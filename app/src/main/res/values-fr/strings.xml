@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="etat_titre">Mettre le clavier en place</string>
+    <string name="etat_activer">1. Autoriser « kab-board » dans les reglages du telephone</string>
+    <string name="etat_choisir">2. Le choisir comme clavier</string>
+    <string name="etat_bouton_activer">Ouvrir les reglages</string>
+    <string name="etat_bouton_choisir">Choisir le clavier</string>
+
+    <string name="journal_titre">Aider a ameliorer le correcteur</string>
+    <string name="journal_explication">Il n\'existe aucun corpus de vraies fautes en kabyle. Quand vous gardez votre graphie au lieu de la notre, vous nous apprenez ce qu\'aucun test ne dit : quelle faute se produit vraiment, et quelle forme un locuteur juge correcte.</string>
+    <string name="journal_activer">Enregistrer les formes que je retiens</string>
+    <string name="journal_detail">Rien n\'est enregistre tant que vous ne l\'avez pas allume. Le fichier reste sur votre appareil.</string>
+    <string name="journal_diffusion">Autoriser la publication de mes contributions dans un corpus kabyle librement reutilisable</string>
+    <string name="journal_diffusion_detail">Question distincte, et posee separement expres : nous laisser utiliser votre fichier et nous laisser le republier ne sont pas la meme permission.</string>
+    <string name="journal_voir">Voir ce qui est enregistre</string>
+    <string name="journal_effacer">Tout effacer</string>
+    <string name="journal_envoyer">Preparer l\'envoi</string>
+    <string name="journal_vide">Rien d\'enregistre pour l\'instant.</string>
+    <string name="journal_compte">%d formes enregistrees</string>
+
+    <string name="prive_titre">Jamais enregistre</string>
+    <string name="prive_detail">Les champs de mot de passe, et tout champ qu\'une application signale comme prive, ne recoivent aucune suggestion et ne sont jamais enregistres.</string>
+    <string name="aspect_titre">Apparence</string>
+    <string name="aspect_systeme">Comme le telephone</string>
+    <string name="aspect_clair">Toujours clair</string>
+    <string name="aspect_sombre">Toujours sombre</string>
+    <string name="frappe_titre">Retour de frappe</string>
+    <string name="frappe_vibration">Vibrer a chaque touche</string>
+    <string name="frappe_son">Jouer un son a chaque touche</string>
+    <string name="frappe_detail">Independants des reglages du telephone, pour que le clavier puisse rester muet quand le telephone ne l\'est pas.</string>
+    <string name="emoji_titre">Emojis recents</string>
+    <string name="emoji_vider">Vider les emojis recents</string>
+    <string name="correcteur_nom">Correcteur kabyle</string>
+    <string name="touche_effacer">Supprimer</string>
+    <string name="touche_entree">Entree</string>
+    <string name="touche_majuscule">Majuscule</string>
+    <string name="touche_emoji">Emoji</string>
+    <string name="touche_micro">Dictee vocale</string>
+    <string name="etat_correcteur">Souligner les fautes dans toutes les applications</string>
+    <string name="etat_bouton_correcteur">Choisir le correcteur</string>
+    <string name="etat_correcteur_detail">Fonctionne meme quand vous tapez avec un autre clavier. Apres une mise a jour, Android peut le laisser muet jusqu\'au redemarrage du telephone.</string>
+    <string name="etat_correcteur_repli">Ouvrez « Verification orthographique » et choisissez « Correcteur kabyle ».</string>
+    <string name="etat_correcteur_actif">Actif en ce moment.</string>
+    <string name="etat_correcteur_inactif">Pas encore choisi.</string>
+    <string name="etat_place">Ressources sur ce telephone : %1$d Mo.</string>
+    <string name="attente_depot">Preparation… %1$d%%</string>
+    <string name="attente_moteur">Chargement du correcteur…</string>
+    <string name="attente_echec">Correcteur indisponible — la saisie fonctionne.</string>
+    <string name="micro_reglages">Autorisez le microphone dans les reglages, puis reessayez.</string>
+    <string name="micro_ecoute">J\'ecoute… touchez pour arreter</string>
+    <string name="micro_transcription">Transcription…</string>
+    <string name="micro_rien">Rien entendu.</string>
+
+    <string name="outils_ouvrir">Ouvrir les outils</string>
+    <string name="outils_fermer">Fermer les outils</string>
+    <string name="outils_titre">Outils</string>
+    <string name="outils_detail">La fleche a gauche de la barre de suggestions ouvre les outils : Asegzawal (aussi par un appui long sur une suggestion), recherche du francais vers le kabyle, relecture, ecrire comme on parle, mot du jour, theme.</string>
+    <string name="outil_asegzawal">Asegzawal</string>
+    <string name="outil_recherche">fr → kab</string>
+    <string name="outil_relire">Relire</string>
+    <string name="outil_parler">gh → ɣ</string>
+    <string name="outil_mot_du_jour">Mot du jour</string>
+    <string name="outil_theme">Theme</string>
+    <string name="panneau_fermer">Fermer</string>
+    <string name="moteur_pas_pret">Le correcteur se charge encore.</string>
+
+    <string name="fiche_sans_mot">Placez le curseur sur un mot, ou faites un appui long sur une suggestion.</string>
+    <string name="fiche_sans_glose">Pas de glose pour cette forme.</string>
+    <string name="fiche_frequence">frequence %1$d</string>
+    <string name="fiche_absent">absent du lexique</string>
+    <string name="fiche_verbe">forme verbale</string>
+    <string name="fiche_etat_libre">etat libre : %1$s</string>
+    <string name="fiche_etat_annexion">etat d\'annexion : %1$s</string>
+    <string name="fiche_pourquoi">Pourquoi cette forme : %1$s</string>
+    <string name="fiche_choisir">Choisir %1$s</string>
+    <string name="cat_adj_fem">adjectif feminin</string>
+    <string name="cat_adj_masc">adjectif masculin</string>
+    <string name="cat_adverb">adverbe</string>
+    <string name="cat_ambig">nom ou adjectif</string>
+    <string name="cat_conj">conjonction</string>
+    <string name="cat_fem">nom feminin</string>
+    <string name="cat_fem_pl">nom feminin pluriel</string>
+    <string name="cat_interj">interjection</string>
+    <string name="cat_locution">locution</string>
+    <string name="cat_masc">nom masculin</string>
+    <string name="cat_num">numeral</string>
+    <string name="cat_particle">particule</string>
+    <string name="cat_prep">preposition</string>
+    <string name="cat_presentat">presentatif</string>
+    <string name="cat_pron">pronom</string>
+    <string name="cat_propn">nom propre</string>
+
+    <string name="recherche_requete">fr : %1$s</string>
+    <string name="recherche_invite">Tapez un mot francais.</string>
+    <string name="recherche_aucun">Aucune forme kabyle trouvee.</string>
+
+    <string name="relire_titre">Relire</string>
+    <string name="relire_en_cours">Relecture… %1$d / %2$d</string>
+    <string name="relire_rien">Rien a signaler.</string>
+    <string name="relire_fini">%1$d mots relus.</string>
+    <string name="relire_limite">Seuls les %1$d premiers mots ont ete relus.</string>
+    <string name="relire_illisible">Cette application ne laisse pas le clavier lire le texte.</string>
+    <string name="relire_sensible">Indisponible dans les champs prives.</string>
+    <string name="relire_modifie">Le texte a change : relancez la relecture.</string>
+    <string name="relire_faute">forme inconnue</string>
+    <string name="relire_doute">le contexte en prefere une autre</string>
+    <string name="relire_dictee">Relire la dictee</string>
+
+    <string name="mot_du_jour_titre">Mot du jour</string>
+    <string name="mot_du_jour_inserer">Inserer</string>
+    <string name="mot_du_jour_aucun">Aucun mot disponible.</string>
+
+    <string name="theme_titre">Theme</string>
+    <string name="aspect_contraste">Contraste eleve</string>
+    <string name="aspect_tamazgha">Tamazɣa</string>
+    <string name="theme_traits_formes">Traits lisibles sans la couleur</string>
+    <string name="theme_traits_detail">Plein : correction en contexte. Tirets : candidat du mot isole. Pointilles : prediction du mot suivant.</string>
+
+    <string name="ecriture_titre">Ecriture</string>
+    <string name="parler_titre">Ecrire comme on parle</string>
+    <string name="parler_detail">gh → ɣ, dh → ḍ, kh → x, aa → ɛ, ou → u pendant la frappe, dans les champs de texte ordinaires seulement. Effacez juste apres une conversion pour retrouver vos deux lettres. Desactive par defaut : le francais est change aussi (« vous » devient « vus »).</string>
+    <string name="parler_actif">Ecrire comme on parle : actif</string>
+    <string name="parler_inactif">Ecrire comme on parle : inactif</string>
+</resources>

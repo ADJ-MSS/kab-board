@@ -1,0 +1,18 @@
+# Sorties de construction
+app/build/
+app/.cxx/
+.gradle/
+.kotlin/
+build/
+natif/build/
+natif/*.so
+*.o
+
+# Ressources linguistiques et modèles, distribués à part (voir README)
+app/src/main/assets/moteur/
+app/src/main/assets/voix/
+
+# Fichiers locaux
+local.properties
+*.iml
+.idea/

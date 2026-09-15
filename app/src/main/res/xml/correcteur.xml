@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<spell-checker xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="@string/correcteur_nom"
+    android:settingsActivity="taqbaylit.clavier.ActiviteReglages">
+    <!-- Le systeme choisit un correcteur en cherchant un sous-type dont la locale correspond a celle du champ de saisie. -->
+    <subtype
+        android:label="@string/sous_type_kab"
+        android:subtypeLocale="fr"
+        android:subtypeExtraValue="TrySuppressingImeSwitcher,AsciiCapable" />
+    <subtype
+        android:label="@string/sous_type_kab"
+        android:subtypeLocale="kab"
+        android:subtypeExtraValue="TrySuppressingImeSwitcher,AsciiCapable" />
+</spell-checker>

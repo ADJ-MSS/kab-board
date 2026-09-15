@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="etat_titre">Sbedd anasiw</string>
+    <string name="etat_activer">1. Sermed « kab-board » deg iɣewwaren n tiliɣri</string>
+    <string name="etat_choisir">2. Fren-it d anasiw-ik</string>
+    <string name="etat_bouton_activer">Ldi iɣewwaren</string>
+    <string name="etat_bouton_choisir">Fren anasiw</string>
+
+    <string name="journal_titre">Ɛawen-aɣ ad nesnerni asefrek</string>
+    <string name="journal_explication">Ulac tasedduft n tuccḍiwin n tira n teqbaylit. Ticki tettḥerrizeḍ tira-k deg umkan n tin-nneɣ, tesselmadeḍ-aɣ ayen ur d-yeqqar ula d yiwen usekyed.</string>
+    <string name="journal_activer">Sekles talɣiwin i freɣ</string>
+    <string name="journal_detail">Ulac ayen ara yettwaklasen alamma tesremdeḍ-t. Afaylu ad yeqqim deg tiliɣri-k.</string>
+    <string name="journal_diffusion">Serreḥ ad ffɣent tikkiwin-iw deg tsedduft n teqbaylit tilellit</string>
+    <string name="journal_diffusion_detail">D asteqsi yemgaraden : ad naɣ-tt-nesseqdec mačči am ad tt-nessuffeɣ.</string>
+    <string name="journal_voir">Wali ayen yettwaklasen</string>
+    <string name="journal_effacer">Kkes kullec</string>
+    <string name="journal_envoyer">Heggi tuzzna</string>
+    <string name="journal_vide">Ulac ayen yettwaklasen tura.</string>
+    <string name="journal_compte">%d n telɣiwin yettwaklasen</string>
+
+    <string name="prive_titre">Ur yettwaklas ara</string>
+    <string name="prive_detail">Urtiyen n wawal uffir, d wid akk i d-yesbeggen usnas d uslig, ur ttawin ula d yiwen usumer.</string>
+    <string name="aspect_titre">Udem</string>
+    <string name="aspect_systeme">Am utilifun</string>
+    <string name="aspect_clair">Yecbeḥ yal tikkelt</string>
+    <string name="aspect_sombre">D aberkan yal tikkelt</string>
+    <string name="frappe_titre">Tiririt n unekcum</string>
+    <string name="frappe_vibration">Ad yergagi yal tanast</string>
+    <string name="frappe_son">Ad d-yeffeɣ imesli yal tanast</string>
+    <string name="frappe_detail">Ur ttḥulfun ara i yiɣewwaren n utilifun, iwakken anasiw ad yeqqim susem ɣas ma d atilifun ala.</string>
+    <string name="emoji_titre">Imujiten ineggura</string>
+    <string name="emoji_vider">Sfeḍ imujiten ineggura</string>
+    <string name="correcteur_nom">Asefrek n Teqbaylit</string>
+    <string name="touche_effacer">Kkes</string>
+    <string name="touche_entree">Kcem</string>
+    <string name="touche_majuscule">Isekkilen imeqqranen</string>
+    <string name="touche_emoji">Imuji</string>
+    <string name="touche_micro">Amikru</string>
+    <string name="etat_correcteur">Sbeggen tuccḍiwin deg yal asnas</string>
+    <string name="etat_bouton_correcteur">Fren asefrek</string>
+    <string name="etat_correcteur_detail">Iteddu ɣas ma tettaruḍ s unasiw nniḍen. Seld alugen amaynut, Android yezmer ad t-yeǧǧ susem alamma tesnekraḍ tiririt n utilifun.</string>
+    <string name="etat_correcteur_repli">Ldi « Asenqed n tira » tefrenḍ « Asefrek n Teqbaylit ».</string>
+    <string name="etat_correcteur_actif">Irmed tura.</string>
+    <string name="etat_correcteur_inactif">Ur yettwafren ara ar tura.</string>
+    <string name="etat_place">Tiɣbula deg utilifun-a : %1$d Mo.</string>
+    <string name="attente_depot">Aheggi… %1$d%%</string>
+    <string name="attente_moteur">Asali n usefrek…</string>
+    <string name="attente_echec">Asefrek ulac-it — tira teddu.</string>
+    <string name="micro_reglages">Serreḥ i umikru deg yiɣewwaren, syen ɛreḍ tikkelt nniḍen.</string>
+    <string name="micro_ecoute">Selleɣ… nnal i uḥbas</string>
+    <string name="micro_transcription">Asuqqel n imeslay…</string>
+    <string name="micro_rien">Ur sliɣ i wacemma.</string>
+</resources>

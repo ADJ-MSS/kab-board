@@ -1,0 +1,248 @@
+# Métadonnées de citation de kab-board (Citation File Format 1.2.0).
+# Ce dépôt n'a pas de DOI propre : aucun champ doi ni identifiers ici.
+# Les références reprennent CITATIONS.bib, dont l'en-tête donne la provenance.
+cff-version: 1.2.0
+message: >-
+  Pour citer ce logiciel, utilisez les métadonnées ci-dessous. Ce dépôt n'a pas
+  de DOI propre ; pour le correcteur orthographique qu'il embarque, citez aussi
+  l'article FEL 2026 et le dépôt Zenodo du correcteur, listés dans references.
+type: software
+title: "kab-board : clavier Android kabyle, correcteur orthographique hybride et dictée embarqués"
+version: "1.0.0"
+license: GPL-3.0-or-later
+repository-code: "https://github.com/ADJ-MSS/kab-board"
+authors:
+  - family-names: Aoudj
+    given-names: Massil
+    affiliation: "CEDRIC, Conservatoire national des arts et métiers (Cnam)"
+  - family-names: Boukhenoufa
+    given-names: Tahar
+    affiliation: "Conservatoire national des arts et métiers (Cnam)"
+  - family-names: Bouzefrane
+    given-names: Samia
+    affiliation: "Conservatoire national des arts et métiers (Cnam)"
+  - family-names: Ameur
+    given-names: Yulliwas
+    affiliation: "Engineering School of Information and Digital Technologies"
+  - family-names: Naït-Zerrad
+    given-names: Kamal
+    affiliation: "Institut national des langues et civilisations orientales (Inalco)"
+abstract: >-
+  Code source et documentation de kab-board, clavier Android (service de
+  saisie) pour le kabyle. Le clavier embarque, sans connexion réseau, le
+  portage Kotlin du correcteur orthographique hybride kabyle (pipeline Python
+  V2), un modèle de langue 3-grammes interrogé par KenLM, un étiqueteur
+  morphosyntaxique CRF (CRFsuite), la prédiction du mot suivant, un correcteur
+  orthographique du système Android à trois états et la dictée vocale kabyle
+  par le modèle acoustique de Mmeslay exporté en ONNX. Les ressources
+  linguistiques et les modèles ne font pas partie du dépôt ; le README décrit
+  leur mise en place.
+keywords:
+  - Kabyle
+  - Taqbaylit
+  - spell checking
+  - Android keyboard
+  - input method
+  - low-resource languages
+  - n-gram language model
+  - KenLM
+  - part-of-speech tagging
+  - speech recognition
+  - ONNX Runtime
+  - Kotlin
+references:
+  - type: conference-paper
+    title: "Building a Community-Grounded Spell Checker for Kabyle Using Hybrid NLP"
+    authors:
+      - family-names: Aoudj
+        given-names: Massil
+      - family-names: Boukhenoufa
+        given-names: Tahar
+      - family-names: Bouzefrane
+        given-names: Samia
+      - family-names: Ameur
+        given-names: Yulliwas
+      - family-names: Naït-Zerrad
+        given-names: Kamal
+    collection-title: "Proceedings of the Foundation for Endangered Languages (FEL) 2026"
+    conference:
+      name: "FEL 2026"
+    year: 2026
+
+  - type: software
+    title: "Building a Community-Grounded Spell Checker for Kabyle Using Hybrid NLP: software and language resources"
+    authors:
+      - family-names: Aoudj
+        given-names: Massil
+      - family-names: Boukhenoufa
+        given-names: Tahar
+      - family-names: Bouzefrane
+        given-names: Samia
+      - family-names: Ameur
+        given-names: Yulliwas
+      - family-names: Naït-Zerrad
+        given-names: Kamal
+    publisher:
+      name: Zenodo
+    version: "1.0.0"
+    year: 2026
+    doi: 10.5281/zenodo.22112060
+    url: "https://doi.org/10.5281/zenodo.22112060"
+    notes: "Concept DOI: 10.5281/zenodo.22112059"
+
+  - type: software
+    title: "KreyolKeyb : Klavyé Kréyòl Karukera, clavier Android pour le créole guadeloupéen"
+    authors:
+      - name: famibelle
+      - name: Potomitan
+    repository-code: "https://github.com/famibelle/KreyolKeyb"
+    license: MIT
+    year: 2025
+    notes: >-
+      Licence MIT, fichier android_keyboard/LICENSE du dépôt : « Copyright (c)
+      2025 Potomitan™ - Clavier Créole Guadeloupéen ». Consulté le 13/09/2026.
+
+  - type: software
+    title: "Mmeslay_backend-CLI : An Automatic Speech Recognition System for the Kabyle language"
+    authors:
+      - name: G1ya777
+    repository-code: "https://github.com/G1ya777/Mmeslay_backend-CLI"
+    notes: >-
+      Licence GPL-3.0 (fichier LICENSE du dépôt ; « only » ou « or later » n'y
+      est pas précisé). Révision consultée : 72f8e22 du 2026-04-12 ; la révision
+      ayant servi à l'export ONNX n'a pas été consignée.
+
+  - type: conference-paper
+    title: "KenLM: Faster and Smaller Language Model Queries"
+    authors:
+      - family-names: Heafield
+        given-names: Kenneth
+    collection-title: "Proceedings of the Sixth Workshop on Statistical Machine Translation"
+    conference:
+      name: "Sixth Workshop on Statistical Machine Translation"
+    publisher:
+      name: "Association for Computational Linguistics"
+    start: 187
+    end: 197
+    month: 7
+    year: 2011
+    url: "https://aclanthology.org/W11-2123/"
+
+  - type: software
+    title: "CRFsuite: a fast implementation of Conditional Random Fields (CRFs)"
+    authors:
+      - family-names: Okazaki
+        given-names: Naoaki
+    year: 2007
+    url: "http://www.chokkan.org/software/crfsuite/"
+    notes: "Licence BSD modifiée (page officielle ; natif/amont/crfsuite/COPYING)."
+
+  - type: conference-paper
+    title: "Squeezeformer: An Efficient Transformer for Automatic Speech Recognition"
+    authors:
+      - family-names: Kim
+        given-names: Sehoon
+      - family-names: Gholami
+        given-names: Amir
+      - family-names: Shaw
+        given-names: Albert
+      - family-names: Lee
+        given-names: Nicholas
+      - family-names: Mangalam
+        given-names: Karttikeya
+      - family-names: Malik
+        given-names: Jitendra
+      - family-names: Mahoney
+        given-names: Michael W.
+      - family-names: Keutzer
+        given-names: Kurt
+    collection-title: "NeurIPS 2022"
+    conference:
+      name: "NeurIPS 2022"
+    year: 2022
+    doi: 10.48550/arXiv.2206.00888
+    url: "https://arxiv.org/abs/2206.00888"
+
+  - type: article
+    title: "NeMo: a toolkit for building AI applications using Neural Modules"
+    authors:
+      - family-names: Kuchaiev
+        given-names: Oleksii
+      - family-names: Li
+        given-names: Jason
+      - family-names: Nguyen
+        given-names: Huyen
+      - family-names: Hrinchuk
+        given-names: Oleksii
+      - family-names: Leary
+        given-names: Ryan
+      - family-names: Ginsburg
+        given-names: Boris
+      - family-names: Kriman
+        given-names: Samuel
+      - family-names: Beliaev
+        given-names: Stanislav
+      - family-names: Lavrukhin
+        given-names: Vitaly
+      - family-names: Cook
+        given-names: Jack
+      - family-names: Castonguay
+        given-names: Patrice
+      - family-names: Popova
+        given-names: Mariya
+      - family-names: Huang
+        given-names: Jocelyn
+      - family-names: Cohen
+        given-names: Jonathan M.
+    year: 2019
+    doi: 10.48550/arXiv.1909.09577
+    url: "https://arxiv.org/abs/1909.09577"
+    notes: "NVIDIA NeMo, licence Apache-2.0. Version employée pour l'export ONNX : nemo_toolkit[asr] 2.7."
+
+  - type: software
+    title: "ONNX Runtime"
+    authors:
+      - name: "ONNX Runtime developers"
+    version: "1.20.0"
+    url: "https://onnxruntime.ai"
+    repository-code: "https://github.com/microsoft/onnxruntime"
+    license: MIT
+    notes: "Version employée par le clavier : com.microsoft.onnxruntime:onnxruntime-android 1.20.0."
+
+  - type: conference-paper
+    title: "Common Voice: A Massively-Multilingual Speech Corpus"
+    authors:
+      - family-names: Ardila
+        given-names: Rosana
+      - family-names: Branson
+        given-names: Megan
+      - family-names: Davis
+        given-names: Kelly
+      - family-names: Kohler
+        given-names: Michael
+      - family-names: Meyer
+        given-names: Josh
+      - family-names: Henretty
+        given-names: Michael
+      - family-names: Morais
+        given-names: Reuben
+      - family-names: Saunders
+        given-names: Lindsay
+      - family-names: Tyers
+        given-names: Francis
+      - family-names: Weber
+        given-names: Gregor
+    collection-title: "Proceedings of the Twelfth Language Resources and Evaluation Conference"
+    conference:
+      name: "LREC 2020"
+    publisher:
+      name: "European Language Resources Association"
+    start: 4218
+    end: 4222
+    month: 5
+    year: 2020
+    url: "https://aclanthology.org/2020.lrec-1.520/"
+    notes: >-
+      Données d'entraînement du modèle acoustique Mmeslay. Jeux de données
+      diffusés sous CC0 d'après les conditions de Mozilla,
+      https://commonvoice.mozilla.org/terms/en.html (consultées le 13/09/2026).
