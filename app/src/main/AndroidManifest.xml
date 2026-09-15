@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Aucune permission. Le moteur est embarque, rien ne sort de l'appareil. -->
+
+    <!-- La seule permission, et elle ne s'exerce qu'a l'appui sur le microphone. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- largeHeap : le moteur tient 57 Mio de donnees vives (lexique de 1,58 million d'entrees, vivier de 449 112 formes, index sonore). -->
+    <application
+        android:label="@string/app_nom"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:allowBackup="false"
+        android:supportsRtl="false"
+        android:hardwareAccelerated="true"
+        android:largeHeap="true">
+
+        <service
+            android:name=".ClavierKabyle"
+            android:label="@string/app_nom"
+            android:permission="android.permission.BIND_INPUT_METHOD"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/methode" />
+        </service>
+
+        <!-- Le correcteur du systeme : souligne les fautes dans n'importe quelle application, meme quand l'utilisateur tape avec un autre clavier. -->
+        <service
+            android:name=".CorrecteurSysteme"
+            android:label="@string/correcteur_nom"
+            android:permission="android.permission.BIND_TEXT_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.textservice.SpellCheckerService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.view.textservice.scs"
+                android:resource="@xml/correcteur" />
+        </service>
+
+        <!-- Un service de saisie ne peut pas demander de permission : le systeme accroche sa demande a une fenetre d'activite. -->
+        <activity
+            android:name=".PermissionMicro"
+            android:exported="false"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name=".ActiviteReglages"
+            android:label="@string/app_nom"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Pour joindre le journal a un message. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fichiers"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/partage" />
+        </provider>
+    </application>
+</manifest>

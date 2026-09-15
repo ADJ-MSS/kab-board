@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_nom">kab-board</string>
+    <string name="sous_type_kab">Kabyle</string>
+
+    <string name="etat_titre">Setting up the keyboard</string>
+    <string name="etat_activer">1. Enable “kab-board” in the system settings</string>
+    <string name="etat_choisir">2. Choose it as your keyboard</string>
+    <string name="etat_bouton_activer">Open settings</string>
+    <string name="etat_bouton_choisir">Choose keyboard</string>
+
+    <string name="journal_titre">Help improve the corrector</string>
+    <string name="journal_explication">There is no corpus of real Kabyle spelling errors. When you keep a form over the one suggested, you teach us something no test can: which error actually occurs, and which form a speaker judges correct.</string>
+    <string name="journal_activer">Record the forms I choose</string>
+    <string name="journal_detail">Nothing is recorded until you turn this on. The file stays on your device.</string>
+    <string name="journal_diffusion">Allow my contributions to be published in a freely reusable Kabyle corpus</string>
+    <string name="journal_diffusion_detail">A separate question on purpose: letting us use your file and letting us republish it are not the same permission.</string>
+    <string name="journal_voir">See what is recorded</string>
+    <string name="journal_effacer">Erase everything</string>
+    <string name="journal_envoyer">Prepare to send</string>
+    <string name="journal_vide">Nothing recorded yet.</string>
+    <string name="journal_compte">%d forms recorded</string>
+
+    <string name="prive_titre">Never recorded</string>
+    <string name="prive_detail">Password fields, and any field an app marks as private, receive no suggestions and are never recorded.</string>
+    <string name="aspect_titre">Appearance</string>
+    <string name="aspect_systeme">Follow the phone</string>
+    <string name="aspect_clair">Always light</string>
+    <string name="aspect_sombre">Always dark</string>
+    <string name="frappe_titre">Key feedback</string>
+    <string name="frappe_vibration">Vibrate on key press</string>
+    <string name="frappe_son">Play a sound on key press</string>
+    <string name="frappe_detail">Independent of the phone settings, so the keyboard can be silent while the phone is not.</string>
+    <string name="emoji_titre">Recent emoji</string>
+    <string name="emoji_vider">Clear recent emoji</string>
+    <string name="correcteur_nom">Kabyle corrector</string>
+    <string name="touche_effacer">Delete</string>
+    <string name="touche_entree">Enter</string>
+    <string name="touche_majuscule">Shift</string>
+    <string name="touche_emoji">Emoji</string>
+    <string name="touche_micro">Voice input</string>
+    <string name="etat_correcteur">Underline mistakes in every app</string>
+    <string name="etat_bouton_correcteur">Choose the spell checker</string>
+    <string name="etat_correcteur_detail">Works even when you type with another keyboard. After installing an update, Android may keep it silent until the phone restarts.</string>
+    <string name="etat_correcteur_repli">Open « Spell checker » and choose « Kabyle corrector ».</string>
+    <string name="etat_correcteur_actif">Currently active.</string>
+    <string name="etat_correcteur_inactif">Not selected yet.</string>
+    <string name="etat_place">Resources on this phone: %1$d MB.</string>
+    <string name="attente_depot">Preparing… %1$d%%</string>
+    <string name="attente_moteur">Loading the corrector…</string>
+    <string name="attente_echec">Corrector unavailable — typing still works.</string>
+    <string name="micro_reglages">Allow the microphone in Settings, then try again.</string>
+    <string name="micro_ecoute">Listening… tap to stop</string>
+    <string name="micro_transcription">Transcribing…</string>
+    <string name="micro_rien">Nothing heard.</string>
+
+    <string name="outils_ouvrir">Open tools</string>
+    <string name="outils_fermer">Close tools</string>
+    <string name="outils_titre">Tools</string>
+    <string name="outils_detail">The arrow at the left of the suggestion bar opens the tools: Asegzawal (also a long press on a suggestion), French → Kabyle search, proofreading, write as you speak, word of the day, theme.</string>
+    <string name="outil_asegzawal">Asegzawal</string>
+    <string name="outil_recherche">fr → kab</string>
+    <string name="outil_relire">Proofread</string>
+    <string name="outil_parler">gh → ɣ</string>
+    <string name="outil_mot_du_jour">Word of the day</string>
+    <string name="outil_theme">Theme</string>
+    <string name="panneau_fermer">Close</string>
+    <string name="moteur_pas_pret">The corrector is still loading.</string>
+
+    <string name="fiche_sans_mot">Put the cursor on a word, or long-press a suggestion.</string>
+    <string name="fiche_sans_glose">No gloss for this form.</string>
+    <string name="fiche_frequence">frequency %1$d</string>
+    <string name="fiche_absent">not in the lexicon</string>
+    <string name="fiche_verbe">verb form</string>
+    <string name="fiche_etat_libre">free state: %1$s</string>
+    <string name="fiche_etat_annexion">construct state: %1$s</string>
+    <string name="fiche_pourquoi">Why this form: %1$s</string>
+    <string name="fiche_choisir">Use %1$s</string>
+    <string name="cat_adj_fem">feminine adjective</string>
+    <string name="cat_adj_masc">masculine adjective</string>
+    <string name="cat_adverb">adverb</string>
+    <string name="cat_ambig">noun or adjective</string>
+    <string name="cat_conj">conjunction</string>
+    <string name="cat_fem">feminine noun</string>
+    <string name="cat_fem_pl">feminine plural noun</string>
+    <string name="cat_interj">interjection</string>
+    <string name="cat_locution">phrase</string>
+    <string name="cat_masc">masculine noun</string>
+    <string name="cat_num">numeral</string>
+    <string name="cat_particle">particle</string>
+    <string name="cat_prep">preposition</string>
+    <string name="cat_presentat">presentative</string>
+    <string name="cat_pron">pronoun</string>
+    <string name="cat_propn">proper noun</string>
+
+    <string name="recherche_requete">fr: %1$s</string>
+    <string name="recherche_invite">Type a French word.</string>
+    <string name="recherche_aucun">No Kabyle form found.</string>
+
+    <string name="relire_titre">Proofread</string>
+    <string name="relire_en_cours">Checking… %1$d / %2$d</string>
+    <string name="relire_rien">Nothing to flag.</string>
+    <string name="relire_fini">%1$d words checked.</string>
+    <string name="relire_limite">Only the first %1$d words were checked.</string>
+    <string name="relire_illisible">This app does not let the keyboard read the text.</string>
+    <string name="relire_sensible">Not available in private fields.</string>
+    <string name="relire_modifie">The text has changed: proofread again.</string>
+    <string name="relire_faute">unknown form</string>
+    <string name="relire_doute">context prefers another form</string>
+    <string name="relire_dictee">Proofread dictation</string>
+
+    <string name="mot_du_jour_titre">Word of the day</string>
+    <string name="mot_du_jour_inserer">Insert</string>
+    <string name="mot_du_jour_aucun">No word available.</string>
+
+    <string name="theme_titre">Theme</string>
+    <string name="aspect_contraste">High contrast</string>
+    <string name="aspect_tamazgha">Tamazɣa</string>
+    <string name="theme_traits_formes">Suggestion marks readable without colour</string>
+    <string name="theme_traits_detail">Solid: correction in context. Dashed: candidate for the word alone. Dotted: next-word prediction.</string>
+
+    <string name="ecriture_titre">Writing</string>
+    <string name="parler_titre">Write as you speak</string>
+    <string name="parler_detail">gh → ɣ, dh → ḍ, kh → x, aa → ɛ, ou → u as you type, in ordinary text fields only. Press delete right after a conversion to get your two letters back. Off by default: it also changes French (« vous » becomes « vus »).</string>
+    <string name="parler_actif">Write as you speak: on</string>
+    <string name="parler_inactif">Write as you speak: off</string>
+</resources>

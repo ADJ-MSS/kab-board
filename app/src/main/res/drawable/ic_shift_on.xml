@@ -1,0 +1,11 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="#FFFFFF">
+    <!-- Shift actif : exactement la silhouette de ic_shift_off, pleine. -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,3L3,12h5v6h8v-6h5L12,3z"/>
+</vector>

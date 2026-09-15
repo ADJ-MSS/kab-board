@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<input-method xmlns:android="http://schemas.android.com/apk/res/android"
+    android:settingsActivity="taqbaylit.clavier.ActiviteReglages"
+    android:supportsSwitchingToNextInputMethod="true">
+    <!-- languageTag double imeSubtypeLocale : la forme moderne (API 24+) sait lire un code ISO 639-3 comme kab, l'ancienne est gardee pour les versions anterieures. -->
+    <subtype
+        android:label="@string/sous_type_kab"
+        android:languageTag="kab"
+        android:imeSubtypeLocale="kab"
+        android:imeSubtypeMode="keyboard"
+        android:isAuxiliary="false"
+        android:overridesImplicitlyEnabledSubtype="true"
+        android:isAsciiCapable="true" />
+</input-method>

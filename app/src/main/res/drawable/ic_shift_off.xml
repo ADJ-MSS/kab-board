@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="#FFFFFF">
+    <!-- Flèche shift creuse. Les trois états partagent cette silhouette et ne diffèrent que par le remplissage (creux → plein → plein + barre), pour que la touche ne change pas de forme d'un état à l'autre. -->
+    <path
+        android:fillColor="@android:color/white"
+        android:fillType="evenOdd"
+        android:pathData="M12,3L3,12h5v6h8v-6h5L12,3zM12,5.83L16.17,10H14v6h-4v-6H7.83L12,5.83z"/>
+</vector>

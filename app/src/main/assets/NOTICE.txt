@@ -1,0 +1,124 @@
+kab-board — clavier kabyle
+==========================
+
+Couche visuelle et interaction
+------------------------------
+
+La disposition, le theme, les appuis longs, le retour de frappe, le panneau
+emoji et la barre de propositions viennent de KreyolKeyb (clavier creole
+guadeloupeen, Potomitan), repris sous licence MIT et adaptes au kabyle :
+
+  https://github.com/famibelle/KreyolKeyb
+
+Fichiers concernes, dans app/src/main/java/taqbaylit/clavier/ :
+  KeyboardLayoutManager.kt   KeyboardTheme.kt      AccentHandler.kt
+  KeyFeedback.kt             CuvetteSuggestions.kt KeyboardPreferences.kt
+  EmojiPickerView.kt         EmojiData.kt          EmojiRecents.kt
+  Constants.kt
+et les icones de touche res/drawable/ic_backspace.xml, ic_keyboard_return.xml
+et ic_shift_*.xml.
+
+Adaptations : lettres de la disposition et appuis longs (mesures sur les
+formes verbales du lexique), barre a une seule rangee, et un theme sobre, sans
+surfaces de couleur, ou les couleurs du drapeau amazigh ne marquent que la
+nature des propositions.
+
+    MIT License
+
+    Copyright (c) 2025 Potomitan(TM) - Clavier Creole Guadeloupeen
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+Icones Material
+---------------
+
+Les icones des touches emoji et micro et l'indice de changement de clavier
+sur la barre d'espace, res/drawable/ic_emoji.xml, ic_micro.xml et
+ic_globe.xml, reprennent les traces « mood », « mic » et « language » de
+Material Icons (Google), sous licence Apache-2.0.
+
+Les icones des outils de la barre de suggestions reprennent, sous la meme
+licence, les traces suivantes :
+
+  ic_outils.xml       « chevron_right »
+  ic_fermer.xml       « close »
+  ic_dictionnaire.xml « book »
+  ic_traduire.xml     « translate »
+  ic_relire.xml       « spellcheck »
+  ic_mot_du_jour.xml  « lightbulb »
+  ic_theme.xml        « palette »
+
+Source :
+
+  https://github.com/google/material-design-icons
+
+Transcription vocale
+--------------------
+
+Le modele de reconnaissance de la parole kabyle vient de Mmeslay (G1ya777),
+sous licence GPL-3.0 :
+
+  https://github.com/G1ya777/Mmeslay_backend-CLI
+
+C'est un Squeezeformer de 9,1 millions de parametres, entraine sur 149 004
+enonces de Common Voice kabyle, exporte ici en ONNX. La sortie de l'export a
+ete verifiee identique a celle de l'original (ecart maximal 9,3e-05, arrondi
+flottant) sur les trois exemples fournis par le depot.
+
+    Cette application etant liee a du code sous GPL-3.0, elle est distribuee
+    sous GPL-3.0. Le texte complet de la licence accompagne le depot du projet.
+
+Le module SqueezeformerEncoder et sa dependance TimeReductionModule, requis
+pour l'export et retires de NeMo a partir de la version 3.0, sont repris de
+NVIDIA NeMo 2.7.0, sous licence Apache-2.0 :
+
+  https://github.com/NVIDIA/NeMo
+
+La mecanique de capture audio dans un service de saisie — source
+VOICE_RECOGNITION, orientation du microphone, demande de permission par une
+activite separee, detection du refus definitif — s'inspire de FUTO Keyboard
+(voiceinput-shared), distribue sous FUTO Source First License 1.1-kb. Le code
+d'Ecouteur.kt et de PermissionMicro.kt est ecrit pour kab-board ; il en reprend
+les principes et des parametres, pas le code :
+
+  https://gitlab.futo.org/keyboard/latinime
+
+Moteur de correction
+--------------------
+
+Le module moteur/ porte en Kotlin le correcteur kabyle de M. Aoudj,
+T. Boukhenoufa, S. Bouzefrane, Y. Ameur et K. Nait-Zerrad, publie sous licence
+MIT pour le logiciel et CC BY-SA 4.0 pour les donnees :
+
+  https://doi.org/10.5281/zenodo.22112059
+
+Les ressources linguistiques embarquees dans l'application (assets/moteur/)
+en sont derivees et restent sous licence CC BY-SA 4.0.
+
+Bibliotheques natives et dependances
+------------------------------------
+
+  KenLM (modele de langue)       LGPL-2.1     https://github.com/kpu/kenlm
+  CRFsuite (etiquetage)          BSD          http://www.chokkan.org/software/crfsuite/
+  liblbfgs (dependance de CRFsuite) MIT       https://github.com/chokkan/liblbfgs
+  ONNX Runtime (dictee)          MIT          https://github.com/microsoft/onnxruntime
+  AndroidX, Kotlin, kotlinx.coroutines  Apache-2.0
+
+Les sources de KenLM, CRFsuite et liblbfgs, avec leurs licences completes,
+sont dans natif/amont/ du depot.

@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="19dp"
+    android:height="12dp"
+    android:viewportWidth="19"
+    android:viewportHeight="12"
+    android:tint="#FFFFFF">
+    <!-- Le tracé n'occupait que 12 unités de haut dans un cadre de 24, soit la moitié. -->
+    <group android:translateX="-2" android:translateY="-6">
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M19,7v4H5.83l3.58,-3.59L8,6l-6,6 6,6 1.41,-1.41L5.83,13H21V7z"/>
+    </group>
+</vector>
