@@ -74,6 +74,7 @@ class MoteurKabBoard(IBus.Engine):
     correcteur = None          # partage par toutes les instances : charge une fois
     chargement = None
     actif = None               # l'instance qui a le champ de saisie
+    dernier = None             # la derniere qui l'a eu, si le focus s'egare
     prise = None               # le serveur du clavier flottant
     outils = None              # gloses, categories : les ressources des outils
     frequents = None           # les mots que la prediction met en concurrence
@@ -157,7 +158,10 @@ class MoteurKabBoard(IBus.Engine):
     @classmethod
     def commande(cls, ligne):
         """Une commande du clavier flottant. Rend sa reponse, ou None."""
-        moteur = cls.actif
+        # A defaut du champ courant, le dernier qui a eu le curseur : un clavier
+        # a l'ecran ne doit pas se taire parce qu'un gestionnaire de fenetres a
+        # deplace le focus sous le doigt de l'utilisateur.
+        moteur = cls.actif or cls.dernier
         if moteur is None:
             return "SANS-CHAMP"
         verbe, _, reste = ligne.partition(" ")
@@ -500,6 +504,7 @@ class MoteurKabBoard(IBus.Engine):
 
     def do_focus_in(self):
         MoteurKabBoard.actif = self
+        MoteurKabBoard.dernier = self
         self.register_properties(self.proprietes)
 
     def do_focus_out(self):

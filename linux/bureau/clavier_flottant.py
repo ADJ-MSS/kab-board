@@ -11,6 +11,15 @@ import sys
 import threading
 from pathlib import Path
 
+# Sous Wayland, une fenetre ordinaire ne peut ni se placer, ni rester au-dessus,
+# ni refuser le focus : c'est le compositeur qui en decide, et GNOME n'offre pas
+# le protocole des claviers a l'ecran. Par Xwayland, les regles de X11
+# s'appliquent de nouveau, et ce sont celles dont ce clavier a besoin.
+# La session pose souvent GDK_BACKEND=wayland : il faut donc l'ecraser, pas
+# seulement le completer.
+if os.environ.get("XDG_SESSION_TYPE") == "wayland" and os.environ.get("DISPLAY"):
+    os.environ["GDK_BACKEND"] = "x11"
+
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GLib
@@ -59,6 +68,18 @@ def parler(commande: str) -> str:
         return ""
 
 
+def bouton_sans_focus(**arguments):
+    """Un bouton qui ne prend jamais le focus.
+
+    Le clavier ecrit ailleurs que chez lui : si une touche reclamait le focus,
+    l'application ou l'on tape le perdrait, et la saisie n'irait plus nulle part.
+    """
+    b = Gtk.Button(**arguments)
+    b.set_can_focus(False)
+    b.set_focus_on_click(False)
+    return b
+
+
 class Clavier(Gtk.Window):
 
     def __init__(self):
@@ -71,17 +92,29 @@ class Clavier(Gtk.Window):
         self.dernieres_propositions = None
         self.translitteration = True
         self.champ_recherche = None     # ou taper, quand fr → kab est ouvert
+        self._depart = None             # point de prise, pendant un deplacement
 
         # Au-dessus de tout, sur tous les bureaux, et surtout : jamais le focus.
         # Sans cela, le clic sur une touche volerait le curseur a l'application
-        # dans laquelle on veut ecrire.
+        # dans laquelle on veut ecrire, et la saisie n'irait plus nulle part.
+        #
+        # accept_focus ne suffit pas : une fenetre ordinaire et decoree, le
+        # gestionnaire la focalise quand meme au clic. Le type DOCK, lui, ne se
+        # focalise pas ; en echange il n'a pas de barre de titre, alors la tete
+        # sert de poignee.
         self.set_keep_above(True)
         self.set_accept_focus(False)
         self.set_focus_on_map(False)
-        self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
-        self.set_decorated(True)
+        self.set_can_focus(False)
+        self.set_type_hint(Gdk.WindowTypeHint.DOCK)
+        self.set_decorated(False)
+        self.set_skip_taskbar_hint(True)
+        self.set_skip_pager_hint(True)
         self.set_default_size(720, 260)
         self.stick()
+        # Au premier affichage, pas a la creation : avant d'etre affichee, la
+        # fenetre ne connait ni sa taille definitive ni le moniteur.
+        self.connect("map-event", self._se_placer)
         self.connect("destroy", Gtk.main_quit)
 
         fournisseur = Gtk.CssProvider()
@@ -114,16 +147,72 @@ class Clavier(Gtk.Window):
     # Tete
 
     def _tete(self):
+        """La tete : l'etat, le choix de graphie, et de quoi deplacer ou fermer.
+
+        Sans barre de titre, c'est elle qui sert de poignee : un glisser dessus
+        deplace la fenetre.
+        """
         ligne = Gtk.Box(spacing=6)
+        poignee = Gtk.EventBox()
+        poignee.add_events(Gdk.EventMask.BUTTON_PRESS_MASK
+                           | Gdk.EventMask.BUTTON_RELEASE_MASK
+                           | Gdk.EventMask.POINTER_MOTION_MASK)
+        poignee.connect("button-press-event", self._prendre)
+        poignee.connect("motion-notify-event", self._glisser)
+        poignee.connect("button-release-event", self._lacher)
         self.etat = Gtk.Label(label="…", xalign=0)
         self.etat.get_style_context().add_class("tete")
-        ligne.pack_start(self.etat, True, True, 0)
+        poignee.add(self.etat)
+        ligne.pack_start(poignee, True, True, 0)
         for libelle, valeur in (("b", "b"), ("v", "v")):
-            b = Gtk.Button(label=f"Graphie {libelle}")
+            b = bouton_sans_focus(label=f"Graphie {libelle}")
             b.get_style_context().add_class("fonction")
             b.connect("clicked", lambda _b, v=valeur: parler(f"GRAPHIE {v}"))
             ligne.pack_start(b, False, False, 0)
+        fermer = bouton_sans_focus(label="✕")
+        fermer.get_style_context().add_class("fonction")
+        fermer.connect("clicked", lambda _b: self.destroy())
+        ligne.pack_start(fermer, False, False, 0)
         return ligne
+
+    def _se_placer(self, _fenetre, _evenement=None):
+        """En bas de l'ecran, centre, comme un clavier a l'ecran doit l'etre.
+
+        Sans barre de titre, le gestionnaire ne place plus la fenetre : elle
+        s'en charge, puis l'utilisateur la deplace par la tete s'il veut.
+        """
+        affichage = Gdk.Display.get_default()
+        moniteur = affichage.get_primary_monitor() or affichage.get_monitor(0)
+        if moniteur is None:
+            return
+        zone = moniteur.get_workarea()
+        largeur, hauteur = self.get_size()
+        self.move(zone.x + (zone.width - largeur) // 2,
+                  zone.y + zone.height - hauteur - 20)
+
+    def _prendre(self, _poignee, evenement):
+        """Debut du glisser : on retient d'ou l'on part.
+
+        Le gestionnaire de fenetres refuse de deplacer une fenetre de type DOCK
+        par la poignee habituelle (begin_move_drag). On la deplace donc
+        soi-meme, ce que X autorise.
+        """
+        if evenement.button != 1:
+            return False
+        x, y = self.get_position()
+        self._depart = (evenement.x_root - x, evenement.y_root - y)
+        return True
+
+    def _glisser(self, _poignee, evenement):
+        if self._depart is None:
+            return False
+        dx, dy = self._depart
+        self.move(int(evenement.x_root - dx), int(evenement.y_root - dy))
+        return True
+
+    def _lacher(self, _poignee, _evenement):
+        self._depart = None
+        return True
 
     # Outils
 
@@ -136,7 +225,7 @@ class Clavier(Gtk.Window):
                                 ("Relire", self._relire),
                                 ("Mot du jour", self._mot_du_jour),
                                 ("✕", self._fermer_panneau)):
-            b = Gtk.Button(label=libelle)
+            b = bouton_sans_focus(label=libelle)
             b.get_style_context().add_class("fonction")
             b.connect("clicked", lambda _b, a=action: a())
             ligne.pack_start(b, True, True, 0)
@@ -176,7 +265,7 @@ class Clavier(Gtk.Window):
             panneau.pack_start(etiquette, False, False, 0)
             panneau.show_all()
             return
-        b = Gtk.Button(label=texte)
+        b = bouton_sans_focus(label=texte)
         b.get_style_context().add_class("proposition")
         b.connect("clicked", lambda _b: action())
         panneau.pack_start(b, False, False, 0)
@@ -268,7 +357,7 @@ class Clavier(Gtk.Window):
         ligne = Gtk.Box(spacing=4)
         for libelle, action in (("Chercher", lambda: self._chercher(p)),
                                 ("Effacer", self._vider_recherche)):
-            b = Gtk.Button(label=libelle)
+            b = bouton_sans_focus(label=libelle)
             b.get_style_context().add_class("fonction")
             b.connect("clicked", lambda _b, a=action: a())
             ligne.pack_start(b, True, True, 0)
@@ -333,7 +422,7 @@ class Clavier(Gtk.Window):
 
     def _touche(self, touche):
         libelle = touche[0]
-        bouton = Gtk.Button()
+        bouton = bouton_sans_focus()
         bouton.get_style_context().add_class("touche")
         if libelle == "␣":
             bouton.set_label("Taqbaylit")
@@ -395,7 +484,7 @@ class Clavier(Gtk.Window):
         fenetre = Gtk.Popover.new(bouton)
         boite = Gtk.Box(spacing=4)
         for variante in touche[1:]:
-            b = Gtk.Button(label=variante)
+            b = bouton_sans_focus(label=variante)
             b.get_style_context().add_class("touche")
             b.connect("clicked", lambda _b, v=variante: (self._envoyer(v),
                                                          fenetre.popdown()))
@@ -419,7 +508,7 @@ class Clavier(Gtk.Window):
     def _suivre(self):
         reponse = parler("ETAT")
         if not reponse:
-            self.etat.set_text("Moteur de saisie absent : lancez ibus/kab_ibus.py")
+            self.etat.set_text("Correcteur éteint : allumez-le dans Kab-board")
             return True
         if reponse == "SANS-CHAMP":
             self.etat.set_text("Cliquez d'abord dans un champ de texte")
@@ -438,7 +527,7 @@ class Clavier(Gtk.Window):
         for enfant in self.barre.get_children():
             self.barre.remove(enfant)
         for rang, forme in enumerate(propositions[:6]):
-            b = Gtk.Button(label=forme)
+            b = bouton_sans_focus(label=forme)
             style = b.get_style_context()
             style.add_class("proposition")
             # Les trois natures du telephone : vert pour la correction en
@@ -461,8 +550,9 @@ class Clavier(Gtk.Window):
 
 if __name__ == "__main__":
     if not PRISE.exists():
-        print(f"Le moteur de saisie ne tourne pas ({PRISE} absent).", file=sys.stderr)
-        print("Lancez d'abord : python3 ibus/kab_ibus.py", file=sys.stderr)
+        print("Le correcteur n'est pas allumé.", file=sys.stderr)
+        print("Ouvrez Kab-board et mettez « Clavier kabyle » en marche.", file=sys.stderr)
+        print(f"(la prise attendue est {PRISE})", file=sys.stderr)
     fenetre = Clavier()
     fenetre.show_all()
     Gtk.main()
