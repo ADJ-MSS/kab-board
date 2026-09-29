@@ -12,7 +12,7 @@ class ActifsLivresTest {
 
     private fun fichier(nom: String): File {
         val f = File(actifs, nom)
-        assertTrue("$nom manquant — lancez outils/exporter_ressources.py", f.exists())
+        assertTrue("$nom manquant, lancez outils/exporter_ressources.py", f.exists())
         return f
     }
 

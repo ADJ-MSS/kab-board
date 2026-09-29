@@ -46,7 +46,7 @@
     <string name="etat_place">Ressources sur ce telephone : %1$d Mo.</string>
     <string name="attente_depot">Preparation… %1$d%%</string>
     <string name="attente_moteur">Chargement du correcteur…</string>
-    <string name="attente_echec">Correcteur indisponible — la saisie fonctionne.</string>
+    <string name="attente_echec">Correcteur indisponible, la saisie fonctionne.</string>
     <string name="micro_reglages">Autorisez le microphone dans les reglages, puis reessayez.</string>
     <string name="micro_ecoute">J\'ecoute… touchez pour arreter</string>
     <string name="micro_transcription">Transcription…</string>
@@ -55,13 +55,15 @@
     <string name="outils_ouvrir">Ouvrir les outils</string>
     <string name="outils_fermer">Fermer les outils</string>
     <string name="outils_titre">Outils</string>
-    <string name="outils_detail">La fleche a gauche de la barre de suggestions ouvre les outils : Asegzawal (aussi par un appui long sur une suggestion), recherche du francais vers le kabyle, relecture, ecrire comme on parle, mot du jour, theme.</string>
+    <string name="outils_detail">La fleche a gauche de la barre de suggestions ouvre les outils : Asegzawal (aussi par un appui long sur une suggestion), recherche du francais vers le kabyle, relecture, ecrire comme on parle, mot du jour, theme, reglages.</string>
     <string name="outil_asegzawal">Asegzawal</string>
     <string name="outil_recherche">fr → kab</string>
     <string name="outil_relire">Relire</string>
     <string name="outil_parler">gh → ɣ</string>
     <string name="outil_mot_du_jour">Mot du jour</string>
     <string name="outil_theme">Theme</string>
+    <string name="outil_reglages">Réglages</string>
+    <string name="reglages_hors_atteinte">Ouvrez kab-board depuis vos applications pour changer les réglages.</string>
     <string name="panneau_fermer">Fermer</string>
     <string name="moteur_pas_pret">Le correcteur se charge encore.</string>
 
@@ -122,4 +124,8 @@
     <string name="parler_detail">gh → ɣ, dh → ḍ, kh → x, aa → ɛ, ou → u pendant la frappe, dans les champs de texte ordinaires seulement. Effacez juste apres une conversion pour retrouver vos deux lettres. Desactive par defaut : le francais est change aussi (« vous » devient « vus »).</string>
     <string name="parler_actif">Ecrire comme on parle : actif</string>
     <string name="parler_inactif">Ecrire comme on parle : inactif</string>
+    <string name="graphie_titre">Graphie b ou v</string>
+    <string name="graphie_b">Écrire avec b</string>
+    <string name="graphie_v">Écrire avec v</string>
+    <string name="graphie_detail">Certains écrivent abrid, d\'autres avrid. Choisissez la vôtre : les six propositions la suivent.</string>
 </resources>

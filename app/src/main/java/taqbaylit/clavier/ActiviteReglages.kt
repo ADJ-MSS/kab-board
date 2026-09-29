@@ -12,6 +12,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
@@ -75,6 +77,18 @@ class ActiviteReglages : Activity() {
             KeyboardPreferences.setTraitsFormes(this, coche)
         }.apply { isChecked = KeyboardPreferences.traitsFormes(this@ActiviteReglages) })
         colonne.addView(petit(getString(R.string.theme_traits_detail)))
+
+        colonne.addView(espace(d))
+        colonne.addView(titre(getString(R.string.graphie_titre)))
+        colonne.addView(choixExclusif(
+            GraphieBV.Mode.entries.map {
+                it to getString(when (it) {
+                    GraphieBV.Mode.B -> R.string.graphie_b
+                    GraphieBV.Mode.V -> R.string.graphie_v
+                })
+            },
+            KeyboardPreferences.graphie(this)) { KeyboardPreferences.setGraphie(this, it) })
+        colonne.addView(petit(getString(R.string.graphie_detail)))
 
         colonne.addView(espace(d))
         colonne.addView(titre(getString(R.string.ecriture_titre)))
@@ -228,7 +242,7 @@ class ActiviteReglages : Activity() {
             appendLine()
             appendLine("Ma region ou ma variete (facultatif) :")
             appendLine()
-            appendLine("Mes choix (${lignes.size}) — date | mot saisi | forme retenue :")
+            appendLine("Mes choix (${lignes.size}), date | mot saisi | forme retenue :")
             if (tronque) appendLine("[debut coupe : le fichier joint contient tout]")
             appendLine(if (tronque) choix.takeLast(corpsMax) else choix)
         }
@@ -296,6 +310,33 @@ class ActiviteReglages : Activity() {
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
         setPadding(0, 2, 0, 14)
     }
+    /**
+     * Un choix exclusif, qui se coche.
+     *
+     * Une rangée de boutons ne dit rien de ce qui est retenu : on appuie, et
+     * rien ne change à l'écran. Une case cochée montre le réglage en cours.
+     */
+    private fun <T> choixExclusif(valeurs: List<Pair<T, String>>, courante: T,
+                                  surChoix: (T) -> Unit) = RadioGroup(this).apply {
+        orientation = RadioGroup.VERTICAL
+        val valeurParId = HashMap<Int, T>()
+        for ((valeur, libelle) in valeurs) {
+            val case = RadioButton(this@ActiviteReglages).apply {
+                id = View.generateViewId()
+                text = libelle
+                setTextColor(TEXTE)
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+                minHeight = 132               // ≥ 48 dp
+                isChecked = valeur == courante
+            }
+            valeurParId[case.id] = valeur
+            addView(case)
+        }
+        // Posé après les cases : sinon celle déjà cochée réécrirait le réglage
+        // à chaque ouverture de l'écran.
+        setOnCheckedChangeListener { _, id -> valeurParId[id]?.let(surChoix) }
+    }
+
     private fun case(t: String, surChangement: (Boolean) -> Unit) = CheckBox(this).apply {
         text = t; setTextColor(TEXTE)
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)

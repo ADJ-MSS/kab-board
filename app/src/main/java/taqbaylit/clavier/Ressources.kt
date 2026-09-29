@@ -87,7 +87,7 @@ object Ressources {
                     throw IOException("copie impossible : $nom")
             } catch (e: Exception) {
                 // Sans ce nettoyage, une copie interrompue laisse son fichier partiel sur le disque
-                // — jusqu'a 268 Mio pour le modele de langue — et la tentative suivante a d'autant
+                // jusqu'a 268 Mio pour le modele de langue, et la tentative suivante a d'autant
                 // moins de place.
                 provisoire.delete()
                 throw e

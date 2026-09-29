@@ -278,6 +278,27 @@ class Outils(private val hote: Hote) {
         })
         r.addView(puceDeBarre(chaine(R.string.outil_mot_du_jour), R.drawable.ic_mot_du_jour) { motDuJour() })
         r.addView(puceDeBarre(chaine(R.string.outil_theme), R.drawable.ic_theme) { ouvrirTheme() })
+        r.addView(puceDeBarre(chaine(R.string.outil_reglages), R.drawable.ic_reglages) { ouvrirReglages() })
+    }
+
+    /**
+     * L'ecran de reglages, ouvert sans quitter le champ de saisie.
+     *
+     * Le clavier n'est pas une activite : l'intention a donc besoin de sa
+     * propre tache. Si le systeme la refuse, on le dit, faute de quoi le
+     * bouton semblerait en panne.
+     */
+    private fun ouvrirReglages() {
+        fermer(rendre = true)
+        val ouverture = android.content.Intent(ctx, ActiviteReglages::class.java).apply {
+            flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or
+                    android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+        runCatching { ctx.startActivity(ouverture) }.onFailure {
+            android.widget.Toast.makeText(
+                ctx, chaine(R.string.reglages_hors_atteinte),
+                android.widget.Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun coche(actif: Boolean, libelle: String) = if (actif) "✓ $libelle" else libelle
@@ -422,30 +443,42 @@ class Outils(private val hote: Hote) {
     /** La fiche de mot. */
     fun ouvrirFiche(mot: String, raison: String?, proposerLaForme: Boolean, utiliser: (String) -> Unit) {
         val colonne = colonne()
-        colonne.addView(ligneTexte(mot, tailleSp = 24f, gras = true))
+        // Le mot tel qu'il a ete tape, pour que la fiche s'ouvre sans attendre le
+        // moteur. Il est reecrit dans la graphie reglee des que la fiche arrive.
+        val titre = ligneTexte(mot, tailleSp = 24f, gras = true)
+        colonne.addView(titre)
         ouvrirPanneau(Panneau.FICHE, chaine(R.string.outil_asegzawal), colonne)
         if (!Moteur.dejaPret()) {
             colonne.addView(ligneTexte(chaine(R.string.moteur_pas_pret), attenuee = true))
             return
         }
+        val graphie = KeyboardPreferences.graphie(ctx)
         travail = hote.portee.launch {
             val infos = withContext(Dispatchers.Default) {
+                GraphieBV.charger(ctx)
                 Moteur.avec(ctx) { c ->
                     val forme = Normalisation.normalize(mot)
                     // « aɣrum-a » : la glose et la catégorie sont celles du nom.
                     val base = forme.substringBefore('-')
                     val categorie = c.res.lexcat(forme) ?: c.res.lexcat(base)
                     val verbe = forme in c.res.amyagSet() || base in c.res.amyagSet()
+                    // Les recherches portent sur la forme du lexique ; la fiche
+                    // s'affiche dans la graphie reglee, etats compris.
+                    val etatsBruts = FicheMot.etats(c.postprocess, forme, verbe, categorie)
                     Infos(
-                        forme = forme,
+                        forme = GraphieBV.basculer(forme, graphie),
                         glose = c.res.glose(forme).ifBlank { c.res.glose(base) },
                         frequence = c.res.freq(forme),
                         categorie = categorie,
                         verbe = verbe,
-                        etats = FicheMot.etats(c.postprocess, forme, verbe, categorie)
+                        etats = etatsBruts?.let {
+                            FicheMot.Etats(GraphieBV.basculer(it.libre, graphie),
+                                           GraphieBV.basculer(it.annexion, graphie))
+                        }
                     )
                 }
             } ?: return@launch
+            titre.text = infos.forme
             remplirFiche(colonne, mot, infos, raison, proposerLaForme, utiliser)
         }
     }
@@ -520,8 +553,13 @@ class Outils(private val hote: Hote) {
         travail = hote.portee.launch {
             // La frappe suivante annule celle-ci, comme pour les propositions.
             delay(ATTENTE_RECHERCHE_MS)
+            val graphie = KeyboardPreferences.graphie(ctx)
             val trouves = withContext(Dispatchers.Default) {
-                Moteur.avec(ctx) { c -> c.res.chercherFrancais(q, RESULTATS_MAX) }
+                GraphieBV.charger(ctx)
+                Moteur.avec(ctx) { c ->
+                    c.res.chercherFrancais(q, RESULTATS_MAX)
+                        .map { it.copy(forme = GraphieBV.basculer(it.forme, graphie)) }
+                }
             } ?: emptyList()
             resultats = trouves
             messageRecherche = if (trouves.isEmpty()) R.string.recherche_aucun else null
@@ -633,6 +671,7 @@ class Outils(private val hote: Hote) {
         val origine = extrait.startOffset
         val signaux = ArrayList<Signal>()
         corrections.clear()
+        val graphie = KeyboardPreferences.graphie(ctx)
         travail = hote.portee.launch {
             for ((k, trouve) in choix.mots.withIndex()) {
                 val (debut, mot) = trouve
@@ -641,7 +680,7 @@ class Outils(private val hote: Hote) {
                 // Un mot à la fois sous le verrou du moteur : la barre peut passer entre deux.
                 val jugement = withContext(Dispatchers.Default) {
                     Moteur.avec(ctx) { c ->
-                        CorrecteurSysteme.jugerMot(c, gauche, mot, PROPOSITIONS_RELIRE)
+                        CorrecteurSysteme.jugerMot(c, gauche, mot, PROPOSITIONS_RELIRE, graphie)
                     }
                 } ?: continue
                 if (jugement.soulignement == CorrecteurSysteme.Soulignement.AUCUN ||
@@ -744,9 +783,13 @@ class Outils(private val hote: Hote) {
         travail = hote.portee.launch {
             val maintenant = System.currentTimeMillis()
             val jour = MotDuJour.jourLocal(maintenant, TimeZone.getDefault().getOffset(maintenant))
+            val graphie = KeyboardPreferences.graphie(ctx)
             val choix = withContext(Dispatchers.Default) {
+                GraphieBV.charger(ctx)
                 Moteur.avec(ctx) { c ->
-                    MotDuJour.choisir(c.res.motsDuJour, jour)?.let { it to c.res.glose(it) }
+                    MotDuJour.choisir(c.res.motsDuJour, jour)?.let {
+                        GraphieBV.basculer(it, graphie) to c.res.glose(it)
+                    }
                 }
             }
             if (choix == null) {

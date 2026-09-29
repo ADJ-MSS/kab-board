@@ -28,7 +28,7 @@ fun main(args: Array<String>) {
         cas.add(mot to cands)
     }
 
-    println("\n  Étape 4 — conformité du générateur de candidats")
+    println("\n  Étape 4 : conformité du générateur de candidats")
     println("  ${cas.size} mots à vérifier\n")
 
     // Un harnais qui ne lit rien annonce « CONFORME » sur zéro cas, et certifie ainsi un portage

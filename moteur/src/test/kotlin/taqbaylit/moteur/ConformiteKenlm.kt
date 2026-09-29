@@ -10,7 +10,7 @@ fun main(args: Array<String>) {
 
     val txt = File(ref, "17_kenlm.json").readText()
 
-    println("\n  Étape 5 — conformité de KenLM via JNI\n")
+    println("\n  Étape 5 : conformité de KenLM via JNI\n")
 
     ModeleLangue.ouvrir(modele).use { lm ->
         println("  ordre du modèle : ${lm.ordre}")

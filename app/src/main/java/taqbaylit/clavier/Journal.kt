@@ -48,7 +48,7 @@ object Journal {
     }
 
     /**
-     * Note un choix. Ne fait rien si le journal est éteint, ou si le champ est un mot de passe — la
+     * Note un choix. Ne fait rien si le journal est éteint, ou si le champ est un mot de passe, car la
      * charte l'exclut explicitement.
      */
     fun noter(ctx: Context, saisi: String, retenu: String, champSensible: Boolean) {

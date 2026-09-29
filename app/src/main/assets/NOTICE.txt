@@ -1,4 +1,4 @@
-kab-board — clavier kabyle
+kab-board, clavier kabyle
 ==========================
 
 Couche visuelle et interaction
@@ -90,9 +90,9 @@ NVIDIA NeMo 2.7.0, sous licence Apache-2.0 :
 
   https://github.com/NVIDIA/NeMo
 
-La mecanique de capture audio dans un service de saisie — source
+La mecanique de capture audio dans un service de saisie (source
 VOICE_RECOGNITION, orientation du microphone, demande de permission par une
-activite separee, detection du refus definitif — s'inspire de FUTO Keyboard
+activite separee, detection du refus definitif) s'inspire de FUTO Keyboard
 (voiceinput-shared), distribue sous FUTO Source First License 1.1-kb. Le code
 d'Ecouteur.kt et de PermissionMicro.kt est ecrit pour kab-board ; il en reprend
 les principes et des parametres, pas le code :
