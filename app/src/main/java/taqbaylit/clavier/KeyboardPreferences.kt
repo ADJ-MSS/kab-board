@@ -49,6 +49,17 @@ object KeyboardPreferences {
 
     private const val KEY_ECRIRE_COMME_ON_PARLE = "ecrire_comme_on_parle"
     private const val KEY_TRAITS_FORMES = "traits_formes"
+    private const val KEY_GRAPHIE = "graphie_bv"
+
+    /** Graphie b ou v : un reglage, qui vaut pour les six propositions. */
+    fun graphie(context: Context): GraphieBV.Mode =
+        if (prefs(context).getString(KEY_GRAPHIE, null) == "v") GraphieBV.Mode.V
+        else GraphieBV.Mode.B
+
+    fun setGraphie(context: Context, mode: GraphieBV.Mode) {
+        prefs(context).edit()
+            .putString(KEY_GRAPHIE, if (mode == GraphieBV.Mode.V) "v" else "b").apply()
+    }
 
     /** « Écrire comme on parle » (EcritureParlee). */
     fun ecrireCommeOnParle(context: Context): Boolean =

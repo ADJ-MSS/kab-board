@@ -46,9 +46,12 @@
     <string name="etat_place">Tiɣbula deg utilifun-a : %1$d Mo.</string>
     <string name="attente_depot">Aheggi… %1$d%%</string>
     <string name="attente_moteur">Asali n usefrek…</string>
-    <string name="attente_echec">Asefrek ulac-it — tira teddu.</string>
+    <string name="attente_echec">Asefrek ulac-it, tira teddu.</string>
     <string name="micro_reglages">Serreḥ i umikru deg yiɣewwaren, syen ɛreḍ tikkelt nniḍen.</string>
     <string name="micro_ecoute">Selleɣ… nnal i uḥbas</string>
     <string name="micro_transcription">Asuqqel n imeslay…</string>
     <string name="micro_rien">Ur sliɣ i wacemma.</string>
+    <string name="graphie_titre">Tira s b neɣ s v</string>
+    <string name="graphie_b">Aru s b</string>
+    <string name="graphie_v">Aru s v</string>
 </resources>

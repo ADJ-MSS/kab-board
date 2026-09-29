@@ -16,3 +16,7 @@ app/src/main/assets/voix/
 local.properties
 *.iml
 .idea/
+
+# Paquets construits : ils se refont avec paquet/construire*.sh
+*.deb
+linux/**/__pycache__/

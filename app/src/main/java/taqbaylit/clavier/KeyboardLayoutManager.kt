@@ -360,7 +360,7 @@ class KeyboardLayoutManager(private val context: Context) {
                     "⏎" -> 4f / BUTTON_HEIGHT_DP
                     "⌫" -> 10f / BUTTON_HEIGHT_DP // Padding moyen pour Backspace
                     // Emoji : même retrait que la corbeille, dont le tracé remplit son cadre dans
-                    // une proportion voisine — le visage en occupe 83 % de la hauteur, la corbeille
+                    // une proportion voisine : le visage en occupe 83 % de la hauteur, la corbeille
                     // 75 %.
                     "EMOJI" -> 10f / BUTTON_HEIGHT_DP
                     // Micro : le retrait de l'entrée, pour la même raison qu'elle.

@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
         if (ko != 0 || vide) global = false
     }
 
-    println("\n  Étape 3 — conformité des ressources\n")
+    println("\n  Étape 3 : conformité des ressources\n")
 
     // 1. lexique : mot, fréquence, nombre de sources, sur les 1 587 517
     run {

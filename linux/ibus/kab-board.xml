@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component>
+  <name>taqbaylit.kabboard</name>
+  <description>Kab-board : clavier et correcteur kabyles</description>
+  <exec>/usr/bin/python3 CHEMIN/kab_ibus.py --ibus</exec>
+  <version>1.0</version>
+  <author>Massil Aoudj</author>
+  <license>GPL-3.0-or-later</license>
+  <homepage>https://github.com/ADJ-MSS/kab-board</homepage>
+  <textdomain>kab-board</textdomain>
+  <engines>
+    <engine>
+      <name>kab-board</name>
+      <language>kab</language>
+      <license>GPL-3.0-or-later</license>
+      <author>Massil Aoudj</author>
+      <layout>fr</layout>
+      <longname>Kabyle (kab-board)</longname>
+      <description>Correcteur kabyle : six propositions, graphie b ou v</description>
+      <rank>99</rank>
+    </engine>
+  </engines>
+</component>

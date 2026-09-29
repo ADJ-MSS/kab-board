@@ -13,7 +13,7 @@ fun main(args: Array<String>) {
     fun liste(s: String) = chaine.findAll(s)
         .map { it.groupValues[1].replace("\\\"", "\"").replace("\\\\", "\\") }.toList()
 
-    println("\n  Étape 6 — conformité de l'étiqueteur CRF\n")
+    println("\n  Étape 6 : conformité de l'étiqueteur CRF\n")
 
     Etiqueteur.ouvrir(File(args[1])).use { tag ->
         println("  étiquettes du modèle : ${tag.nbEtiquettes}")

@@ -35,8 +35,8 @@ import kotlinx.coroutines.withContext
 import taqbaylit.moteur.Prediction
 
 /**
- * Le clavier. La couche visuelle — disposition, theme, appuis longs, retour de frappe, barre de
- * suggestions en cuvette — vient de KreyolKeyb (MIT, Potomitan), reprise telle quelle.
+ * Le clavier. La couche visuelle (disposition, theme, appuis longs, retour de frappe, barre de
+ * suggestions en cuvette) vient de KreyolKeyb (MIT, Potomitan), reprise telle quelle.
  */
 class ClavierKabyle : InputMethodService(),
     KeyboardLayoutManager.KeyboardInteractionListener,
@@ -568,8 +568,12 @@ class ClavierKabyle : InputMethodService(),
         val separateur = if (avant.isEmpty() || avant.last().isWhitespace()) "" else " "
         // Avant l'écriture : les propositions qu'elle déclenche montrent déjà la
         // puce « Relire la dictée ».
-        dicteeARelire = texte
-        ic.commitText("$separateur$texte", 1)
+        // Le modele vocal ne transcrit qu'en b : le texte dicte suit le meme
+        // reglage que le reste de ce qui s'affiche.
+        GraphieBV.charger(this)
+        val ecrit = GraphieBV.appliquerTexte(texte, KeyboardPreferences.graphie(this))
+        dicteeARelire = ecrit
+        ic.commitText("$separateur$ecrit", 1)
     }
 
     /** Un mot dans la barre, qui n'est pas une proposition et ne se touche pas. */
@@ -770,10 +774,12 @@ class ClavierKabyle : InputMethodService(),
             // prefixe que l'utilisateur a deja quitte.
             delay(ATTENTE_MS)
             val t0 = System.currentTimeMillis()
+            val graphie = KeyboardPreferences.graphie(this@ClavierKabyle)
             val resultat = withContext(Dispatchers.Default) {
+                GraphieBV.charger(this@ClavierKabyle)
                 Moteur.avec(this@ClavierKabyle) { m ->
                     // Position 1 : la correction en contexte, qui voit la phrase.
-                    val six = Propositions.calculer(m, gauche, mot)
+                    val six = Propositions.calculer(m, gauche, mot, graphie)
                     val formes = (listOf(six.absolue) + six.cinq)
                         .map { casserComme(mot, it) }
                         .distinct()
@@ -793,13 +799,19 @@ class ClavierKabyle : InputMethodService(),
     private fun predire(gauche: String) {
         raisonDeTete = null
         if (gauche.isBlank()) { afficher(emptyList()); return }
+        val graphie = KeyboardPreferences.graphie(this)
         travailEnCours = portee.launch {
             delay(ATTENTE_MS)
             val t0 = System.currentTimeMillis()
             val liste = withContext(Dispatchers.Default) {
+                GraphieBV.charger(this@ClavierKabyle)
                 Moteur.avec(this@ClavierKabyle) { c ->
                     val lm = c.modeleLangue ?: return@avec emptyList()
-                    Prediction(lm, c.res.frequents).suivants(gauche, MAX_PROPOSITIONS)
+                    // Le modele de langue ne connait que le b : la graphie reglee
+                    // vaut aussi pour ce qu'il propose.
+                    GraphieBV.appliquer(
+                        Prediction(lm, c.res.frequents).suivants(gauche, MAX_PROPOSITIONS),
+                        graphie)
                 } ?: emptyList()
             }
             Log.i(TAG, "prediction apres « $gauche » : $liste " +

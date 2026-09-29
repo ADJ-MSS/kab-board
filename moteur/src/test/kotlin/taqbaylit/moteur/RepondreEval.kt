@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
     val aCorriger = (entrees["corriger"] as List<Any?>).map { it as String }
     val aTop5 = (entrees["top5"] as List<Any?>).map { it as String }
 
-    println("\n  Étape 8 — le moteur Kotlin répond à l'évaluation\n")
+    println("\n  Étape 8 : le moteur Kotlin répond à l'évaluation\n")
     println("  ${aCorriger.size} phrases à corriger, ${aTop5.size} demandes de top-5")
 
     Correcteur(

@@ -56,12 +56,13 @@ class CorrecteurSysteme : SpellCheckerService() {
         }
 
         /** Le jugement d'un mot et ses propositions. */
-        fun jugerMot(c: Correcteur, gauche: String, mot: String, nb: Int): Jugement {
+        fun jugerMot(c: Correcteur, gauche: String, mot: String, nb: Int,
+                     graphie: GraphieBV.Mode = GraphieBV.Mode.B): Jugement {
             val forme = Normalisation.normalize(mot)
             // « Connu » au sens du pipeline lui-meme, et selon ses deux niveaux : la forme de
             // confiance et la forme construite sur une racine fiable.
             val connu = c.res.fiable(forme) || c.res.valideParAffixe(forme)
-            val six = Propositions.calculer(c, gauche, mot)
+            val six = Propositions.calculer(c, gauche, mot, graphie)
             val s = verdict(mot, six.absolue, six.cinq, connu)
             val propositions = if (s == Soulignement.AUCUN) emptyList() else
                 // La correction absolue en tete, puis le top-5.
@@ -134,7 +135,11 @@ class CorrecteurSysteme : SpellCheckerService() {
 
             val nb = if (limite > 0) limite else NB_PAR_DEFAUT
             // Un mot a la fois sous le verrou du moteur, et non une phrase entiere.
-            val jugement = Moteur.avec(applicationContext) { c -> jugerMot(c, gauche, mot, nb) }
+            val graphie = KeyboardPreferences.graphie(applicationContext)
+            val jugement = Moteur.avec(applicationContext) { c ->
+                GraphieBV.charger(applicationContext)
+                jugerMot(c, gauche, mot, nb, graphie)
+            }
                 ?: return RIEN // moteur indisponible : ce non-verdict n'est pas memorise
 
             memoire.put(cle, jugement)

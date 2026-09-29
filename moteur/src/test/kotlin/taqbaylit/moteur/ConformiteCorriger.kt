@@ -10,7 +10,7 @@ fun main(args: Array<String>) {
     val data = File(args[2])
     val natif = File(args[3])
 
-    println("\n  Étape 7 — conformité de la chaîne complète\n")
+    println("\n  Étape 7 : conformité de la chaîne complète\n")
 
     val cas = JsonMini.parse(File(ref, "19_corriger.json").readText()) as List<Map<String, Any?>>
     println("  ${cas.size} phrases de référence chargées")

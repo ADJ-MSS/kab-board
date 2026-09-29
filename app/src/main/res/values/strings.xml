@@ -48,7 +48,7 @@
     <string name="etat_place">Resources on this phone: %1$d MB.</string>
     <string name="attente_depot">Preparing… %1$d%%</string>
     <string name="attente_moteur">Loading the corrector…</string>
-    <string name="attente_echec">Corrector unavailable — typing still works.</string>
+    <string name="attente_echec">Corrector unavailable, typing still works.</string>
     <string name="micro_reglages">Allow the microphone in Settings, then try again.</string>
     <string name="micro_ecoute">Listening… tap to stop</string>
     <string name="micro_transcription">Transcribing…</string>
@@ -57,13 +57,15 @@
     <string name="outils_ouvrir">Open tools</string>
     <string name="outils_fermer">Close tools</string>
     <string name="outils_titre">Tools</string>
-    <string name="outils_detail">The arrow at the left of the suggestion bar opens the tools: Asegzawal (also a long press on a suggestion), French → Kabyle search, proofreading, write as you speak, word of the day, theme.</string>
+    <string name="outils_detail">The arrow at the left of the suggestion bar opens the tools: Asegzawal (also a long press on a suggestion), French → Kabyle search, proofreading, write as you speak, word of the day, theme, settings.</string>
     <string name="outil_asegzawal">Asegzawal</string>
     <string name="outil_recherche">fr → kab</string>
     <string name="outil_relire">Proofread</string>
     <string name="outil_parler">gh → ɣ</string>
     <string name="outil_mot_du_jour">Word of the day</string>
     <string name="outil_theme">Theme</string>
+    <string name="outil_reglages">Settings</string>
+    <string name="reglages_hors_atteinte">Open kab-board from your apps to change the settings.</string>
     <string name="panneau_fermer">Close</string>
     <string name="moteur_pas_pret">The corrector is still loading.</string>
 
@@ -124,4 +126,8 @@
     <string name="parler_detail">gh → ɣ, dh → ḍ, kh → x, aa → ɛ, ou → u as you type, in ordinary text fields only. Press delete right after a conversion to get your two letters back. Off by default: it also changes French (« vous » becomes « vus »).</string>
     <string name="parler_actif">Write as you speak: on</string>
     <string name="parler_inactif">Write as you speak: off</string>
+    <string name="graphie_titre">Spelling with b or v</string>
+    <string name="graphie_b">Write with b</string>
+    <string name="graphie_v">Write with v</string>
+    <string name="graphie_detail">Some words are written abrid, others avrid. Pick the one you write, and every suggestion follows.</string>
 </resources>
