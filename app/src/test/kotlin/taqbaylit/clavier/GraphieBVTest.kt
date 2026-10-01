@@ -148,4 +148,20 @@ class GraphieBVTest {
         assertEquals("yenna-d belli uvrid",
             GraphieBV.appliquerTexte("yenna-d belli ubrid", GraphieBV.Mode.V))
     }
+
+    // --- la graphie de depart ------------------------------------------
+
+    @Test
+    fun `le v est la graphie de depart`() {
+        assertEquals(GraphieBV.Mode.V, KeyboardPreferences.graphieDepuis(null))
+        assertEquals(GraphieBV.Mode.V, KeyboardPreferences.graphieDepuis("v"))
+        assertEquals(GraphieBV.Mode.B, KeyboardPreferences.graphieDepuis("b"))
+    }
+
+    @Test
+    fun `une valeur abimee ramene au v`() {
+        assertEquals(GraphieBV.Mode.V, KeyboardPreferences.graphieDepuis(""))
+        assertEquals(GraphieBV.Mode.V, KeyboardPreferences.graphieDepuis("B"))
+        assertEquals(GraphieBV.Mode.V, KeyboardPreferences.graphieDepuis("n'importe quoi"))
+    }
 }

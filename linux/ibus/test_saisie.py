@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from saisie import Saisie, est_lettre, choix_par_chiffre
+from saisie import Saisie, est_lettre, choix_par_chiffre, graphie_reglee
 
 ok, rates = 0, []
 
@@ -68,6 +68,14 @@ props = ["ruḥeɣ", "ruḥ", "ruḥeɣt"]
 verifie("touche 1", choix_par_chiffre(1, props), "ruḥeɣ")
 verifie("touche 3", choix_par_chiffre(3, props), "ruḥeɣt")
 verifie("touche 5 sans candidat", choix_par_chiffre(5, props), None)
+
+# La graphie de depart
+verifie("sans reglage, le v", graphie_reglee({}), "v")
+verifie("fichier absent, le v", graphie_reglee(None), "v")
+verifie("b seulement s'il est choisi", graphie_reglee({"graphie": "b"}), "b")
+verifie("v quand il est choisi", graphie_reglee({"graphie": "v"}), "v")
+verifie("valeur abimee, le v", graphie_reglee({"graphie": "n'importe quoi"}), "v")
+verifie("autre reglage sans effet", graphie_reglee({"translitteration": False}), "v")
 
 print(f"{ok} vérifications passées, {len(rates)} échec(s)")
 for r in rates:

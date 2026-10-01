@@ -23,7 +23,7 @@ sys.path.insert(0, str(RACINE / "pipeline"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from graphie_bv import GraphieBV, B, V
-from saisie import Saisie, est_lettre, choix_par_chiffre, ALTGR
+from saisie import Saisie, est_lettre, choix_par_chiffre, graphie_reglee, ALTGR
 sys.path.insert(0, str(RACINE / "bureau"))
 from ressources_kab import Ressources as RessourcesOutils
 
@@ -44,7 +44,7 @@ def lire_reglages():
     try:
         return json.loads(REGLAGES.read_text(encoding="utf-8"))
     except Exception:
-        return {"graphie": "b", "translitteration": True}
+        return {"graphie": "v", "translitteration": True}
 
 
 def casser_comme(modele: str, mot: str) -> str:
@@ -85,7 +85,7 @@ class MoteurKabBoard(IBus.Engine):
         reglages = lire_reglages()
         self.saisie = Saisie(translitteration=reglages.get("translitteration", True))
         self.graphie = GraphieBV.charger(chemins.TABLE_BV)
-        self.mode = V if reglages.get("graphie") == "v" else B
+        self.mode = graphie_reglee(reglages)
         self.propositions = []
         self.nature = "prop"   # « prop » : correction ; « pred » : mot suivant
         self.champ_sensible = False
