@@ -35,7 +35,7 @@ def lire_reglages():
     try:
         return json.loads(REGLAGES.read_text(encoding="utf-8"))
     except Exception:
-        return {"graphie": "b", "translitteration": True, "demarrage": False}
+        return {"graphie": "v", "translitteration": True, "demarrage": False}
 
 
 def ecrire_reglages(reglages):
@@ -111,7 +111,7 @@ class Fenetre(Gtk.ApplicationWindow):
         boite = Gtk.Box(spacing=0, css_classes=["linked"], margin_bottom=6)
         self.bouton_b = Gtk.ToggleButton(label="Écrire avec b")
         self.bouton_v = Gtk.ToggleButton(label="Écrire avec v")
-        self.bouton_b.set_active(self.reglages.get("graphie", "b") == "b")
+        self.bouton_b.set_active(self.reglages.get("graphie", "v") == "b")
         self.bouton_v.set_active(not self.bouton_b.get_active())
         self.bouton_b.connect("toggled", self._changer_graphie, "b")
         self.bouton_v.connect("toggled", self._changer_graphie, "v")

@@ -53,8 +53,14 @@ object KeyboardPreferences {
 
     /** Graphie b ou v : un reglage, qui vaut pour les six propositions. */
     fun graphie(context: Context): GraphieBV.Mode =
-        if (prefs(context).getString(KEY_GRAPHIE, null) == "v") GraphieBV.Mode.V
-        else GraphieBV.Mode.B
+        graphieDepuis(prefs(context).getString(KEY_GRAPHIE, null))
+
+    /**
+     * La graphie en v au depart : c'est celle que les scripteurs emploient.
+     * Le b ne s'applique que s'il a ete choisi, et une valeur abimee ne fait rien.
+     */
+    internal fun graphieDepuis(valeur: String?): GraphieBV.Mode =
+        if (valeur == "b") GraphieBV.Mode.B else GraphieBV.Mode.V
 
     fun setGraphie(context: Context, mode: GraphieBV.Mode) {
         prefs(context).edit()

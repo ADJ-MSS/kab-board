@@ -10,7 +10,7 @@ object Propositions {
 
     /** Bloque le fil appelant : a n'appeler que depuis Moteur.avec. */
     fun calculer(c: Correcteur, gauche: String, mot: String,
-                 mode: GraphieBV.Mode = GraphieBV.Mode.B): Six {
+                 mode: GraphieBV.Mode = GraphieBV.Mode.V): Six {
         // Position 1 : la correction en contexte. Le correcteur rend la phrase
         // entiere, et le dernier mot est celui qu'on juge.
         val resultat = c.corriger("$gauche $mot")

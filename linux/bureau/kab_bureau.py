@@ -79,7 +79,7 @@ class Fenetre(Gtk.ApplicationWindow):
         self.set_default_size(760, 720)
         self.correcteur = None
         self.graphie = GraphieBV.charger(chemins.TABLE_BV)
-        self.mode = B
+        self.mode = V
         self.calcul = None
         self.dernier_mot = ""
         self.majuscule = False      # une lettre, puis retour aux minuscules
@@ -111,8 +111,8 @@ class Fenetre(Gtk.ApplicationWindow):
         tete = Gtk.HeaderBar()
         self.set_titlebar(tete)
         boite = Gtk.Box(css_classes=["linked"])
-        self.bouton_b = Gtk.ToggleButton(label="Écrire avec b", active=True)
-        self.bouton_v = Gtk.ToggleButton(label="Écrire avec v")
+        self.bouton_b = Gtk.ToggleButton(label="Écrire avec b")
+        self.bouton_v = Gtk.ToggleButton(label="Écrire avec v", active=True)
         self.bouton_b.connect("toggled", self._changer_graphie, B)
         self.bouton_v.connect("toggled", self._changer_graphie, V)
         boite.append(self.bouton_b)

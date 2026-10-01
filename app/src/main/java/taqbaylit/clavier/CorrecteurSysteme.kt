@@ -57,7 +57,7 @@ class CorrecteurSysteme : SpellCheckerService() {
 
         /** Le jugement d'un mot et ses propositions. */
         fun jugerMot(c: Correcteur, gauche: String, mot: String, nb: Int,
-                     graphie: GraphieBV.Mode = GraphieBV.Mode.B): Jugement {
+                     graphie: GraphieBV.Mode = GraphieBV.Mode.V): Jugement {
             val forme = Normalisation.normalize(mot)
             // « Connu » au sens du pipeline lui-meme, et selon ses deux niveaux : la forme de
             // confiance et la forme construite sur une racine fiable.

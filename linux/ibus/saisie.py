@@ -16,6 +16,15 @@ ALTGR = {
 LETTRES = set("abcdefghijklmnopqrstuvwxyzɣɛḍḥṭẓṣǧčṛ")
 
 
+def graphie_reglee(reglages):
+    """La graphie à appliquer, d'après les réglages de l'utilisateur.
+
+    Le v au départ : c'est ce que la plupart des gens écrivent. Le b ne
+    s'applique que s'il a été choisi, et une valeur abîmée ne change rien.
+    """
+    return "b" if (reglages or {}).get("graphie") == "b" else "v"
+
+
 @dataclass
 class Saisie:
     """Le mot en cours de frappe, et ce qu'il devient."""
