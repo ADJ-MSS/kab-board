@@ -32,6 +32,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import taqbaylit.moteur.Normalisation
 import taqbaylit.moteur.Prediction
 
 /**
@@ -117,6 +118,25 @@ class ClavierKabyle : InputMethodService(),
             return proposition
         }
 
+        /**
+         * Longueur des n mots qui terminent texteAvant, blancs qui les suivent compris :
+         * ce qu'il faut effacer en plus du mot en cours quand une proposition le rattache
+         * aux mots precedents. -1 si ces mots ne sont pas la, ou pas separes par de simples
+         * blancs : une virgule entre les deux interdit de les fondre.
+         */
+        fun longueurMotsAvant(texteAvant: String, n: Int): Int {
+            var i = texteAvant.length
+            repeat(n) {
+                val apresBlancs = i
+                while (i > 0 && texteAvant[i - 1].isWhitespace()) i--
+                if (i == apresBlancs) return -1
+                val finMot = i
+                while (i > 0 && estCaractereMot(texteAvant[i - 1])) i--
+                if (i == finMot) return -1
+            }
+            return texteAvant.length - i
+        }
+
         /** Fin du mot situee apres le curseur, quand on edite par le milieu. */
         fun finApres(texteApres: String): Int =
             texteApres.takeWhile(::estCaractereMot).length
@@ -155,6 +175,16 @@ class ClavierKabyle : InputMethodService(),
 
     /** La raison d'état de la correction en tête de barre, pour sa fiche. */
     private var raisonDeTete: String? = null
+
+    /** Les mots déjà écrits que la correction en tête remplace aussi (Propositions.Six). */
+    private var teteMotsAvant = 0
+
+    /** La barre complète le mot en cours au lieu de le corriger : rien à noter au journal. */
+    private var barreEnCompletion = false
+
+    /** Ce que calcule la barre pour un mot en cours. */
+    private class Barre(val formes: List<String>, val raison: String? = null,
+                        val motsAvant: Int = 0, val completion: Boolean = false)
 
     /**
      * La dernière conversion d'« écrire comme on parle », qu'un effacement
@@ -729,21 +759,31 @@ class ClavierKabyle : InputMethodService(),
         afficher(emptyList())
     }
 
-    /** Remplace le mot en cours par la forme choisie. */
-    private fun appliquerChoix(forme: String) {
+    /**
+     * Remplace le mot en cours par la forme choisie, et avec lui les motsAvant mots qui le
+     * precedent quand la forme les rattache (« tamurt iw » -> « tamurt-iw »).
+     */
+    private fun appliquerChoix(forme: String, motsAvant: Int = 0) {
         val ic = currentInputConnection ?: return
         val mot = motCourant()
+        val avant = ic.getTextBeforeCursor(REGARD, 0)?.toString() ?: ""
+        val enPlus = if (motsAvant > 0)
+            longueurMotsAvant(avant.dropLast(mot.length), motsAvant).coerceAtLeast(0) else 0
+        val remplace = avant.takeLast(mot.length + enPlus).trim()
         // Rien a noter quand il n'y avait pas de mot : accepter une prediction n'est pas corriger
         // une graphie, et cela n'a pas sa place dans les contributions.
         val apres = ic.getTextAfterCursor(REGARD, 0)?.toString() ?: ""
         val fin = finApres(apres)
-        if (mot.isNotEmpty()) ic.deleteSurroundingText(mot.length, fin)
+        if (mot.isNotEmpty() || enPlus > 0) ic.deleteSurroundingText(mot.length + enPlus, fin)
         // L'espace n'est ajoute que s'il en manque un.
         val suite = apres.drop(fin)
         val espace = if (suite.isEmpty() || !suite[0].isWhitespace()) " " else ""
         ic.commitText("$forme$espace", 1)
-        if (mot.isNotEmpty()) Journal.noter(this, mot, forme, champSensible)
+        // Une complétion n'est pas une faute corrigée : elle n'a rien à faire au journal.
+        if (remplace.isNotEmpty() && !barreEnCompletion) Journal.noter(this, remplace, forme, champSensible)
         travailEnCours?.cancel()
+        teteMotsAvant = 0
+        barreEnCompletion = false
         // Choisi depuis une fiche : elle a servi.
         outils.fermerPanneau()
         dicteeARelire = null
@@ -778,26 +818,44 @@ class ClavierKabyle : InputMethodService(),
             val resultat = withContext(Dispatchers.Default) {
                 GraphieBV.charger(this@ClavierKabyle)
                 Moteur.avec(this@ClavierKabyle) { m ->
+                    // De 1 a 3 lettres, la barre complete le mot, quand quelque chose
+                    // commence ainsi ; ensuite, ou faute de complétion, elle corrige.
+                    val tape = Normalisation.normalize(mot)
+                    m.completion.barre(gauche, tape, MAX_PROPOSITIONS, m.modeleLangue, m.res::fiable)
+                        ?.let { completes ->
+                            return@avec Barre(
+                                GraphieBV.appliquer(completes, graphie)
+                                    .map { casserComme(mot, it) }.distinct(),
+                                completion = true)
+                        }
                     // Position 1 : la correction en contexte, qui voit la phrase.
                     val six = Propositions.calculer(m, gauche, mot, graphie)
-                    val formes = (listOf(six.absolue) + six.cinq)
-                        .map { casserComme(mot, it) }
+                    // Rattachée au mot d'avant, elle en prend la casse.
+                    val modeleTete = if (six.motsAvant > 0)
+                        gauche.trimEnd().takeLastWhile(::estCaractereMot) else mot
+                    val formes = (listOf(casserComme(modeleTete, six.absolue)) +
+                                  six.cinq.map { casserComme(mot, it) })
                         .distinct()
                         .filter { it.isNotBlank() }
                     // La raison d'état ne vaut que pour la correction en contexte.
-                    formes to six.raison?.takeIf { six.absolue.isNotBlank() }
+                    Barre(formes, six.raison?.takeIf { six.absolue.isNotBlank() }, six.motsAvant)
                 }
             }
-            val liste = resultat?.first ?: emptyList()
-            raisonDeTete = resultat?.second
+            val liste = resultat?.formes ?: emptyList()
+            raisonDeTete = resultat?.raison
+            teteMotsAvant = resultat?.motsAvant ?: 0
+            barreEnCompletion = resultat?.completion ?: false
             Log.i(TAG, "« $mot » -> $liste en ${System.currentTimeMillis() - t0} ms")
-            afficher(liste)
+            // Une complétion se lit comme une prédiction : la suite d'un mot, pas sa correction.
+            afficher(liste, prediction = barreEnCompletion)
         }
     }
 
     /** Le mot suivant, quand il n'y a plus de mot en cours. */
     private fun predire(gauche: String) {
         raisonDeTete = null
+        teteMotsAvant = 0
+        barreEnCompletion = false
         if (gauche.isBlank()) { afficher(emptyList()); return }
         val graphie = KeyboardPreferences.graphie(this)
         travailEnCours = portee.launch {
@@ -917,17 +975,24 @@ class ClavierKabyle : InputMethodService(),
         setOnClickListener { puce ->
             // Au clic et non au toucher.
             KeyFeedback.onKeyPress(puce)
-            appliquerChoix(forme)
+            appliquerChoix(forme, motsAvantDe(rang, prediction))
         }
         // Asegzawal : la fiche de la forme avant de la choisir, et pour la
         // correction en contexte, la raison d'un changement d'état.
         val raison = if (!prediction && rang == 0) raisonDeTete else null
         setOnLongClickListener { puce ->
             KeyFeedback.onKeyPress(puce)
-            outils.ouvrirFiche(forme, raison, proposerLaForme = true) { choisie -> appliquerChoix(choisie) }
+            val motsAvant = motsAvantDe(rang, prediction)
+            outils.ouvrirFiche(forme, raison, proposerLaForme = true) { choisie ->
+                appliquerChoix(choisie, if (choisie == forme) motsAvant else 0)
+            }
             true
         }
     }
+
+    /** Seule la correction en contexte, en tête de barre, peut remplacer aussi le mot d'avant. */
+    private fun motsAvantDe(rang: Int, prediction: Boolean) =
+        if (!prediction && rang == 0) teteMotsAvant else 0
 
     /** Le trait de nature d'une proposition. */
     private fun traitDeNature(couleur: Int, motif: TraitDeNature.Motif): Drawable {

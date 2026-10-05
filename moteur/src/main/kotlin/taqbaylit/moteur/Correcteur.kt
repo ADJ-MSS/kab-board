@@ -29,6 +29,9 @@ class Correcteur(
     /** Le modele de langue, en lecture, pour la prediction du mot suivant. */
     val modeleLangue: ModeleLangue? get() = lm
 
+    /** La complétion du mot en cours, construite à la première demande. */
+    val completion: Completion by lazy { Completion.depuis(res) }
+
     /** Les règles d'état, en lecture, pour la fiche d'un mot au clavier. */
     val postprocess: Postprocess get() = post
 
@@ -38,7 +41,9 @@ class Correcteur(
         val texteCorrige: String,
         val tokensEntree: List<String>,
         val nbCorrections: Int,
-        val annexions: List<Postprocess.Proposition> = emptyList()
+        val annexions: List<Postprocess.Proposition> = emptyList(),
+        /** Jetons d'entree recouverts par la derniere forme : 2 pour « tamurt iw » -> « tamurt-iw ». */
+        val couvertureFin: Int = 1
     )
 
     fun topCandidats(mot: String, nb: Int = 5) = gen.topCandidats(mot, nb)
@@ -88,8 +93,9 @@ class Correcteur(
             corrigee, res.amyagSet(), { m -> res.lexcat(m) })
         nb += corrChaker.size
 
-        val finale = Normalisation.rejoindrePossessifs(apresChaker)
-        return Resultat(finale.joinToString(" "), tokens, nb, corrChaker)
+        val finale = Normalisation.rejoindrePossessifsPortees(apresChaker)
+        return Resultat(finale.joinToString(" ") { it.first }, tokens, nb, corrChaker,
+                        finale.lastOrNull()?.second ?: 1)
     }
 
     override fun close() {

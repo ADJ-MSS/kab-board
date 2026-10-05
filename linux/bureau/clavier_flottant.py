@@ -531,8 +531,9 @@ class Clavier(Gtk.Window):
             style = b.get_style_context()
             style.add_class("proposition")
             # Les trois natures du telephone : vert pour la correction en
-            # contexte, bleu pour un candidat, ocre pour une prediction.
-            if nature == "pred":
+            # contexte, bleu pour un candidat, ocre pour une prediction, qu'il
+            # s'agisse du mot suivant ou de la fin du mot en cours.
+            if nature in ("pred", "comp"):
                 style.add_class("prediction")
             elif rang == 0:
                 style.add_class("correction")

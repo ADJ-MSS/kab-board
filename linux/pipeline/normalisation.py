@@ -66,12 +66,16 @@ def detacher_clitique(tok: str) -> Tuple[str, str, str]:
 
 def rejoindre_possessifs(tokens: List[str]) -> List[str]:
     """Joint les suffixes possessifs au mot précédent avec un tiret."""
-    if len(tokens) < 2:
-        return tokens
-    out: List[str] = []
+    return [forme for forme, _ in rejoindre_possessifs_portees(tokens)]
+
+
+def rejoindre_possessifs_portees(tokens: List[str]) -> List[Tuple[str, int]]:
+    """Les mêmes formes, chacune avec le nombre de jetons d'entrée qu'elle recouvre."""
+    out: List[Tuple[str, int]] = []
     for i, tok in enumerate(tokens):
         if i > 0 and tok in POSSESSIFS_KABYLE and out:
-            out[-1] = out[-1] + "-" + tok
+            forme, n = out[-1]
+            out[-1] = (forme + "-" + tok, n + 1)
         else:
-            out.append(tok)
+            out.append((tok, 1))
     return out

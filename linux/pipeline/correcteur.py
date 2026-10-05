@@ -3,7 +3,7 @@ from dataclasses import dataclass, field, replace
 from typing import Dict, List, Optional, Tuple
 
 import config
-from normalisation import normalize, tokenize, detacher_clitique, rejoindre_possessifs
+from normalisation import normalize, tokenize, detacher_clitique, rejoindre_possessifs_portees
 from ressources import Ressources
 from candidats import generer, Candidat
 from decodeur import decoder
@@ -17,6 +17,8 @@ class ResultatV2:
     # (avant, après, source, détail)
     corrections: List[Tuple] = field(default_factory=list)
     tokens_entree: List[str] = field(default_factory=list)
+    # Jetons d'entrée recouverts par la dernière forme : 2 pour « tamurt iw » → « tamurt-iw ».
+    couverture_fin: int = 1
 
 
 class KabyleCorrecteurV2:
@@ -135,7 +137,8 @@ class KabyleCorrecteurV2:
             corrections.append((avant, apres, "chaker", {"raison": raison}))
 
         avant_pos = list(corrigee)
-        corrigee = rejoindre_possessifs(corrigee)
+        portees = rejoindre_possessifs_portees(corrigee)
+        corrigee = [forme for forme, _ in portees]
         if len(corrigee) != len(avant_pos):
             for tok in corrigee:
                 if "-" in tok and tok not in avant_pos:
@@ -150,6 +153,7 @@ class KabyleCorrecteurV2:
             nb_corrections=len(corrections),
             corrections=corrections,
             tokens_entree=tokens,
+            couverture_fin=portees[-1][1] if portees else 1,
         )
 
 
