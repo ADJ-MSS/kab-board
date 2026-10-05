@@ -32,6 +32,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import taqbaylit.moteur.Completion
 import taqbaylit.moteur.Normalisation
 import taqbaylit.moteur.Prediction
 
@@ -821,7 +822,8 @@ class ClavierKabyle : InputMethodService(),
                     // De 1 a 3 lettres, la barre complete le mot, quand quelque chose
                     // commence ainsi ; ensuite, ou faute de complétion, elle corrige.
                     val tape = Normalisation.normalize(mot)
-                    m.completion.barre(gauche, tape, MAX_PROPOSITIONS, m.modeleLangue, m.res::fiable)
+                    m.completion.barre(gauche, tape, MAX_PROPOSITIONS, m.modeleLangue,
+                                       Completion.motDeDictionnaire(m.res))
                         ?.let { completes ->
                             return@avec Barre(
                                 GraphieBV.appliquer(completes, graphie)

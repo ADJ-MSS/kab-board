@@ -16,14 +16,13 @@ def verifie(nom, obtenu, attendu):
 
 class Faux:
     """Un lexique minuscule, sans modèle de langue."""
-    def __init__(self, fiables):
+    def __init__(self, dictionnaire):
         self.freq = {"tamurt": 900, "tameṭṭut": 1200, "tamdint": 300, "taqbaylit": 800,
                      "axxam": 2000, "aɣrum": 700, "tamettant": 60,
                      "tam": 5000, "rare": 10}
         self.kenlm = None
-        self._fiables = fiables
-    def fiable(self, mot):
-        return mot in self._fiables
+        self.lexcat = {m: "particle" for m in dictionnaire}
+        self.amyag = set()
 
 c = Completion(Faux(set()))
 verifie("les plus fréquents d'abord", c.candidats("tam"),
@@ -40,6 +39,9 @@ verifie("faute en tête, on corrige", c.barre("", "tma"), None)
 verifie("un mot court sûr reste en tête",
         Completion(Faux({"tam"})).barre("", "tam", 3), ["tam", "tameṭṭut", "tamurt"])
 verifie("seuils de la mesure", (SEUIL, LONGUEUR_MIN), (3, 4))
+# Un bout de mot fréquent n'est pas un mot : « tam » sans dictionnaire ne reste pas en tête.
+verifie("hors dictionnaire, pas en tête", Completion(Faux(set())).barre("", "tam", 2),
+        ["tameṭṭut", "tamurt"])
 
 print(f"{ok} vérifications passées, {len(rates)} échec(s)")
 for r in rates:
