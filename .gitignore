@@ -20,3 +20,15 @@ local.properties
 # Paquets construits : ils se refont avec paquet/construire*.sh
 *.deb
 linux/**/__pycache__/
+
+# Kab-board pour Word : trop gros pour git, publiés dans la release (voir word/NOTES-DEV.md)
+/word/kab-board-word-complet-0.1/modeles/
+/word/kab-board-word-complet-0.1/python/
+/word/setup/sortie/
+/word/setup/construction/
+/word/complement/sortie/
+/word/manuel/captures/
+/word/manuel/word.pid
+__pycache__/
+*.pyc
+~$*

@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kab-board pour Word — Manuel d'utilisation</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 17mm 20mm 17mm;
+    @bottom-center { content: "Kab-board pour Word 0.3  ·  page " counter(page) " sur " counter(pages); font: 8.5pt "Segoe UI", sans-serif; color: #888; }
+  }
+  @page :first { @bottom-center { content: none; } }
+  :root { --vert: #00843f; --bleu: #0072bb; --encre: #1f2328; --doux: #59636e; --filet: #d8dee4; --fond: #f6f8fa; }
+  * { box-sizing: border-box; }
+  body { font: 10.5pt/1.5 "Segoe UI", "Noto Sans", Arial, sans-serif; color: var(--encre); margin: 0; }
+  h1, h2, h3 { line-height: 1.2; }
+  h2 { font-size: 17pt; margin: 10mm 0 4mm; padding-bottom: 2mm; border-bottom: 2px solid var(--vert); break-after: avoid; }
+  section > h2 + * { break-before: avoid; }
+  .saut { break-before: page; }
+  .saut h2 { margin-top: 0; }
+  h2 .num { color: var(--vert); margin-right: 3mm; }
+  h3 { font-size: 12pt; margin: 6mm 0 2mm; break-after: avoid; }
+  p { margin: 0 0 2.5mm; }
+  ul, ol { margin: 0 0 3mm; padding-left: 6mm; }
+  li { margin-bottom: 1.2mm; }
+  figure { margin: 4mm 0 5mm; text-align: center; break-inside: avoid; }
+  figure img { max-width: 100%; border: 1px solid var(--filet); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  figure.etroit img { max-width: 62%; }
+  figure.moyen img { max-width: 80%; }
+  figcaption { font-size: 9pt; color: var(--doux); margin-top: 1.5mm; }
+  .bouton { display: inline-block; padding: 0 2mm; border: 1px solid #b9c2cc; border-radius: 3px; background: var(--fond); font-size: 9.5pt; white-space: nowrap; }
+  .encadre { border-left: 4px solid var(--bleu); background: #eef6fc; padding: 3mm 4mm; margin: 3mm 0 4mm; border-radius: 0 4px 4px 0; break-inside: avoid; }
+  .encadre.attention { border-color: #bf8700; background: #fff8e5; }
+  .encadre.astuce { border-color: var(--vert); background: #eaf6ef; }
+  .encadre p:last-child, .encadre ul:last-child { margin-bottom: 0; }
+  .encadre > strong:first-child { display: block; margin-bottom: 1mm; }
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0 4mm; font-size: 9.8pt; break-inside: avoid; }
+  th, td { border: 1px solid var(--filet); padding: 1.6mm 2.4mm; text-align: left; vertical-align: top; }
+  th { background: var(--fond); }
+  .vert { color: var(--vert); font-weight: 600; }
+  .bleu { color: var(--bleu); font-weight: 600; }
+  .deux { display: flex; gap: 5mm; align-items: flex-start; break-inside: avoid; }
+  .deux figure { flex: 1; margin-top: 2mm; }
+  code { font-family: Consolas, monospace; font-size: 9.2pt; background: var(--fond); padding: 0 1mm; border-radius: 2px; }
+
+  /* Couverture */
+  .couverture { height: 250mm; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+  .couverture .marque { font-size: 11pt; letter-spacing: .25em; text-transform: uppercase; color: var(--vert); font-weight: 600; }
+  .couverture h1 { font-size: 34pt; margin: 6mm 0 3mm; }
+  .couverture .sous { font-size: 15pt; color: var(--doux); margin-bottom: 14mm; }
+  .couverture img { width: 82%; margin: 0 auto; border: 1px solid var(--filet); border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+  .couverture .pied { margin-top: 14mm; color: var(--doux); font-size: 10pt; }
+
+  /* Sommaire */
+  .sommaire { break-before: page; }
+  .sommaire h2 { break-before: auto; }
+  .sommaire ol { list-style: none; padding: 0; columns: 1; }
+  .sommaire li { display: flex; border-bottom: 1px dotted var(--filet); padding: 1.6mm 0; margin: 0; }
+  .sommaire li span:first-child { color: var(--vert); font-weight: 600; width: 9mm; }
+</style>
+</head>
+<body>
+
+<section class="couverture">
+  <div class="marque">Kab-board</div>
+  <h1>Le correcteur kabyle<br>pour Microsoft Word</h1>
+  <div class="sous">Manuel d'utilisation · version 0.3</div>
+  <img src="images/relecture.png" alt="Word avec l'onglet Kab-board et le volet de relecture">
+  <div class="pied">Installation, relecture, corrections, dictée, désinstallation.<br>Tout se calcule sur votre ordinateur : rien n'est envoyé sur Internet.</div>
+</section>
+
+<section class="sommaire">
+  <h2>Sommaire</h2>
+  <ol>
+    <li><span>1</span><span>Ce qu'il faut</span></li>
+    <li><span>2</span><span>Installer Kab-board</span></li>
+    <li><span>3</span><span>L'onglet Kab-board dans Word</span></li>
+    <li><span>4</span><span>Choisir la graphie : v ou b</span></li>
+    <li><span>5</span><span>Enlever les vagues rouges du correcteur français</span></li>
+    <li><span>6</span><span>Ouvrir le volet et attendre le correcteur</span></li>
+    <li><span>7</span><span>Relire un document</span></li>
+    <li><span>8</span><span>Corriger un mot</span></li>
+    <li><span>9</span><span>Remplacer partout</span></li>
+    <li><span>10</span><span>Les possessifs : « tamurt iw » → « tamurt-iw »</span></li>
+    <li><span>11</span><span>Passer d'un mot à l'autre, arrêter la relecture</span></li>
+    <li><span>12</span><span>Relire seulement une partie</span></li>
+    <li><span>13</span><span>Mon dictionnaire</span></li>
+    <li><span>14</span><span>Dicter en kabyle</span></li>
+    <li><span>15</span><span>Annuler, enregistrer, imprimer</span></li>
+    <li><span>16</span><span>Vos données</span></li>
+    <li><span>17</span><span>Désinstaller</span></li>
+    <li><span>18</span><span>En cas de souci</span></li>
+  </ol>
+  <p style="margin-top:12mm; color:var(--doux); font-size:8.5pt">Kab-board, correcteur kabyle. Licence GNU GPL version 3 ou ultérieure. Le modèle de langue et le lexique sont publiés sous licence CC BY-SA 4.0, doi 10.5281/zenodo.22112059.</p>
+</section>
+
+<!-- 1 -->
+<section class="saut">
+  <h2><span class="num">1</span>Ce qu'il faut</h2>
+  <ul>
+    <li><strong>Windows 10 ou 11</strong>, en 64 bits (presque tous les ordinateurs récents).</li>
+    <li><strong>Microsoft Word 2013 ou plus récent</strong>, y compris Word de Microsoft 365.</li>
+    <li>Environ <strong>700 Mo</strong> d'espace libre.</li>
+    <li>Pour la dictée seulement : un <strong>micro</strong> (celui d'un portable, d'un casque ou d'une webcam suffit).</li>
+  </ul>
+  <p>Il n'y a rien d'autre à installer. Le correcteur emporte tout avec lui : le lexique kabyle de 1,58 million de formes, le modèle de langue, le modèle de dictée, et le programme qui les fait tourner.</p>
+  <div class="encadre attention">
+    <strong>Ce qui ne marche pas</strong>
+    <p>Word pour Mac, Word en ligne (dans le navigateur) et Word sur téléphone n'acceptent pas ce genre de complément.</p>
+  </div>
+  <p>Pas besoin d'être administrateur de l'ordinateur : Kab-board s'installe dans votre compte Windows, comme une application personnelle.</p>
+</section>
+
+<!-- 2 -->
+<section class="saut">
+  <h2><span class="num">2</span>Installer Kab-board</h2>
+  <p>L'installeur est un seul fichier : <code>kab-board-word-setup-0.3.exe</code> (environ 250 Mo).</p>
+
+  <h3>Étape 1 : lancer l'installeur</h3>
+  <p>Double-cliquez sur le fichier.</p>
+  <div class="encadre attention">
+    <strong>« Windows a protégé votre ordinateur »</strong>
+    <p>L'installeur n'est pas signé numériquement, alors Windows peut afficher cet écran bleu la première fois. Cliquez sur <span class="bouton">Informations complémentaires</span>, puis sur <span class="bouton">Exécuter quand même</span>.</p>
+  </div>
+
+  <h3>Étape 2 : confirmer</h3>
+  <p>Une seule fenêtre s'ouvre. Cliquez sur <span class="bouton">Installer</span>.</p>
+  <figure class="moyen"><img src="images/installeur-1.png" alt=""><figcaption>La seule question posée par l'installeur.</figcaption></figure>
+  <p>Si Word est ouvert, l'installeur propose de le fermer : enregistrez d'abord vos documents.</p>
+
+  <h3>Étape 3 : patienter</h3>
+  <p>L'installation dure <strong>deux à trois minutes</strong>. À la fin, l'installeur affiche un moment « Préparation du correcteur… » : il prépare ce qui permettra à Word de démarrer le correcteur plus vite.</p>
+  <figure class="moyen"><img src="images/installeur-2.png" alt=""><figcaption>Les fichiers se copient dans votre compte.</figcaption></figure>
+
+  <h3>Étape 4 : terminer</h3>
+  <p>Cliquez sur <span class="bouton">Terminer</span>. C'est installé.</p>
+  <figure class="moyen"><img src="images/installeur-3.png" alt=""><figcaption>Fin de l'installation.</figcaption></figure>
+
+  <div class="encadre astuce">
+    <strong>Mise à jour</strong>
+    <p>Pour passer à une nouvelle version, lancez simplement le nouvel installeur : il remplace l'ancienne version et garde votre dictionnaire et vos réglages.</p>
+  </div>
+</section>
+
+<!-- 3 -->
+<section>
+  <h2><span class="num">3</span>L'onglet Kab-board dans Word</h2>
+  <p>Ouvrez Word. Un nouvel onglet <strong>Kab-board</strong> apparaît dans le ruban, à droite de « Aide ». Cliquez dessus :</p>
+  <figure><img src="images/ruban.png" alt=""><figcaption>L'onglet Kab-board et ses deux groupes, « Kabyle » et « Outils ».</figcaption></figure>
+  <table>
+    <tr><th style="width:34%">Bouton</th><th>À quoi il sert</th></tr>
+    <tr><td><span class="bouton">Correcteur kabyle</span></td><td>Ouvre ou ferme le volet Kab-board, à droite de la page.</td></tr>
+    <tr><td><span class="bouton">Relire le document</span></td><td>Cherche les mots douteux dans tout le document (§ 7).</td></tr>
+    <tr><td><span class="bouton">Relire la sélection</span></td><td>Seulement les paragraphes sélectionnés, ou celui du curseur (§ 12).</td></tr>
+    <tr><td><span class="bouton">Dicter</span></td><td>Écrit au curseur ce que vous dites en kabyle (§ 14).</td></tr>
+    <tr><td><span class="bouton">Graphie</span></td><td>Écrire avec v ou avec b (§ 4).</td></tr>
+    <tr><td><span class="bouton">Ne pas vérifier en français</span></td><td>Enlève les vagues rouges du correcteur français (§ 5).</td></tr>
+    <tr><td><span class="bouton">Revérifier en français</span></td><td>L'inverse, pour un passage en français.</td></tr>
+    <tr><td><span class="bouton">Mon dictionnaire</span></td><td>Les mots que le correcteur ne doit plus signaler (§ 13).</td></tr>
+  </table>
+</section>
+
+<!-- 4 -->
+<section>
+  <h2><span class="num">4</span>Choisir la graphie : v ou b</h2>
+  <p>Le kabyle s'écrit de deux façons pour certains sons : avec <strong>v</strong> ou avec <strong>b</strong>. Choisissez la vôtre dans la liste <span class="bouton">Graphie</span> du ruban :</p>
+  <figure class="moyen"><img src="images/graphie.png" alt=""><figcaption>La liste « Graphie » : « Écrire avec v » ou « Écrire avec b ».</figcaption></figure>
+  <p>On peut aussi la choisir en haut du volet. Le choix est <strong>retenu</strong> d'une fois sur l'autre ; au départ, c'est « v ».</p>
+  <p>La graphie compte pour les corrections proposées et pour la dictée. Si vous la changez pendant une relecture, relancez <span class="bouton">Relire le document</span> pour en tenir compte.</p>
+</section>
+
+<!-- 5 -->
+<section>
+  <h2><span class="num">5</span>Enlever les vagues rouges du correcteur français</h2>
+  <p>Word croit que votre texte kabyle est du français mal écrit, et le souligne de vagues rouges partout. Ces vagues cachent celles de Kab-board.</p>
+  <div class="deux">
+    <figure><img src="images/vagues-rouges.png" alt=""><figcaption>Avant : Word souligne tout en rouge.</figcaption></figure>
+    <figure><img src="images/sans-francais.png" alt=""><figcaption>Après « Ne pas vérifier en français ».</figcaption></figure>
+  </div>
+  <ol>
+    <li>Sélectionnez le texte kabyle. <em>S'il n'y a pas de sélection, c'est tout le document qui est concerné.</em></li>
+    <li>Cliquez sur <span class="bouton">Ne pas vérifier en français</span>, dans l'onglet Kab-board. Le même lien existe en bas du volet.</li>
+  </ol>
+  <p>Ce réglage est enregistré avec le document. Le texte que vous tapez ensuite au même endroit en profite aussi. Pour un passage en français, sélectionnez-le et cliquez sur <span class="bouton">Revérifier en français</span>.</p>
+</section>
+
+<!-- 6 -->
+<section>
+  <h2><span class="num">6</span>Ouvrir le volet et attendre le correcteur</h2>
+  <p>Cliquez sur <span class="bouton">Correcteur kabyle</span>. Le volet <strong>Kab-board</strong> s'ouvre à droite de la page :</p>
+  <figure><img src="images/volet-ouvert.png" alt=""><figcaption>Le volet est prêt : « Correcteur prêt. Tout se calcule sur cet ordinateur. »</figcaption></figure>
+  <div class="encadre">
+    <strong>Le démarrage</strong>
+    <p>Le correcteur se prépare à chaque ouverture de Word : comptez <strong>une quinzaine de secondes</strong>, et jusqu'à une minute juste après avoir allumé l'ordinateur. Pendant ce temps, le volet affiche « Démarrage du correcteur… » et le bouton <span class="bouton">Relire le document</span> reste grisé. Il s'active tout seul quand c'est prêt.</p>
+  </div>
+  <p>Le volet se ferme avec la croix en haut à droite, et se rouvre avec <span class="bouton">Correcteur kabyle</span>.</p>
+</section>
+
+<!-- 7 -->
+<section>
+  <h2><span class="num">7</span>Relire un document</h2>
+  <p>Cliquez sur <span class="bouton">Relire le document</span>, dans le ruban ou dans le volet. Sur un long document, le volet montre la progression (« Relecture : paragraphe 12 sur 80… »), et <span class="bouton">Annuler</span> l'arrête.</p>
+  <figure><img src="images/relecture.png" alt=""><figcaption>Après la relecture : les mots douteux sont soulignés, et le volet montre le premier, avec ses propositions.</figcaption></figure>
+  <p>Chaque mot douteux est souligné d'une vague de couleur :</p>
+  <ul>
+    <li><span class="vert">en vert</span> quand le correcteur a tranché d'après la phrase : la première proposition est celle que le contexte désigne ;</li>
+    <li><span class="bleu">en bleu</span> quand il propose seulement des formes proches du mot.</li>
+  </ul>
+  <p>Le volet indique où vous en êtes (« Mot 1 sur 7 · 7 à revoir »), le mot en question, et jusqu'à six propositions. La première, en gras, est la meilleure.</p>
+  <div class="encadre astuce">
+    <strong>Rien n'est jamais remplacé sans vous</strong>
+    <p>Le correcteur ne fait que proposer. C'est toujours vous qui choisissez.</p>
+  </div>
+</section>
+
+<!-- 8 -->
+<section>
+  <h2><span class="num">8</span>Corriger un mot</h2>
+  <h3>Avec le clic droit (le plus rapide)</h3>
+  <p>Faites un <strong>clic droit</strong> sur un mot souligné. Ses propositions apparaissent en haut du menu habituel de Word. Cliquez sur la bonne :</p>
+  <figure class="moyen"><img src="images/menu-clic-droit.png" alt=""><figcaption>Clic droit sur « tamettut » : les propositions, puis « Garder mon mot » et « Ajouter à mon dictionnaire ».</figcaption></figure>
+
+  <h3>Avec le volet</h3>
+  <p>Cliquez sur un mot souligné dans le texte : le volet passe à ce mot, et votre curseur reste où vous avez cliqué. Choisissez une proposition dans la liste, puis :</p>
+  <table>
+    <tr><th style="width:34%">Bouton</th><th>Effet</th></tr>
+    <tr><td><span class="bouton">Remplacer</span></td><td>Remplace le mot par la proposition choisie, et passe au mot suivant. Un double-clic sur la proposition fait pareil.</td></tr>
+    <tr><td><span class="bouton">Remplacer partout</span></td><td>Remplace toutes les fois où ce même mot est signalé (§ 9).</td></tr>
+    <tr><td><span class="bouton">Garder mon mot</span></td><td>Vous aviez raison : le mot reste tel quel, ici.</td></tr>
+    <tr><td><span class="bouton">Ajouter à mon dictionnaire</span></td><td>Le mot est juste et ne doit plus jamais être signalé, dans aucun document (§ 13).</td></tr>
+  </table>
+</section>
+
+<!-- 9 -->
+<section>
+  <h2><span class="num">9</span>Remplacer partout</h2>
+  <p>Quand la même faute revient plusieurs fois, inutile de la corriger une à une. Choisissez la proposition, puis cliquez sur <span class="bouton">Remplacer partout</span> :</p>
+  <figure><img src="images/remplacer-partout.png" alt=""><figcaption>« ghar » remplacé par « ɣer » : 2 fois, d'un seul clic.</figcaption></figure>
+  <p>Seules les occurrences encore à revoir de ce mot exact sont remplacées. Un seul <strong>Ctrl+Z</strong> les remet toutes.</p>
+</section>
+
+<!-- 10 -->
+<section class="saut">
+  <h2><span class="num">10</span>Les possessifs : « tamurt iw » → « tamurt-iw »</h2>
+  <p>Les possessifs s'attachent au nom par un trait d'union. Quand vous les écrivez séparés, le correcteur souligne <strong>les deux mots ensemble</strong> et propose la forme rattachée :</p>
+  <figure><img src="images/possessif.png" alt=""><figcaption>« Tamurt iw » est signalé d'un bloc ; la proposition est « Tamurt-iw ».</figcaption></figure>
+  <p><span class="bouton">Remplacer</span> remplace les deux mots d'un coup :</p>
+  <figure class="moyen"><img src="images/possessif-remplace.png" alt=""><figcaption>Le résultat : « Tamurt-iw d tamurt n lejdud. »</figcaption></figure>
+  <p>Le correcteur ne fusionne jamais deux mots séparés par une virgule.</p>
+</section>
+
+<!-- 11 -->
+<section>
+  <h2><span class="num">11</span>Passer d'un mot à l'autre, arrêter la relecture</h2>
+  <div class="deux">
+    <figure style="flex:0 0 42%"><img src="images/volet-bas.png" alt=""><figcaption>Le bas du volet.</figcaption></figure>
+    <div style="flex:1; padding-top:4mm">
+      <ul>
+        <li><span class="bouton">◀ Uzwir</span> : le mot précédent encore à revoir.</li>
+        <li><span class="bouton">Uḍfir ▶</span> : le mot suivant.</li>
+        <li>Ou cliquez simplement sur un mot souligné dans le texte.</li>
+        <li><span class="bouton">Arrêter la relecture</span> retire tous les soulignés de Kab-board.</li>
+        <li><strong>Mon dictionnaire…</strong> et <strong>Texte kabyle : ne pas vérifier en français</strong> : les mêmes que dans le ruban.</li>
+      </ul>
+      <p>Sur un petit écran, faites défiler le volet pour voir ces boutons.</p>
+    </div>
+  </div>
+  <p>Quand tout est revu, le volet l'indique : « Tout est revu ».</p>
+</section>
+
+<!-- 12 -->
+<section>
+  <h2><span class="num">12</span>Relire seulement une partie</h2>
+  <p>Pour vérifier un passage sans relire tout le document :</p>
+  <ol>
+    <li>sélectionnez le passage, ou placez simplement le curseur dans un paragraphe ;</li>
+    <li>cliquez sur <span class="bouton">Relire la sélection</span>.</li>
+  </ol>
+  <p>Seuls ces paragraphes sont relus. Les soulignés déjà posés ailleurs restent en place. C'est pratique après avoir écrit ou dicté quelques phrases.</p>
+</section>
+
+<!-- 13 -->
+<section class="saut">
+  <h2><span class="num">13</span>Mon dictionnaire</h2>
+  <p>Un nom propre, un mot régional, un mot juste que le correcteur ne connaît pas : ajoutez-le à <strong>votre dictionnaire</strong> et il ne sera plus jamais signalé.</p>
+  <ul>
+    <li>Depuis un mot souligné : <span class="bouton">Ajouter à mon dictionnaire</span> (volet ou clic droit).</li>
+    <li>Pour voir et gérer la liste : <span class="bouton">Mon dictionnaire</span> dans le ruban.</li>
+  </ul>
+  <figure class="etroit"><img src="images/dictionnaire.png" alt=""><figcaption>La fenêtre « Mon dictionnaire ».</figcaption></figure>
+  <p>Dans cette fenêtre, vous pouvez :</p>
+  <ul>
+    <li><strong>chercher</strong> un mot dans la liste ;</li>
+    <li><strong>retirer</strong> un mot ajouté par erreur : sélectionnez-le, puis <span class="bouton">Retirer de mon dictionnaire</span>, ou la touche Suppr ;</li>
+    <li><strong>ajouter</strong> un mot à la main : tapez-le en bas, puis <span class="bouton">Ajouter</span>.</li>
+  </ul>
+</section>
+
+<!-- 14 -->
+<section>
+  <h2><span class="num">14</span>Dicter en kabyle</h2>
+  <p>Kab-board peut écrire ce que vous dites, avec le même modèle de dictée que l'application sur téléphone.</p>
+  <ol>
+    <li>Placez le curseur là où le texte doit aller.</li>
+    <li>Cliquez sur <span class="bouton">Dicter</span>, dans le ruban ou dans le volet.</li>
+    <li>Parlez normalement. Le bouton devient <span class="bouton">Arrêter la dictée</span>.</li>
+    <li>Cliquez sur <span class="bouton">Arrêter la dictée</span> quand vous avez fini. Au bout de <strong>30 secondes</strong>, la dictée s'arrête toute seule.</li>
+  </ol>
+  <figure><img src="images/dictee.png" alt=""><figcaption>Pendant l'écoute : « Arrêter la dictée » dans le ruban et dans le volet ; Windows montre l'icône du micro dans la barre des tâches.</figcaption></figure>
+  <p>Après quelques secondes de transcription, le texte s'écrit au curseur, dans votre graphie (v ou b). Il reste <strong>sélectionné</strong> : cliquez sur <span class="bouton">Relire la sélection</span> pour le vérifier. La dictée n'est jamais corrigée d'office.</p>
+  <div class="encadre attention">
+    <strong>Si le micro ne marche pas</strong>
+    <p>Windows doit autoriser les applications de bureau à utiliser le micro : <em>Paramètres › Confidentialité et sécurité › Microphone</em>, puis activez « Autoriser les applications de bureau à accéder à votre microphone ».</p>
+  </div>
+  <p>L'enregistrement de votre voix reste sur l'ordinateur et il est effacé dès que le texte est écrit.</p>
+</section>
+
+<!-- 15 -->
+<section>
+  <h2><span class="num">15</span>Annuler, enregistrer, imprimer</h2>
+  <ul>
+    <li><strong>Annuler :</strong> chaque correction, même un « Remplacer partout », s'annule d'un seul <strong>Ctrl+Z</strong>. Le mot rétabli redevient « à revoir ».</li>
+    <li><strong>Enregistrer :</strong> les soulignés de Kab-board ne vont <strong>jamais</strong> dans vos fichiers. Ils sont retirés juste avant l'enregistrement, puis remis. Un document envoyé par e-mail ne les montre donc pas.</li>
+    <li><strong>Imprimer :</strong> même chose, les soulignés ne s'impriment pas.</li>
+    <li><strong>Fermer :</strong> si vous n'avez fait que relire, Word ne demande pas d'enregistrer pour les soulignés.</li>
+  </ul>
+  <div class="encadre attention">
+    <strong>Enregistrement automatique (OneDrive)</strong>
+    <p>Avec l'enregistrement automatique de OneDrive, Word enregistre en continu, sans prévenir Kab-board. Cliquez sur <span class="bouton">Arrêter la relecture</span> avant de partager un document.</p>
+  </div>
+</section>
+
+<!-- 16 -->
+<section>
+  <h2><span class="num">16</span>Vos données</h2>
+  <p><strong>Rien ne quitte votre ordinateur.</strong> Le correcteur et la dictée tournent entièrement sur votre machine. Ils ne se connectent à aucun service sur Internet.</p>
+  <table>
+    <tr><th style="width:38%">Quoi</th><th>Où</th></tr>
+    <tr><td>Le programme</td><td><code>%LOCALAPPDATA%\Programs\Kab-board</code></td></tr>
+    <tr><td>Votre dictionnaire</td><td><code>%LOCALAPPDATA%\kab-board\mots-a-moi.txt</code> (un mot par ligne)</td></tr>
+    <tr><td>Le journal des incidents</td><td><code>%LOCALAPPDATA%\kab-board\pont.log</code></td></tr>
+    <tr><td>Votre graphie</td><td>dans le registre de Windows, à votre nom</td></tr>
+  </table>
+  <p>Pour ouvrir un de ces dossiers, tapez son chemin dans la barre d'adresse de l'Explorateur de fichiers.</p>
+</section>
+
+<!-- 17 -->
+<section class="saut">
+  <h2><span class="num">17</span>Désinstaller</h2>
+  <ol>
+    <li>Fermez Word.</li>
+    <li>Ouvrez <em>Paramètres › Applications › Applications installées</em>.</li>
+    <li>Cherchez « Kab-board ».</li>
+    <li>Cliquez sur les trois points <strong>…</strong> à droite de « Kab-board, correcteur kabyle pour Word », puis sur <span class="bouton">Désinstaller</span>.</li>
+  </ol>
+  <figure><img src="images/desinstaller.png" alt=""><figcaption>Kab-board dans la liste des applications installées.</figcaption></figure>
+  <p>Votre dictionnaire est gardé, au cas où vous réinstalleriez. Pour l'effacer aussi, supprimez le dossier <code>%LOCALAPPDATA%\kab-board</code>.</p>
+</section>
+
+<!-- 18 -->
+<section>
+  <h2><span class="num">18</span>En cas de souci</h2>
+  <table>
+    <tr><th style="width:36%">Ce qui se passe</th><th>Que faire</th></tr>
+    <tr><td>L'onglet Kab-board n'apparaît pas</td><td>Fermez et rouvrez Word. Sinon : <em>Fichier › Options › Compléments</em>, en bas « Gérer : Compléments COM » › <span class="bouton">Atteindre</span>, et cochez « Kab-board ». Regardez aussi « Éléments désactivés » dans la même liste.</td></tr>
+    <tr><td>« Relire » reste grisé</td><td>Le correcteur démarre encore : attendez que le volet affiche « Correcteur prêt ». Juste après avoir allumé l'ordinateur, cela peut prendre une minute.</td></tr>
+    <tr><td>« Le correcteur s'est arrêté : il redémarre… »</td><td>Rien à faire : il repart tout seul. Si une relecture était en cours, elle reprend.</td></tr>
+    <tr><td>« Le correcteur n'a pas pu démarrer »</td><td>Fermez Word et rouvrez-le. Si cela continue, réinstallez Kab-board.</td></tr>
+    <tr><td>« Dicter » est grisé</td><td>Attendez « Correcteur prêt ». Le bouton est aussi grisé pendant une relecture.</td></tr>
+    <tr><td>« Rien n'a été reconnu »</td><td>Parlez plus près du micro, et vérifiez l'autorisation du micro (§ 14).</td></tr>
+    <tr><td>Un mot juste est signalé</td><td><span class="bouton">Ajouter à mon dictionnaire</span>.</td></tr>
+  </table>
+  <p>Pour signaler un problème : <strong>github.com/ADJ-MSS/kab-board</strong>. Joignez si possible le journal <code>%LOCALAPPDATA%\kab-board\pont.log</code>.</p>
+</section>
+
+</body>
+</html>
