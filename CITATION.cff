@@ -7,8 +7,8 @@ message: >-
   de DOI propre ; pour le correcteur orthographique qu'il embarque, citez aussi
   l'article FEL 2026 et le dépôt Zenodo du correcteur, listés dans references.
 type: software
-title: "kab-board : clavier Android kabyle, correcteur orthographique hybride et dictée embarqués"
-version: "1.0.0"
+title: "kab-board : clavier kabyle pour Android et Linux, correcteur orthographique hybride et dictée embarqués"
+version: "0.3"
 license: GPL-3.0-or-later
 repository-code: "https://github.com/ADJ-MSS/kab-board"
 authors:
