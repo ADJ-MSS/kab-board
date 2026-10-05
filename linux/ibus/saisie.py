@@ -84,6 +84,26 @@ def est_lettre(caractere: str) -> bool:
     return caractere.lower() in LETTRES or caractere == "-"
 
 
+def longueur_mots_avant(texte_avant: str, n: int) -> int:
+    """Longueur des n mots qui terminent texte_avant, blancs qui les suivent compris :
+    ce qu'il faut effacer en plus du mot en cours quand une proposition le rattache aux
+    mots précédents (« tamurt iw » → « tamurt-iw »). -1 si ces mots ne sont pas là, ou
+    pas séparés par de simples blancs. Même règle que ClavierKabyle.longueurMotsAvant."""
+    i = len(texte_avant)
+    for _ in range(n):
+        apres_blancs = i
+        while i > 0 and texte_avant[i - 1].isspace():
+            i -= 1
+        if i == apres_blancs:
+            return -1
+        fin_mot = i
+        while i > 0 and (texte_avant[i - 1].isalpha() or texte_avant[i - 1] == "-"):
+            i -= 1
+        if i == fin_mot:
+            return -1
+    return len(texte_avant) - i
+
+
 def choix_par_chiffre(chiffre: int, propositions: List[str]) -> Optional[str]:
     """La proposition désignée par une touche de 1 à 6, ou None."""
     if 1 <= chiffre <= len(propositions):

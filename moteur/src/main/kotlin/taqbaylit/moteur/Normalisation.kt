@@ -66,13 +66,17 @@ object Normalisation {
         return Triple("", tok, "")
     }
 
-    fun rejoindrePossessifs(tokens: List<String>): List<String> {
-        if (tokens.size < 2) return tokens
-        val out = ArrayList<String>(tokens.size)
+    fun rejoindrePossessifs(tokens: List<String>): List<String> =
+        rejoindrePossessifsPortees(tokens).map { it.first }
+
+    /** Les memes formes, chacune avec le nombre de jetons d'entree qu'elle recouvre. */
+    fun rejoindrePossessifsPortees(tokens: List<String>): List<Pair<String, Int>> {
+        val out = ArrayList<Pair<String, Int>>(tokens.size)
         for ((i, tok) in tokens.withIndex()) {
-            if (i > 0 && tok in POSSESSIFS && out.isNotEmpty())
-                out[out.size - 1] = out[out.size - 1] + "-" + tok
-            else out.add(tok)
+            if (i > 0 && tok in POSSESSIFS && out.isNotEmpty()) {
+                val (forme, n) = out[out.size - 1]
+                out[out.size - 1] = "$forme-$tok" to n + 1
+            } else out.add(tok to 1)
         }
         return out
     }

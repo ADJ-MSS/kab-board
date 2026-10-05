@@ -44,6 +44,14 @@ object Moteur {
             correcteur = it
             etat = Etat.PRET
             Log.i(TAG, "MOTEUR PRET en ${System.currentTimeMillis() - t0} ms")
+            // Le vocabulaire de complétion se construit en parcourant tout le lexique : en
+            // arrière-plan maintenant, plutôt qu'à la première lettre tapée.
+            Thread {
+                val t1 = System.currentTimeMillis()
+                avec(ctx) { c -> c.completion.taille }?.let { n ->
+                    Log.i(TAG, "complétion prête : $n mots en ${System.currentTimeMillis() - t1} ms")
+                }
+            }.start()
         }.onFailure {
             echoue = true
             etat = Etat.ECHEC

@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from saisie import Saisie, est_lettre, choix_par_chiffre, graphie_reglee
+from saisie import longueur_mots_avant, Saisie, est_lettre, choix_par_chiffre, graphie_reglee
 
 ok, rates = 0, []
 
@@ -76,6 +76,16 @@ verifie("b seulement s'il est choisi", graphie_reglee({"graphie": "b"}), "b")
 verifie("v quand il est choisi", graphie_reglee({"graphie": "v"}), "v")
 verifie("valeur abimee, le v", graphie_reglee({"graphie": "n'importe quoi"}), "v")
 verifie("autre reglage sans effet", graphie_reglee({"translitteration": False}), "v")
+
+# Le mot d'avant que rattache un possessif : « tamurt iw » → « tamurt-iw »
+verifie("le mot d'avant et son espace", longueur_mots_avant("tamurt ", 1), 7)
+verifie("au milieu d'une phrase", longueur_mots_avant("ruḥeɣ ɣer tamurt ", 1), 7)
+verifie("plusieurs blancs", longueur_mots_avant("tamurt  ", 1), 8)
+verifie("deux mots", longueur_mots_avant("ruḥeɣ ɣer axxam nneɣ ", 2), len("axxam nneɣ "))
+verifie("sans blanc, pas de fusion", longueur_mots_avant("tamurt", 1), -1)
+verifie("une virgule l'interdit", longueur_mots_avant("tamurt, ", 1), -1)
+verifie("pas assez de mots", longueur_mots_avant("tamurt ", 2), -1)
+verifie("texte vide", longueur_mots_avant("", 1), -1)
 
 print(f"{ok} vérifications passées, {len(rates)} échec(s)")
 for r in rates:

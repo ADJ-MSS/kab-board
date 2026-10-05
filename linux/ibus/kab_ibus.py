@@ -23,7 +23,8 @@ sys.path.insert(0, str(RACINE / "pipeline"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from graphie_bv import GraphieBV, B, V
-from saisie import Saisie, est_lettre, choix_par_chiffre, graphie_reglee, ALTGR
+from saisie import (Saisie, est_lettre, choix_par_chiffre, graphie_reglee, ALTGR,
+                    longueur_mots_avant)
 sys.path.insert(0, str(RACINE / "bureau"))
 from ressources_kab import Ressources as RessourcesOutils
 
@@ -78,6 +79,7 @@ class MoteurKabBoard(IBus.Engine):
     prise = None               # le serveur du clavier flottant
     outils = None              # gloses, categories : les ressources des outils
     frequents = None           # les mots que la prediction met en concurrence
+    completion = None          # les mots qui commencent par ce qui est tape
     derniere_dictee = ""       # ce que la dictee vient d'ecrire, pour le relire
 
     def __init__(self):
@@ -90,6 +92,7 @@ class MoteurKabBoard(IBus.Engine):
         self.nature = "prop"   # « prop » : correction ; « pred » : mot suivant
         self.champ_sensible = False
         self.contexte = ""     # ce qui a ete ecrit avant, pour la correction en contexte
+        self.tete_mots_avant = 0   # mots deja ecrits que la proposition de tete remplace aussi
         self.table = IBus.LookupTable.new(NB_PROPOSITIONS, 0, True, True)
         self.table.set_orientation(IBus.Orientation.HORIZONTAL)
         self.proprietes = self._proprietes()
@@ -119,6 +122,9 @@ class MoteurKabBoard(IBus.Engine):
                 moteur.charger()
                 cls.correcteur = moteur
                 print(f"kab-board : correcteur prêt en {time.time() - t0:.0f} s", flush=True)
+                from completion import Completion
+                cls.completion = Completion(moteur.res)
+                cls.completion.candidats("a")       # le vocabulaire, construit d'avance
             except Exception as erreur:
                 print(f"kab-board : correcteur indisponible ({erreur})", flush=True)
         cls.chargement = threading.Thread(target=travail, daemon=True)
@@ -287,8 +293,16 @@ class MoteurKabBoard(IBus.Engine):
                 continue
             corrigee = res.texte_corrige.strip().split(" ")[-1] if res.texte_corrige else ""
             corrigee = self.graphie.basculer(corrigee, self.mode)
-            if corrigee and corrigee.lower() != m.group().lower():
-                signales.append(f"{m.group()}\t{corrigee}")
+            portee = m.group()
+            avant = getattr(res, "couverture_fin", 1) - 1
+            if avant > 0:
+                # « tamurt iw » -> « tamurt-iw » : la correction vaut pour les deux mots.
+                k = longueur_mots_avant(texte[:m.start()], avant)
+                if k <= 0:
+                    continue
+                portee = texte[m.start() - k:m.end()]
+            if corrigee and corrigee.lower() != portee.lower():
+                signales.append(f"{portee}\t{corrigee}")
         return "\n".join(signales)
 
     def touche_flottante(self, caractere):
@@ -312,8 +326,8 @@ class MoteurKabBoard(IBus.Engine):
 
     def choisir_flottant(self, forme):
         """Une proposition touchee dans le clavier a l'ecran : espace comprise."""
-        self.saisie.vider()
-        self._ecrire(forme, espace=True)
+        rang = self.propositions.index(forme) if forme in self.propositions else -1
+        self._choisir(rang, forme)
         return False
 
     # Touches
@@ -342,8 +356,7 @@ class MoteurKabBoard(IBus.Engine):
         if self.propositions and IBus.KEY_1 <= keyval <= IBus.KEY_6:
             choix = choix_par_chiffre(keyval - IBus.KEY_1 + 1, self.propositions)
             if choix:
-                self.saisie.vider()
-                self._ecrire(choix, espace=True)
+                self._choisir(keyval - IBus.KEY_1, choix)
                 return True
 
         if self.propositions and keyval in (IBus.KEY_Up, IBus.KEY_Down,
@@ -360,8 +373,7 @@ class MoteurKabBoard(IBus.Engine):
             rang = self.table.get_cursor_pos()
             choix = choix_par_chiffre(rang + 1, self.propositions)
             if choix and rang > 0:
-                self.saisie.vider()
-                self._ecrire(choix, espace=True)
+                self._choisir(rang, choix)
                 return True
 
         if keyval in (IBus.KEY_space, IBus.KEY_Return, IBus.KEY_KP_Enter, IBus.KEY_Tab):
@@ -406,30 +418,55 @@ class MoteurKabBoard(IBus.Engine):
 
     def _calculer(self, mot, contexte):
         c = MoteurKabBoard.correcteur
+        # De 1 a 3 lettres, la barre complete le mot, quand quelque chose commence ainsi.
+        if MoteurKabBoard.completion is not None:
+            try:
+                from normalisation import normalize
+                barre = MoteurKabBoard.completion.barre(contexte, normalize(mot))
+            except Exception:
+                barre = None
+            if barre:
+                formes = []
+                for f in barre:
+                    g = casser_comme(mot, self.graphie.basculer(f, self.mode))
+                    if g and g not in formes:
+                        formes.append(g)
+                GLib.idle_add(self._montrer, mot, formes[:NB_PROPOSITIONS], 0, "comp")
+                return
         try:
             res = c.corriger(f"{contexte} {mot}".strip())
             corrigee = res.texte_corrige.strip().split(" ")[-1] if res.texte_corrige else ""
             cinq = [x["candidat"] for x in c.top_candidats(mot, 5)]
         except Exception:
             return
+        # Rattachee aux mots d'avant (« tamurt iw » -> « tamurt-iw »), la tete les
+        # remplace aussi, et en prend la casse.
+        mots_avant = (getattr(res, "couverture_fin", 1) - 1) if corrigee else 0
+        if mots_avant > 0 and longueur_mots_avant(contexte + " ", mots_avant) < 0:
+            # Fondu par-dessus une virgule, que le correcteur ne voit pas : le mot seul.
+            corrigee, mots_avant = corrigee.rsplit("-", 1)[-1], 0
+        precedents = contexte.split()
+        modele_tete = precedents[-mots_avant] if 0 < mots_avant <= len(precedents) else mot
         # La composition de la barre d'Android, sans un ecart : la correction en
         # contexte en tete, meme quand elle est le mot lui-meme, car elle dit
         # alors que le correcteur, contexte compris, l'ecrirait ainsi, puis le
         # top-5 du mot isole, la casse du mot rendue a chaque forme.
         formes = []
-        for f in [corrigee] + cinq:
+        for rang, f in enumerate([corrigee] + cinq):
             if not f:
                 continue
-            g = casser_comme(mot, self.graphie.basculer(f, self.mode))
+            modele = modele_tete if rang == 0 else mot
+            g = casser_comme(modele, self.graphie.basculer(f, self.mode))
             if g and g not in formes:
                 formes.append(g)
-        GLib.idle_add(self._montrer, mot, formes[:NB_PROPOSITIONS])
+        GLib.idle_add(self._montrer, mot, formes[:NB_PROPOSITIONS], mots_avant)
 
-    def _montrer(self, mot, formes):
+    def _montrer(self, mot, formes, mots_avant=0, nature="prop"):
         if self.saisie.tampon != mot:        # la frappe a continue
             return False
         self.propositions = formes
-        self.nature = "prop"
+        self.tete_mots_avant = mots_avant
+        self.nature = nature
         self.table.clear()
         for forme in formes:
             self.table.append_candidate(IBus.Text.new_from_string(forme))
@@ -448,6 +485,41 @@ class MoteurKabBoard(IBus.Engine):
             return not (suite and suite[0].isspace())
         except Exception:
             return True
+
+    def _choisir(self, rang, forme):
+        """Une proposition choisie, espace comprise. Seule la correction en tete de liste
+        peut remplacer aussi les mots d'avant."""
+        self.saisie.vider()
+        if rang == 0 and self.nature == "prop" and self.tete_mots_avant > 0:
+            self._effacer_mots_avant(self.tete_mots_avant)
+        self.tete_mots_avant = 0
+        self._ecrire(forme, espace=True)
+
+    def _effacer_mots_avant(self, n):
+        """Efface les n mots deja ecrits avant le mot en cours, blancs compris."""
+        avant, sur_place = "", False
+        try:
+            texte, curseur, _ancre = self.get_surrounding_text()
+            avant = texte.get_text()[:curseur]
+            sur_place = bool(avant)
+        except Exception:
+            pass
+        if not sur_place:
+            # L'application ne dit pas son texte : on se fie a ce qu'on y a ecrit,
+            # le mot suivi de l'espace que la touche a laisse passer.
+            avant = self.contexte + " "
+        k = longueur_mots_avant(avant, n)
+        if k <= 0:
+            return
+        self.hide_preedit_text()
+        if sur_place:
+            self.delete_surrounding_text(-k, k)
+        else:
+            for _ in range(k):
+                self.forward_key_event(IBus.KEY_BackSpace, 14, 0)
+                self.forward_key_event(IBus.KEY_BackSpace, 14, IBus.ModifierType.RELEASE_MASK)
+        mots = self.contexte.split()
+        self.contexte = " ".join(mots[:-n]) if len(mots) > n else ""
 
     def _ecrire(self, texte, espace=False):
         if not texte:
@@ -535,8 +607,7 @@ class MoteurKabBoard(IBus.Engine):
         """Le clic sur une proposition du panneau. Sans cette methode, il ne repond pas."""
         choix = choix_par_chiffre(index + 1, self.propositions)
         if choix:
-            self.saisie.vider()
-            self._ecrire(choix, espace=True)
+            self._choisir(index, choix)
 
     def do_cursor_up(self):
         self.table.cursor_up()

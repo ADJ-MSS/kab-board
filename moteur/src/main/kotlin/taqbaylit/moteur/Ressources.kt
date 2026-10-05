@@ -177,6 +177,7 @@ class Ressources(dossier: File) {
     fun amyagSet(): Set<String> = amyagSet
 
     fun freq(mot: String): Int { val i = lexique.indexDe(mot); return if (i < 0) 0 else lexFreq[i] }
+    fun freqParIndex(i: Int): Int = lexFreq[i]
     fun nsrc(mot: String): Int { val i = lexique.indexDe(mot); return if (i < 0) 0 else lexNsrc[i] }
     fun lexcat(mot: String): String? {
         val i = lexcatMots.indexDe(mot); return if (i < 0) null else catNoms[lexcatCat[i]]

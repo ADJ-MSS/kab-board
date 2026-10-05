@@ -683,6 +683,17 @@ class Outils(private val hote: Hote) {
                         CorrecteurSysteme.jugerMot(c, gauche, mot, PROPOSITIONS_RELIRE, graphie)
                     }
                 } ?: continue
+                // Le mot et ceux d'avant a fondre en un : « tamurt iw » -> « tamurt-iw ».
+                jugement.fusion?.let { fusion ->
+                    val n = ClavierKabyle.longueurMotsAvant(texte.substring(0, debut), jugement.motsAvant)
+                    if (n > 0) {
+                        val portee = texte.substring(debut - n, debut + mot.length)
+                        val s = Signal(positionActuelle(origine + debut - n), portee,
+                            listOf(ClavierKabyle.casserComme(portee, fusion)), true)
+                        signaux.add(s)
+                        colonne.addView(ligneSignal(s, signaux, colonne, etat))
+                    }
+                }
                 if (jugement.soulignement == CorrecteurSysteme.Soulignement.AUCUN ||
                     jugement.propositions.isEmpty()) continue
                 val s = Signal(positionActuelle(origine + debut), mot, jugement.propositions,

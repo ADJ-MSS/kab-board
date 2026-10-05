@@ -6,6 +6,12 @@ Clavier pour écrire le kabyle, sur Android et sur Linux : correcteur orthograph
 - **Manuel d'utilisation** : [kab-board-manuel-utilisation.netlify.app](https://kab-board-manuel-utilisation.netlify.app/)
 - **Le code Linux** : [`linux/`](linux/), application, méthode de saisie et clavier à l'écran.
 
+## Version 0.3
+
+- **La barre complète le mot**, de 1 à 3 lettres tapées : les mots qui commencent ainsi, choisis d'après la phrase. Dès la 4e lettre, elle corrige comme avant. Mesuré sur 400 phrases : 23 % de frappes en moins, sans rien perdre en correction.
+- **« tamurt iw » devient « tamurt-iw » en une fois.** La correction qui rattache un possessif au mot d'avant remplace désormais les deux mots, dans la barre comme dans Relire.
+- La graphie **v** est le réglage de départ, sur Android comme sur Linux ; un choix déjà fait est respecté.
+
 ## Version 0.2
 
 - **Graphie b ou v.** Un réglage, et il vaut pour tout ce qui s'affiche : voir plus bas.

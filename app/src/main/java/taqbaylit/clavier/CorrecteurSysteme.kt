@@ -15,8 +15,13 @@ class CorrecteurSysteme : SpellCheckerService() {
 
     enum class Soulignement { AUCUN, DOUTE, FAUTE }
 
-    /** Un verdict et les formes a proposer, deja a la casse du mot. */
-    data class Jugement(val soulignement: Soulignement, val propositions: List<String>)
+    /**
+     * Un verdict et les formes a proposer, deja a la casse du mot. fusion est la correction
+     * qui rattache le mot a ceux qui le precedent (« tamurt iw » -> « tamurt-iw ») : elle ne
+     * remplace pas le seul mot, elle n'est donc pas dans propositions.
+     */
+    data class Jugement(val soulignement: Soulignement, val propositions: List<String>,
+                        val fusion: String? = null, val motsAvant: Int = 0)
 
     companion object {
         private const val TAG = "Taqbaylit"
@@ -63,15 +68,19 @@ class CorrecteurSysteme : SpellCheckerService() {
             // confiance et la forme construite sur une racine fiable.
             val connu = c.res.fiable(forme) || c.res.valideParAffixe(forme)
             val six = Propositions.calculer(c, gauche, mot, graphie)
-            val s = verdict(mot, six.absolue, six.cinq, connu)
+            // Une correction qui fond le mot avec le precedent ne vaut pas pour le mot seul :
+            // le correcteur du systeme ne remplace jamais qu'un mot. Elle part a part.
+            val fusion = if (six.motsAvant > 0) six.absolue else null
+            val absolue = if (fusion != null) "" else six.absolue
+            val s = verdict(mot, absolue, six.cinq, connu)
             val propositions = if (s == Soulignement.AUCUN) emptyList() else
                 // La correction absolue en tete, puis le top-5.
-                (listOf(six.absolue) + six.cinq)
+                (listOf(absolue) + six.cinq)
                     .filter { it.isNotBlank() && it != forme }
                     .map { ClavierKabyle.casserComme(mot, it) }
                     .distinct()
                     .take(nb)
-            return Jugement(s, propositions)
+            return Jugement(s, propositions, fusion, six.motsAvant)
         }
     }
 
