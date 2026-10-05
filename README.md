@@ -1,16 +1,18 @@
 # kab-board
 
-Clavier pour écrire le kabyle, sur Android et sur Linux : correcteur orthographique, suggestions, dictée vocale et outils d'écriture. **100 % hors ligne** : tout se calcule sur l'appareil, et l'application Android n'a pas l'autorisation d'accéder à Internet.
+Clavier pour écrire le kabyle, sur Android et sur Linux, et correcteur pour Microsoft Word sous Windows : correcteur orthographique, suggestions, dictée vocale et outils d'écriture. **100 % hors ligne** : tout se calcule sur l'appareil, et l'application Android n'a pas l'autorisation d'accéder à Internet.
 
-- **Télécharger** : [page des versions](https://github.com/ADJ-MSS/kab-board/releases) : `.apk` pour Android 7 ou plus récent sur téléphone 64 bits, `.deb` pour Debian et Ubuntu.
+- **Télécharger** : [page des versions](https://github.com/ADJ-MSS/kab-board/releases) : `.apk` pour Android 7 ou plus récent sur téléphone 64 bits, `.deb` pour Debian et Ubuntu, `kab-board-word-setup-0.3.exe` pour Word sous Windows 10 ou 11.
 - **Manuel d'utilisation** : [kab-board-manuel-utilisation.netlify.app](https://kab-board-manuel-utilisation.netlify.app/)
 - **Le code Linux** : [`linux/`](linux/), application, méthode de saisie et clavier à l'écran.
+- **Le code Word** : [`word/`](word/), complément pour Word, moteur et installeur ; voir [`word/NOTES-DEV.md`](word/NOTES-DEV.md).
 
 ## Version 0.3
 
 - **La barre complète le mot**, de 1 à 3 lettres tapées : les mots qui commencent ainsi, choisis d'après la phrase. Dès la 4e lettre, elle corrige comme avant. Mesuré sur 400 phrases : 24 % de frappes en moins, sans rien perdre en correction.
 - **« tamurt iw » devient « tamurt-iw » en une fois.** La correction qui rattache un possessif au mot d'avant remplace désormais les deux mots, dans la barre comme dans Relire.
 - La graphie **v** est le réglage de départ, sur Android comme sur Linux ; un choix déjà fait est respecté.
+- **Kab-board pour Word**, première version publique : un onglet dans le ruban, la relecture du document ou de la sélection, les propositions au clic droit, « Mon dictionnaire », la graphie b ou v et la dictée en kabyle. Comme sur le téléphone, tout se calcule sur l'ordinateur.
 
 ## Version 0.2
 

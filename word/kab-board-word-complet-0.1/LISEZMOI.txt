@@ -1,0 +1,142 @@
+﻿Correcteur kabyle pour Microsoft Word, version 0.3
+==================================================
+
+Un onglet « Kab-board » dans le ruban, un volet qui reprend les mots douteux un
+par un et propose des corrections, les propositions au clic droit, et la dictee
+en kabyle. Tout se calcule sur votre ordinateur : rien n'est envoye, aucune
+connexion n'est ouverte.
+
+
+CE QU'IL FAUT
+-------------
+
+  Windows 10 ou 11, 64 bits
+  Word 2013 ou plus recent, en 32 ou en 64 bits
+  Le .NET Framework 4.7.2, present par defaut sur Windows 10 et 11
+
+  Ni Word pour Mac, ni Word en ligne, ni Word sur telephone : ceux-la
+  n'acceptent pas ce genre de complement.
+
+  Pour la dictee, un micro. Rien d'autre : ce paquet emporte le correcteur
+  entier, le lexique de 1,58 million d'entrees, le modele de langue 3-grammes,
+  l'etiqueteur, la table des graphies, le modele vocal Mmeslay, et meme Python
+  et ses modules.
+
+
+INSTALLER
+---------
+
+  1. Double-cliquez sur kab-board-word-setup-0.3.exe, puis « Installer ».
+     Pas besoin d'etre administrateur : tout va dans votre compte. Comptez
+     700 Mo et deux ou trois minutes. Si Word est ouvert, l'installeur propose
+     de le fermer.
+
+     L'installeur n'est pas signe : Windows peut afficher « Windows a protege
+     votre ordinateur ». Cliquez « Informations complementaires », puis
+     « Executer quand meme ».
+
+  2. Ouvrez Word. L'onglet « Kab-board » est dans le ruban.
+
+  Une version precedente est remplacee ; votre dictionnaire est garde.
+
+
+S'EN SERVIR
+-----------
+
+  Onglet « Kab-board », « Correcteur kabyle » : le volet s'ouvre a droite.
+
+  La graphie, v ou b, se choisit dans le volet ou dans le ruban ; elle est
+  retenue d'une fois sur l'autre (v au depart).
+
+  « Relire le document », ou « Relire la selection » pour seulement les
+  paragraphes selectionnes (ou celui du curseur). Sur un long document, le volet
+  montre ou en est la relecture ; « Annuler » l'arrete.
+
+  Chaque mot douteux est souligne dans le texte : en vert quand le correcteur a
+  tranche d'apres le contexte, en bleu quand il propose des formes voisines.
+
+  Pour corriger un mot :
+    - clic droit dessus : ses propositions sont en haut du menu, avec
+      « Garder mon mot » et « Ajouter a mon dictionnaire » ;
+    - ou dans le volet : choisissez une proposition, puis « Remplacer », ou
+      « Remplacer partout » pour toutes les fois ou ce mot est signale.
+
+  Un possessif ecrit a part est rattache a son nom : pour « tamurt iw », la
+  proposition est « tamurt-iw », et elle remplace les deux mots d'un coup.
+
+  « ◀ Uzwir » et « Uḍfir ▶ » vont au mot precedent et au suivant. Cliquer sur un
+  mot souligne dans le texte y amene aussi le volet.
+
+  Une correction s'annule d'un seul Ctrl+Z. Rien n'est jamais remplace sans que
+  vous ayez choisi. « Arreter la relecture » retire les soulignements.
+
+  Les soulignements ne vont jamais dans vos fichiers : ils sont retires juste
+  avant chaque enregistrement ou impression, puis remis. Un document enregistre
+  le reste : Word ne demande pas d'enregistrer pour eux.
+
+
+LA DICTEE
+---------
+
+  « Dicter », dans le ruban ou le volet : parlez en kabyle, puis cliquez
+  « Arreter la dictee » (30 secondes au plus). Le texte s'ecrit au curseur, dans
+  la graphie choisie, et reste selectionne : « Relire la selection » le verifie.
+  Comme sur le telephone, la dictee n'est jamais corrigee d'office.
+
+  Si Windows demande l'acces au micro, acceptez-le. Sinon : Parametres de
+  Windows > Confidentialite et securite > Microphone, et autorisez les
+  applications de bureau.
+
+
+LES VAGUES ROUGES DE WORD
+-------------------------
+
+  Word prend le kabyle pour du francais mal ecrit et le souligne en rouge.
+  « Ne pas verifier en francais » (onglet Kab-board, ou lien en bas du volet)
+  le lui interdit pour la selection, ou pour tout le document s'il n'y a pas de
+  selection. « Reverifier en francais » fait l'inverse.
+
+
+MON DICTIONNAIRE
+----------------
+
+  Onglet Kab-board, « Mon dictionnaire » : les mots que le correcteur ne
+  signale plus. On peut en chercher, en retirer un ajoute par erreur, en ajouter
+  a la main. Ils sont dans un fichier a vous :
+  %LOCALAPPDATA%\kab-board\mots-a-moi.txt
+
+
+LE DEMARRAGE
+------------
+
+  Le correcteur se prepare a chaque ouverture de Word : une quinzaine de
+  secondes, jusqu'a une minute juste apres le demarrage de l'ordinateur. Le volet
+  affiche « Demarrage du correcteur… » pendant ce temps, et « Relire » s'active
+  quand c'est pret. S'il s'arrete en cours de route, il redemarre tout seul.
+
+
+CE QUE VOUS ECRIVEZ
+-------------------
+
+  Rien ne sort de votre ordinateur. Le complement parle au correcteur par la
+  boucle locale, 127.0.0.1, et le correcteur ne s'adresse a personne. Votre voix
+  non plus : l'enregistrement est transcrit sur place, puis efface.
+
+
+DESINSTALLER
+------------
+
+  Fermez Word, puis Parametres de Windows > Applications > Applications
+  installees > « Kab-board, correcteur kabyle pour Word » > Desinstaller.
+
+  Votre dictionnaire reste dans %LOCALAPPDATA%\kab-board, a supprimer aussi si
+  vous le voulez.
+
+
+  Si quelque chose cloche, ecrivez-le au depot : github.com/ADJ-MSS/kab-board
+  Le journal du complement est dans %LOCALAPPDATA%\kab-board\pont.log.
+
+  kab-board, correcteur kabyle. Licence GNU GPL version 3 ou ulterieure.
+  Le modele de langue et le lexique sont publies sous CC BY-SA 4.0,
+  doi 10.5281/zenodo.22112059. La dictee utilise le modele vocal Mmeslay
+  (Aomer Gaya Ouldali), sous licence GNU GPL version 3.
