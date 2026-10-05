@@ -10,7 +10,7 @@ Version : **0.3**, installée et utilisée sous Windows 11 depuis le 2026-10-05.
 | `complement/` | Le complément Word (C#) : ruban, volet, menu du clic droit, relecture, dictée, client du moteur. Compilé en `KabBoardPont.dll`. |
 | `kab-board-word-complet-0.1/` | Le paquet installé : `moteur/` (le correcteur et la dictée, en Python), `LISEZMOI.txt`. Les dossiers `modeles/` et `python/` sont trop gros pour git : ils sont dans la release (voir plus bas). Le nom du dossier vient du paquet d'origine. |
 | `setup/` | `construire.ps1` (compile le complément et fabrique l'installeur) et `kab-board.iss` (script Inno Setup). |
-| `manuel/` | Le manuel d'utilisation en PDF, sa source `manuel.html` et ses captures. |
+| `manuel/` | Le manuel d'utilisation en PDF, sa source LaTeX `manuel.tex` (`pdflatex manuel.tex`, deux fois) et ses captures. |
 
 ## Tout récupérer
 

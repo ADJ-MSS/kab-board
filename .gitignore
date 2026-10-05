@@ -32,3 +32,9 @@ linux/**/__pycache__/
 __pycache__/
 *.pyc
 ~$*
+
+# Fichiers intermédiaires de LaTeX
+/word/manuel/*.aux
+/word/manuel/*.log
+/word/manuel/*.out
+/word/manuel/*.toc
