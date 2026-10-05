@@ -3,60 +3,28 @@
 
 \documentclass[11pt,a4paper]{article}
 
-\usepackage[a4paper,top=20mm,bottom=24mm,left=20mm,right=20mm,footskip=12mm]{geometry}
+\usepackage[a4paper,margin=25mm]{geometry}
 \usepackage{tipa}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
-\usepackage{tgheros}
-\renewcommand{\familydefault}{\sfdefault}
 \usepackage{newunicodechar}
 % Les lettres kabyles du texte.
 \newunicodechar{ɣ}{\textipa{G}}
 \newunicodechar{ḍ}{\d{d}}
 \usepackage[french]{babel}
-\frenchsetup{og=«, fg=», StandardItemLabels=true}
+\frenchsetup{og=«, fg=», StandardItemLabels=true, SmallCapsFigTabCaptions=false}
 \usepackage{microtype}
-\usepackage{xcolor}
 \usepackage{graphicx}
+\usepackage{float}
+\usepackage[font=small,labelfont=bf]{caption}
 \usepackage{tabularx,booktabs,array}
-\usepackage{enumitem}
-\usepackage{titlesec}
-\usepackage{fancyhdr}
-\usepackage{lastpage}
 \usepackage{amssymb}
-\usepackage[most]{tcolorbox}
 \usepackage[hidelinks]{hyperref}
-\hypersetup{pdftitle={Kab-board pour Word : manuel d'utilisation},pdfauthor={kab-board},pdflang={fr}}
-
-\definecolor{vert}{HTML}{00843F}
-\definecolor{bleu}{HTML}{0072BB}
-\definecolor{ocre}{HTML}{A86A00}
-\definecolor{encre}{HTML}{1F2328}
-\definecolor{doux}{HTML}{59636E}
-\definecolor{filet}{HTML}{D8DEE4}
-\definecolor{fond}{HTML}{F6F8FA}
-\color{encre}
-
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{0.55em}
-\linespread{1.08}
-\setlist{itemsep=0.25em,topsep=0.3em,leftmargin=1.6em}
-
-% Titres : un numéro vert, un filet sous le titre de section.
-\titleformat{\section}{\Large\bfseries}{\textcolor{vert}{\thesection}\hspace{0.6em}}{0pt}{}[\vspace{0.25em}{\color{vert}\titlerule[1.2pt]}]
-\titlespacing*{\section}{0pt}{1.6em}{0.9em}
-\titleformat{\subsection}{\large\bfseries}{}{0pt}{}
-\titlespacing*{\subsection}{0pt}{1.1em}{0.4em}
-
-\pagestyle{fancy}
-\fancyhf{}
-\renewcommand{\headrulewidth}{0pt}
-\fancyfoot[C]{\footnotesize\color{doux}Kab-board pour Word 0.3 \quad·\quad page \thepage\ sur \pageref*{LastPage}}
+\hypersetup{pdftitle={Kab-board pour Word : manuel d'utilisation},pdfauthor={Massil Aoudj},pdflang={fr}}
 
 % Un bouton de Word ou du volet.
-\newtcbox{\bouton}{on line, colback=fond, colframe=black!28, boxrule=0.4pt, arc=2pt,
-  left=2.5pt, right=2.5pt, top=0.6pt, bottom=0.6pt, fontupper=\small}
+\newcommand{\bouton}[1]{\textsf{#1}}
 % Un mot kabyle cité.
 \newcommand{\kab}[1]{\textit{#1}}
 % Un chemin de Windows.
@@ -64,21 +32,17 @@
 \newcommand{\bs}{\textbackslash}
 \newcommand{\menu}{\enspace›\enspace}
 
-% Encadrés.
-\newtcolorbox{encadre}[2][bleu]{enhanced, breakable=false, colback=#1!7, colframe=#1,
-  boxrule=0pt, leftrule=3.5pt, arc=0pt, outer arc=0pt, left=8pt, right=8pt, top=6pt, bottom=6pt,
-  before skip=0.8em, after skip=0.9em, fontupper=\normalsize,
-  before upper={\textbf{#2}\par\vspace{0.2em}}}
+% Une remarque : un titre en gras, puis le texte.
+\newenvironment{encadre}[2][]{\par\medskip\noindent\textbf{#2.}\ }{\par\medskip}
 
-% Une capture, encadrée d'un filet, avec sa légende.
-\newcommand{\capture}[3][\linewidth]{%
-  \par\begin{center}
-  \begin{tcolorbox}[enhanced, width=#1, boxrule=0.4pt, colframe=filet, colback=white, arc=3pt,
-    left=0pt, right=0pt, top=0pt, bottom=0pt, boxsep=0pt]
-  \includegraphics[width=\linewidth]{images/#2}
-  \end{tcolorbox}\vspace{0.2em}
-  {\small\color{doux}#3}
-  \end{center}\par}
+% Une capture et sa légende.
+\setlength{\fboxsep}{0pt}
+\setlength{\fboxrule}{0.4pt}
+\newcommand{\capture}[3][\dimexpr\linewidth-2\fboxrule\relax]{%
+  \begin{figure}[H]
+  \centering\fbox{\includegraphics[width=#1]{images/#2}}
+  \caption{#3}
+  \end{figure}}
 
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 \newcommand{\tableau}[3]{%
@@ -86,37 +50,26 @@
   \toprule #2 \\ \midrule #3 \bottomrule
   \end{tabularx}\par}
 
+\title{Kab-board pour Word\\[0.4em] \large Le correcteur kabyle pour Microsoft Word : manuel d'utilisation, version 0.3}
+\author{}
+\date{5 octobre 2026}
+
 \begin{document}
 
-% ---------------------------------------------------------------- Couverture
-\begin{titlepage}
-\thispagestyle{empty}
-\centering
-\vspace*{18mm}
-{\large\bfseries\color{vert}K\,A\,B\,-\,B\,O\,A\,R\,D\par}
-\vspace{8mm}
-{\fontsize{30}{36}\selectfont\bfseries Le correcteur kabyle\\[2mm] pour Microsoft Word\par}
-\vspace{6mm}
-{\Large\color{doux}Manuel d'utilisation · version 0.3\par}
-\vspace{14mm}
-\begin{tcolorbox}[enhanced, width=0.9\linewidth, boxrule=0.4pt, colframe=filet, colback=white, arc=4pt,
-  left=0pt, right=0pt, top=0pt, bottom=0pt, boxsep=0pt, drop fuzzy shadow=black!35]
-\includegraphics[width=\linewidth]{images/relecture.png}
-\end{tcolorbox}
-\vspace{14mm}
-{\color{doux}Installation, relecture, corrections, dictée, désinstallation.\\
-Tout se calcule sur votre ordinateur : rien n'est envoyé sur Internet.\par}
-\vfill
-{\footnotesize\color{doux}Kab-board, correcteur kabyle. Licence GNU GPL version 3 ou ultérieure.
-Le modèle de langue et le lexique sont publiés sous licence CC BY-SA 4.0, doi 10.5281/zenodo.22112059.
-La dictée utilise le modèle vocal Mmeslay (Aomer Gaya Ouldali), sous licence GNU GPL version 3.\par}
-\end{titlepage}
+\maketitle
+
+\begin{abstract}
+Kab-board ajoute à Microsoft Word un correcteur orthographique du kabyle et la dictée en kabyle. Ce manuel en décrit l'installation, la relecture d'un document, la correction des mots signalés, le dictionnaire personnel, la dictée et la désinstallation. Le correcteur et la dictée tournent entièrement sur l'ordinateur : rien n'est envoyé sur Internet.
+\end{abstract}
+
+\noindent{\small Kab-board, correcteur kabyle. Licence GNU GPL version 3 ou ultérieure. Le modèle de langue et le lexique sont publiés sous licence CC BY-SA 4.0, doi 10.5281/zenodo.22112059. La dictée utilise le modèle vocal Mmeslay (Aomer Gaya Ouldali), sous licence GNU GPL version 3.}
 
 % ---------------------------------------------------------------- Sommaire
+\clearpage
 \renewcommand{\contentsname}{Sommaire}
 \setcounter{tocdepth}{1}
 \tableofcontents
-\newpage
+\clearpage
 
 % ---------------------------------------------------------------- 1
 \section{Ce qu'il faut}\label{s:faut}
@@ -128,7 +81,7 @@ La dictée utilise le modèle vocal Mmeslay (Aomer Gaya Ouldali), sous licence G
 \end{itemize}
 Il n'y a rien d'autre à installer. Le correcteur emporte tout avec lui : le lexique kabyle de 1,58 million de formes, le modèle de langue, le modèle de dictée, et le programme qui les fait tourner.
 
-\begin{encadre}[ocre]{Ce qui ne marche pas}
+\begin{encadre}{Ce qui ne marche pas}
 Word pour Mac, Word en ligne (dans le navigateur) et Word sur téléphone n'acceptent pas ce genre de complément.
 \end{encadre}
 
@@ -140,7 +93,7 @@ L'installeur est un seul fichier : \chemin{kab-board-word-setup-0.3.exe} (enviro
 
 \subsection{Étape 1 : lancer l'installeur}
 Double-cliquez sur le fichier.
-\begin{encadre}[ocre]{« Windows a protégé votre ordinateur »}
+\begin{encadre}{« Windows a protégé votre ordinateur »}
 L'installeur n'est pas signé numériquement, alors Windows peut afficher cet écran bleu la première fois. Cliquez sur \bouton{Informations complémentaires}, puis sur \bouton{Exécuter quand même}.
 \end{encadre}
 
@@ -156,7 +109,7 @@ L'installation dure \textbf{deux à trois minutes}. À la fin, l'installeur affi
 Cliquez sur \bouton{Terminer}. C'est installé.
 \capture[0.62\linewidth]{installeur-3.png}{Fin de l'installation.}
 
-\begin{encadre}[vert]{Mise à jour}
+\begin{encadre}{Mise à jour}
 Pour passer à une nouvelle version, lancez simplement le nouvel installeur : il remplace l'ancienne version et garde votre dictionnaire et vos réglages.
 \end{encadre}
 
@@ -185,16 +138,17 @@ Le choix est \textbf{retenu} d'une fois sur l'autre ; au départ, c'est v. Il co
 \section{Enlever les vagues rouges du correcteur français}\label{s:francais}
 Word croit que votre texte kabyle est du français mal écrit, et le souligne de vagues rouges partout. Ces vagues cachent celles de Kab-board.
 
-\begin{center}
+\begin{figure}[H]
+\centering
 \begin{minipage}[t]{0.47\linewidth}\centering
-  \fcolorbox{filet}{white}{\includegraphics[width=0.96\linewidth]{images/vagues-rouges.png}}\\[0.3em]
-  {\small\color{doux}Avant : Word souligne tout en rouge.}
+  \fbox{\includegraphics[width=0.96\linewidth]{images/vagues-rouges.png}}
+  \caption{Avant : Word souligne tout en rouge.}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.47\linewidth}\centering
-  \fcolorbox{filet}{white}{\includegraphics[width=0.96\linewidth]{images/sans-francais.png}}\\[0.3em]
-  {\small\color{doux}Après « Ne pas vérifier en français ».}
+  \fbox{\includegraphics[width=0.96\linewidth]{images/sans-francais.png}}
+  \caption{Après « Ne pas vérifier en français ».}
 \end{minipage}
-\end{center}
+\end{figure}
 
 \begin{enumerate}
   \item Sélectionnez le texte kabyle. \emph{S'il n'y a pas de sélection, c'est tout le document qui est concerné.}
@@ -219,12 +173,12 @@ Cliquez sur \bouton{Relire le document}, dans le ruban ou dans le volet. Sur un 
 
 Chaque mot douteux est souligné d'une vague de couleur :
 \begin{itemize}
-  \item \textcolor{vert}{\textbf{en vert}} quand le correcteur a tranché d'après la phrase : la première proposition est celle que le contexte désigne ;
-  \item \textcolor{bleu}{\textbf{en bleu}} quand il propose seulement des formes proches du mot.
+  \item \textbf{en vert} quand le correcteur a tranché d'après la phrase : la première proposition est celle que le contexte désigne ;
+  \item \textbf{en bleu} quand il propose seulement des formes proches du mot.
 \end{itemize}
 Le volet indique où vous en êtes (« Mot 1 sur 7 · 7 à revoir »), le mot en question, et jusqu'à six propositions. La première, en gras, est la meilleure.
 
-\begin{encadre}[vert]{Rien n'est jamais remplacé sans vous}
+\begin{encadre}{Rien n'est jamais remplacé sans vous}
 Le correcteur ne fait que proposer. C'est toujours vous qui choisissez.
 \end{encadre}
 
@@ -259,22 +213,15 @@ Le correcteur ne fusionne jamais deux mots séparés par une virgule.
 
 % ---------------------------------------------------------------- 11
 \section{Passer d'un mot à l'autre, arrêter la relecture}\label{s:naviguer}
-\begin{minipage}[t]{0.38\linewidth}\vspace{0pt}\centering
-  \fcolorbox{filet}{white}{\includegraphics[width=0.94\linewidth]{images/volet-bas.png}}\\[0.3em]
-  {\small\color{doux}Le bas du volet.}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.58\linewidth}\vspace{0pt}
+\capture[0.36\linewidth]{volet-bas.png}{Le bas du volet.}
 \begin{itemize}
   \item \bouton{$\blacktriangleleft$ Uzwir} : le mot précédent encore à revoir.
   \item \bouton{Uḍfir $\blacktriangleright$} : le mot suivant.
   \item Ou cliquez simplement sur un mot souligné dans le texte.
   \item \bouton{Arrêter la relecture} retire tous les soulignés de Kab-board.
-  \item \textbf{Mon dictionnaire…} et \textbf{Texte kabyle : ne pas vérifier en français} : les mêmes que dans le ruban.
+  \item \bouton{Mon dictionnaire…} et \bouton{Texte kabyle : ne pas vérifier en français} : les mêmes que dans le ruban.
 \end{itemize}
 Sur un petit écran, faites défiler le volet pour voir ces boutons.
-\end{minipage}
-
-\medskip
 Quand tout est revu, le volet l'indique : « Tout est revu ».
 
 % ---------------------------------------------------------------- 12
@@ -290,22 +237,17 @@ Seuls ces paragraphes sont relus. Les soulignés déjà posés ailleurs restent 
 \section{Mon dictionnaire}\label{s:dictionnaire}
 Un nom propre, un mot régional, un mot juste que le correcteur ne connaît pas : ajoutez-le à \textbf{votre dictionnaire} et il ne sera plus jamais signalé.
 
-\begin{minipage}[t]{0.4\linewidth}\vspace{0pt}\centering
-  \fcolorbox{filet}{white}{\includegraphics[width=0.94\linewidth]{images/dictionnaire.png}}\\[0.3em]
-  {\small\color{doux}La fenêtre « Mon dictionnaire ».}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.56\linewidth}\vspace{0pt}
 \begin{itemize}
   \item Depuis un mot souligné : \bouton{Ajouter à mon dictionnaire} (volet ou clic droit).
   \item Pour voir et gérer la liste : \bouton{Mon dictionnaire} dans le ruban.
 \end{itemize}
+\capture[0.4\linewidth]{dictionnaire.png}{La fenêtre « Mon dictionnaire ».}
 Dans cette fenêtre, vous pouvez :
 \begin{itemize}
   \item \textbf{chercher} un mot dans la liste ;
   \item \textbf{retirer} un mot ajouté par erreur : sélectionnez-le, puis \bouton{Retirer de mon dictionnaire}, ou la touche Suppr ;
   \item \textbf{ajouter} un mot à la main : tapez-le en bas, puis \bouton{Ajouter}.
 \end{itemize}
-\end{minipage}
 
 % ---------------------------------------------------------------- 14
 \section{Dicter en kabyle}\label{s:dicter}
@@ -319,7 +261,7 @@ Kab-board peut écrire ce que vous dites, avec le même modèle de dictée que l
 \capture{dictee.png}{Pendant l'écoute : « Arrêter la dictée » dans le ruban et dans le volet.}
 Après quelques secondes de transcription, le texte s'écrit au curseur, dans votre graphie (v ou b). Il reste \textbf{sélectionné} : cliquez sur \bouton{Relire la sélection} pour le vérifier. La dictée n'est jamais corrigée d'office.
 
-\begin{encadre}[ocre]{Si le micro ne marche pas}
+\begin{encadre}{Si le micro ne marche pas}
 Windows doit autoriser les applications de bureau à utiliser le micro : \emph{Paramètres\menu Confidentialité et sécurité\menu Microphone}, puis activez « Autoriser les applications de bureau à accéder à votre microphone ».
 \end{encadre}
 L'enregistrement de votre voix reste sur l'ordinateur et il est effacé dès que le texte est écrit.
@@ -332,7 +274,7 @@ L'enregistrement de votre voix reste sur l'ordinateur et il est effacé dès que
   \item \textbf{Imprimer :} même chose, les soulignés ne s'impriment pas.
   \item \textbf{Fermer :} si vous n'avez fait que relire, Word ne demande pas d'enregistrer pour les soulignés.
 \end{itemize}
-\begin{encadre}[ocre]{Enregistrement automatique (OneDrive)}
+\begin{encadre}{Enregistrement automatique (OneDrive)}
 Avec l'enregistrement automatique de OneDrive, Word enregistre en continu, sans prévenir Kab-board. Cliquez sur \bouton{Arrêter la relecture} avant de partager un document.
 \end{encadre}
 
