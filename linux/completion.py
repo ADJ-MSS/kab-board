@@ -5,9 +5,9 @@ tapé ; au-delà, elle corrige comme avant. On ne complète jamais vers un mot d
 2 ou 3 lettres : ceux-là, on les a déjà tapés.
 
 Mesuré le 05/10/2026 sur 400 phrases du corpus, tapées lettre par lettre :
-23,3 % de frappes en moins avec SEUIL = 3, sans rien changer au filet de
-correction (191/200 sur les fautes injectées, comme sans complétion). À 4
-lettres, on gagne 26,8 %, mais le filet tombe à 90,5 %.
+24,1 % de frappes en moins avec SEUIL = 3, sans rien changer au filet de
+correction (191/200 sur les fautes injectées, comme sans complétion). Compléter
+jusqu'à 4 lettres faisait tomber le filet à 90,5 %.
 
 Même règle que taqbaylit.moteur.Completion, côté Android.
 """
@@ -61,15 +61,22 @@ class Completion:
         notes.sort(key=lambda x: -x[0])
         return [m for _, m in notes[:nb]]
 
+    def mot_de_dictionnaire(self, mot):
+        """Le mot tapé reste en tête s'il est déjà un mot des dictionnaires : lexique par
+        catégories ou conjugaisons. La fiabilité du correcteur ne suffit pas ici : le
+        lexique agrégé compte des bouts de mots, « ẓr » ou « lx », présents dans plus de
+        trois sources."""
+        return (mot in getattr(self.res, "lexcat", {})
+                or mot in getattr(self.res, "amyag", ()))
+
     def barre(self, contexte, tape, nb=6):
         """Ce que montre la barre pour un mot de 1 à SEUIL lettres : le mot tapé s'il
-        est déjà un mot sûr, puis les complétions. None quand rien ne commence ainsi :
-        la barre corrige alors comme avant."""
+        est déjà un mot des dictionnaires, puis les complétions. None quand rien ne
+        commence ainsi : la barre corrige alors comme avant."""
         if not tape or len(tape) > SEUIL:
             return None
         comp = self.completer(contexte, tape, nb)
         if not comp:
             return None
-        fiable = getattr(self.res, "fiable", None)
-        tete = [tape] if fiable is not None and fiable(tape) else []
+        tete = [tape] if self.mot_de_dictionnaire(tape) else []
         return (tete + [m for m in comp if m != tape])[:nb]

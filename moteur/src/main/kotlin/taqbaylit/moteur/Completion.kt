@@ -7,9 +7,9 @@ package taqbaylit.moteur
  * au-delà, elle corrige comme avant. On ne complète jamais vers un mot de 2 ou 3 lettres :
  * ceux-là, on les a déjà tapés.
  *
- * Mesuré le 05/10/2026 sur 400 phrases du corpus, tapées lettre par lettre : 23,3 % de
+ * Mesuré le 05/10/2026 sur 400 phrases du corpus, tapées lettre par lettre : 24,1 % de
  * frappes en moins avec SEUIL = 3, sans rien changer au filet de correction (191/200 sur
- * les fautes injectées). À 4 lettres, on gagne 26,8 %, mais le filet tombe à 90,5 %.
+ * les fautes injectées). Compléter jusqu'à 4 lettres faisait tomber le filet à 90,5 %.
  *
  * Même règle que linux/completion.py.
  */
@@ -30,6 +30,15 @@ class Completion(mots: List<String>, freqs: List<Int>) {
         const val LONGUEUR_MIN = 4     // jamais vers un mot de 2 ou 3 lettres
         const val FREQ_MIN = 50        // assez fréquent pour être proposé sans être tapé
         const val PAR_PREFIXE = 400    // les plus fréquents d'un début, avant le modèle de langue
+
+        /**
+         * Le mot tapé reste en tête s'il est déjà un mot des dictionnaires : lexique par
+         * catégories ou conjugaisons. La fiabilité du correcteur ne suffit pas ici : le
+         * lexique agrégé compte des bouts de mots, « ẓr » ou « lx », présents dans plus de
+         * trois sources.
+         */
+        fun motDeDictionnaire(res: Ressources): (String) -> Boolean =
+            { m -> res.lexcat(m) != null || m in res.amyag }
 
         /** Les mots fiables de 4 lettres ou plus du lexique. */
         fun depuis(res: Ressources): Completion {
@@ -81,15 +90,15 @@ class Completion(mots: List<String>, freqs: List<Int>) {
 
     /**
      * Ce que montre la barre pour un mot de 1 à SEUIL lettres : le mot tapé s'il est déjà un
-     * mot sûr, puis les complétions. null quand rien ne commence ainsi : la barre corrige
-     * alors comme avant.
+     * mot (estUnMot, en pratique motDeDictionnaire), puis les complétions. null quand rien ne
+     * commence ainsi : la barre corrige alors comme avant.
      */
     fun barre(contexteGauche: String, tape: String, nb: Int, lm: ModeleLangue?,
-              fiable: (String) -> Boolean): List<String>? {
+              estUnMot: (String) -> Boolean): List<String>? {
         if (tape.isEmpty() || tape.length > SEUIL) return null
         val comp = completer(contexteGauche, tape, nb, lm)
         if (comp.isEmpty()) return null
-        val tete = if (fiable(tape)) listOf(tape) else emptyList()
+        val tete = if (estUnMot(tape)) listOf(tape) else emptyList()
         return (tete + comp.filter { it != tape }).take(nb)
     }
 }

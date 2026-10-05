@@ -19,7 +19,7 @@ android {
         // Les deux architectures des telephones reels. x86 et x86_64 ne servent qu'aux emulateurs
         // et coutaient 43 Mio d'APK, dont 30 pour le seul ONNX Runtime.
         ndk { abiFilters += listOf("arm64-v8a") }
-        versionCode = 3
+        versionCode = 4
         versionName = "0.3"
         externalNativeBuild {
             cmake {
