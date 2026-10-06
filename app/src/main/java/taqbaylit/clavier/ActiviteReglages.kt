@@ -17,6 +17,8 @@ import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 /** Réglages, en langage simple et non en jargon. */
 class ActiviteReglages : Activity() {
@@ -154,6 +156,15 @@ class ActiviteReglages : Activity() {
 
         setContentView(ScrollView(this).apply {
             setBackgroundColor(FOND); addView(colonne)
+            // Depuis Android 15, l'écran s'étend sous les barres du système : le contenu
+            // s'en écarte de leur hauteur, et défile jusqu'au-dessus de la barre de navigation.
+            clipToPadding = false
+            ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+                val b = insets.getInsets(WindowInsetsCompat.Type.systemBars() or
+                    WindowInsetsCompat.Type.displayCutout())
+                v.setPadding(b.left, b.top, b.right, b.bottom)
+                insets
+            }
         })
     }
 

@@ -582,9 +582,10 @@ class ClavierKabyle : InputMethodService(),
                     ?.also { transcripteur = it }
                 t?.let { runCatching { it.transcrire(echantillons) }.getOrNull() }
             }
-            Log.i(TAG, "dictee : %.1f s d'audio, %d ms, « %s »".format(
+            // Jamais le texte dicté dans le journal : seulement les durées.
+            Log.i(TAG, "dictee : %.1f s d'audio, %d ms".format(
                 echantillons.size.toFloat() / Transcripteur.TAUX,
-                System.currentTimeMillis() - t0, texte ?: ""))
+                System.currentTimeMillis() - t0))
 
             if (texte.isNullOrBlank()) { afficherMessage(getString(R.string.micro_rien)); return@launch }
             ecrireDictee(texte)
@@ -847,7 +848,8 @@ class ClavierKabyle : InputMethodService(),
             raisonDeTete = resultat?.raison
             teteMotsAvant = resultat?.motsAvant ?: 0
             barreEnCompletion = resultat?.completion ?: false
-            Log.i(TAG, "« $mot » -> $liste en ${System.currentTimeMillis() - t0} ms")
+            // Jamais le mot tapé ni les propositions dans le journal.
+            Log.i(TAG, "${liste.size} propositions en ${System.currentTimeMillis() - t0} ms")
             // Une complétion se lit comme une prédiction : la suite d'un mot, pas sa correction.
             afficher(liste, prediction = barreEnCompletion)
         }
@@ -874,8 +876,7 @@ class ClavierKabyle : InputMethodService(),
                         graphie)
                 } ?: emptyList()
             }
-            Log.i(TAG, "prediction apres « $gauche » : $liste " +
-                "en ${System.currentTimeMillis() - t0} ms")
+            Log.i(TAG, "prediction : ${liste.size} mots en ${System.currentTimeMillis() - t0} ms")
             afficher(liste, prediction = true)
         }
     }

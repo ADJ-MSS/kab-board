@@ -1,6 +1,16 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+}
+
+// La clé de téléversement Google Play vit hors du dépôt. Sans elle, le build release se fait
+// sans signature, et rien de secret n'entre dans git.
+val proprietesSignature = file(System.getProperty("user.home") +
+    "/.config/kab-board-signature/keystore.properties")
+val signature = Properties().apply {
+    if (proprietesSignature.isFile) proprietesSignature.inputStream().use { load(it) }
 }
 
 // Nom du fichier produit : kab-board-debug.apk, et non app-debug.apk.
@@ -8,19 +18,19 @@ base { archivesName.set("kab-board") }
 
 android {
     namespace = "taqbaylit.clavier"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = "28.2.13676358"
 
     defaultConfig {
         applicationId = "taqbaylit.clavier"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
 
         // Les deux architectures des telephones reels. x86 et x86_64 ne servent qu'aux emulateurs
         // et coutaient 43 Mio d'APK, dont 30 pour le seul ONNX Runtime.
         ndk { abiFilters += listOf("arm64-v8a") }
-        versionCode = 4
-        versionName = "0.3"
+        versionCode = 5
+        versionName = "0.3.1"
         externalNativeBuild {
             cmake {
                 // Pas de RTTI ni d'exceptions superflues : ce sont des
@@ -52,9 +62,21 @@ android {
                                             // corrige de la meme facon.
                                             "onnx") }
 
+    signingConfigs {
+        if (signature.getProperty("storeFile") != null) {
+            create("televersement") {
+                storeFile = file(signature.getProperty("storeFile"))
+                storePassword = signature.getProperty("storePassword")
+                keyAlias = signature.getProperty("keyAlias")
+                keyPassword = signature.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.findByName("televersement")
         }
     }
     compileOptions {
