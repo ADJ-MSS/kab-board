@@ -1,6 +1,15 @@
 """Chargement du lexique, des dictionnaires et des modèles."""
 import csv
+import sys
+from pathlib import Path
 from typing import Dict, List, Optional, Set
+
+# rapidfuzz livré avec le paquet, prioritaire : une autre version ne retient pas
+# les mêmes candidats à égalité.
+_VENDU = (Path(__file__).resolve().parent.parent.parent / "vendor"
+          / f"cp{sys.version_info.major}{sys.version_info.minor}")
+if _VENDU.is_dir() and str(_VENDU) not in sys.path:
+    sys.path.insert(0, str(_VENDU))
 
 import config
 from normalisation import normalize
@@ -17,7 +26,13 @@ try:
     import kenlm as _kenlm
     KENLM_OK = True
 except ImportError:
-    KENLM_OK = False
+    # Pas de module compilé : le pont ctypes vers la bibliothèque natif/pont
+    # rend le même service, et n'exige aucun compilateur sur la machine.
+    try:
+        import pont_kenlm as _kenlm
+        KENLM_OK = True
+    except Exception:
+        KENLM_OK = False
 
 try:
     from joblib import load as _joblib_load
@@ -173,11 +188,23 @@ class Ressources:
         self._log("  KenLM 3-gram chargé")
 
     def _charger_pos(self):
-        if not JOBLIB_OK or not config.POS_MODEL.exists():
-            self._log("  tagger POS indisponible")
-            return
-        self.pos_model = _joblib_load(str(config.POS_MODEL))
-        self._log(f"  POS CRF chargé ({len(self.pos_model.classes_)} classes)")
+        if JOBLIB_OK and config.POS_MODEL.exists():
+            try:
+                self.pos_model = _joblib_load(str(config.POS_MODEL))
+                self._log(f"  POS CRF chargé ({len(self.pos_model.classes_)} classes)")
+                return
+            except Exception:
+                pass        # sklearn-crfsuite absent
+        natif = getattr(config, "POS_CRFSUITE", config.POS_MODEL.with_name("pos_kab.crfsuite"))
+        if natif.exists():
+            try:
+                import pont_crf
+                self.pos_model = pont_crf.Etiqueteur(natif)
+                self._log(f"  POS CRF chargé par le pont ({len(self.pos_model.classes_)} classes)")
+                return
+            except Exception:
+                pass
+        self._log("  tagger POS indisponible")
 
     def fiable(self, mot: str) -> bool:
         """Mot de confiance : Amyag, Lexique, multi-sources ou très fréquent."""

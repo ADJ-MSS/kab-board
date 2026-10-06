@@ -6,8 +6,10 @@ au moteur de saisie par une prise locale, et c'est lui qui ecrit. Le moteur doit
 donc tourner (ibus/kab_ibus.py) et etre la source de saisie active.
 """
 import os
+import shutil
 import socket
 import sys
+import tempfile
 import threading
 from pathlib import Path
 
@@ -281,7 +283,8 @@ class Clavier(Gtk.Window):
             self._ligne(p, "Transcription…")
             threading.Thread(target=self._transcrire, args=(p,), daemon=True).start()
             return
-        self.onde = Path("/tmp/kab-dictee.wav")
+        # Dossier prive (700), efface apres la transcription.
+        self.onde = Path(tempfile.mkdtemp(prefix="kab-dictee-")) / "dictee.wav"
         self.enregistrement = subprocess.Popen(
             ["arecord", "-q", "-f", "S16_LE", "-c", "1", "-r", "16000",
              "-d", "30", str(self.onde)],
@@ -301,6 +304,8 @@ class Clavier(Gtk.Window):
             texte = sortie.stdout.strip()
         except Exception as erreur:
             print(f"dictée : {erreur}", file=sys.stderr)
+        finally:
+            shutil.rmtree(self.onde.parent, ignore_errors=True)
         GLib.idle_add(self._dictee_finie, panneau, texte)
 
     def _dictee_finie(self, panneau, texte):

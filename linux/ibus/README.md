@@ -13,8 +13,13 @@ correcteur système de kab-board sur Android.
 Puis, dans **Paramètres → Clavier → Sources de saisie**, ajouter
 **Kabyle (kab-board)**. La touche Super+Espace bascule entre les sources.
 
-L'installation écrit un seul fichier, `~/.local/share/ibus/component/kab-board.xml`,
-et redémarre IBus. Pour désinstaller, supprimer ce fichier et redémarrer IBus.
+Avec le paquet `.deb`, rien à lancer : il installe ce fichier lui-même. Il suffit
+de redémarrer IBus (`ibus restart`) ou de rouvrir la session.
+
+L'installation écrit un seul fichier, `/usr/share/ibus/component/kab-board.xml`,
+d'où le mot de passe demandé, et redémarre IBus. IBus 1.5.29 (Ubuntu 24.04) ne lit
+pas `~/.local/share/ibus/component`. Pour désinstaller, supprimer ce fichier et
+redémarrer IBus.
 
 ## Écrire
 

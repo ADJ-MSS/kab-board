@@ -50,7 +50,7 @@ class Completion:
         lm = getattr(self.res, "kenlm", None)
         if not cands or lm is None:
             return cands[:nb]
-        import kenlm
+        from ressources import _kenlm as kenlm
         etat, sortie = kenlm.State(), kenlm.State()
         lm.BeginSentenceWrite(etat)
         from normalisation import tokenize
