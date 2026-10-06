@@ -174,7 +174,7 @@ class AccentHandler(private val context: Context) {
                 )
             }
             
-            Log.d(TAG, "Popup d'accents affichée pour '$baseKey' avec ${accents.size} options")
+            Log.d(TAG, "Popup d'accents affichée, ${accents.size} options")
             
         } catch (e: Exception) {
             Log.e(TAG, "Erreur lors de l'affichage de la popup: ${e.message}", e)
@@ -287,7 +287,7 @@ class AccentHandler(private val context: Context) {
         dismissAccentPopup()
         currentBaseCharacter = null  // Nettoyer après usage
         
-        Log.d(TAG, "Accent sélectionné: '$finalAccent' pour base: '$baseChar'")
+        Log.d(TAG, "Accent sélectionné")
     }
     
     /**

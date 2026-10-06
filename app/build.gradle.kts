@@ -8,19 +8,19 @@ base { archivesName.set("kab-board") }
 
 android {
     namespace = "taqbaylit.clavier"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = "28.2.13676358"
 
     defaultConfig {
         applicationId = "taqbaylit.clavier"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
 
         // Les deux architectures des telephones reels. x86 et x86_64 ne servent qu'aux emulateurs
         // et coutaient 43 Mio d'APK, dont 30 pour le seul ONNX Runtime.
         ndk { abiFilters += listOf("arm64-v8a") }
-        versionCode = 4
-        versionName = "0.3"
+        versionCode = 5
+        versionName = "0.3.1"
         externalNativeBuild {
             cmake {
                 // Pas de RTTI ni d'exceptions superflues : ce sont des
