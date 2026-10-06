@@ -8,7 +8,13 @@ try:
     import kenlm as _kenlm
     KENLM_OK = True
 except ImportError:
-    KENLM_OK = False
+    # Pas de module compilé : le pont ctypes vers la bibliothèque natif/pont
+    # rend le même service, et n'exige aucun compilateur sur la machine.
+    try:
+        import pont_kenlm as _kenlm
+        KENLM_OK = True
+    except Exception:
+        KENLM_OK = False
 
 
 def decoder(cands_par_pos: List[List[Candidat]], kenlm_model,

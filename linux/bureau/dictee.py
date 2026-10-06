@@ -8,6 +8,7 @@ passe par arecord, 16 kHz mono 16 bits. Tout se calcule ici.
 import re
 import subprocess
 import sys
+import tempfile
 import wave
 from pathlib import Path
 
@@ -20,7 +21,7 @@ MODELE = VOIX / "mmeslay.onnx"
 JETONS = VOIX / "jetons.txt"
 
 TAUX = 16000
-MIN_ECHANTILLONS = 1600      # un dixieme de seconde : en deca, rien a decoder
+MIN_ECHANTILLONS = 2400      # 0,15 s : en deca, le modele refuse l'entree
 DUREE_MAX_S = 30
 NOM_ENTREE = "audio"
 BLANC = "_"
@@ -32,7 +33,8 @@ def enregistrer(secondes: float, sortie: Path) -> Path:
     """Capte le micro. `arecord` plutot qu'une bibliotheque : il est deja la."""
     subprocess.run(
         ["arecord", "-q", "-f", "S16_LE", "-c", "1", "-r", str(TAUX),
-         "-d", str(min(secondes, DUREE_MAX_S)), str(sortie)],
+         # arecord refuse « -d 2.0 ».
+         "-d", str(max(1, round(min(secondes, DUREE_MAX_S)))), str(sortie)],
         check=True)
     return sortie
 
@@ -70,19 +72,28 @@ def decoder(logits: np.ndarray, jetons: list) -> str:
 class Transcripteur:
 
     def __init__(self):
-        import onnxruntime
+        self.jetons = charger_jetons()
+        try:
+            import onnxruntime
+        except ImportError:
+            import pont_onnx
+            self.pont = pont_onnx.Session(MODELE)
+            self.session = None
+            return
         options = onnxruntime.SessionOptions()
         options.graph_optimization_level = \
             onnxruntime.GraphOptimizationLevel.ORT_ENABLE_ALL
         self.session = onnxruntime.InferenceSession(str(MODELE), options,
                                                     providers=["CPUExecutionProvider"])
-        self.jetons = charger_jetons()
 
     def transcrire(self, echantillons: np.ndarray) -> str:
         if echantillons.size < MIN_ECHANTILLONS:
             return ""
         entree = echantillons.astype(np.float32).reshape(1, -1)
-        logits = self.session.run(None, {NOM_ENTREE: entree})[0][0]
+        if self.session is None:
+            logits = self.pont.executer(entree)
+        else:
+            logits = self.session.run(None, {NOM_ENTREE: entree})[0][0]
         return decoder(logits, self.jetons)
 
 
@@ -96,9 +107,9 @@ def principal(argv):
         texte = Transcripteur().transcrire(lire_wav(Path(argv[2])))
     else:
         secondes = float(argv[1]) if len(argv) > 1 else 5.0
-        fichier = Path("/tmp/kab-dictee.wav")
-        enregistrer(secondes, fichier)
-        texte = Transcripteur().transcrire(lire_wav(fichier))
+        with tempfile.TemporaryDirectory(prefix="kab-dictee-") as dossier:
+            fichier = enregistrer(secondes, Path(dossier) / "dictee.wav")
+            texte = Transcripteur().transcrire(lire_wav(fichier))
     print(texte)
     return 0 if texte else 1
 

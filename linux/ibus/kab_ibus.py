@@ -221,7 +221,7 @@ class MoteurKabBoard(IBus.Engine):
         vivier = MoteurKabBoard.frequents or []
         if c is None or not vivier or getattr(c.res, "kenlm", None) is None:
             return []
-        import kenlm
+        from ressources import _kenlm as kenlm
         lm = c.res.kenlm
         entree, sortie = kenlm.State(), kenlm.State()
         lm.BeginSentenceWrite(entree)

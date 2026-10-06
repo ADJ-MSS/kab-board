@@ -52,11 +52,34 @@ D'où **Relire sur le presse-papiers** plutôt que sur le champ courant.
 
 ```sh
 python3 test_graphie_bv.py      # 58 vérifications sur les graphies
-python3 ibus/test_saisie.py     # 22 vérifications sur la saisie
+python3 test_completion.py      # 12 vérifications sur la complétion
+python3 ibus/test_saisie.py     # 36 vérifications sur la saisie
 ```
 
 ## Les dépendances
 
-GTK 4 et GTK 3 (`python3-gi`), les dépendances du pipeline du correcteur
-(`kenlm`, `sklearn-crfsuite`, `joblib`, `rapidfuzz`), et `onnxruntime` pour la
-dictée seulement, installé à part dans un environnement dédié.
+Le paquet `.deb` (amd64) ne demande que ce que fournit la distribution : Python
+3.10 ou plus récent, GTK 4 et GTK 3 (`python3-gi`), IBus, NumPy et `arecord`.
+Vérifié sur des systèmes vierges, sous un compte ordinaire : Ubuntu 22.04, 24.04
+et 25.10, Debian 12 et 13.
+
+Ce qu'aucune distribution ne fournit est livré avec lui, et se charge sans rien
+compiler, quelle que soit la version de Python :
+
+| Besoin | Module Python habituel | Dans le paquet |
+|---|---|---|
+| modèle de langue | `kenlm` | `natif/pont/libkab_lm.so`, par `pont_kenlm.py` |
+| étiqueteur | `sklearn-crfsuite`, `joblib` | `natif/pont/libkab_crf.so` et `pos_kab.crfsuite`, par `pont_crf.py` |
+| dictée | `onnxruntime` | `natif/pont/libkab_onnx.so` et ONNX Runtime 1.20.1, par `pont_onnx.py` |
+| candidats | `rapidfuzz` | les roues officielles 3.14.5, une par Python de 3.10 à 3.14 (`vendor/`) |
+
+Quand le module habituel est installé, il est préféré, sauf `rapidfuzz` : la
+version livrée passe devant celle du système, pour que le correcteur réponde
+pareil partout. Les ponts donnent les mêmes résultats que les modules : mêmes
+scores KenLM sur 3 002 phrases, mêmes étiquettes sur 115 786 mots, mêmes
+décisions de dictée, et les mêmes corrections sur 500 phrases.
+
+Les ponts se construisent par `natif/construire-pont.sh linux`, avec Zig, qui
+vise glibc 2.28 : ils ne dépendent ni de la glibc ni de la libstdc++ de la
+machine qui les construit. `paquet/construire-complet.sh` les reconstruit à
+chaque paquet.

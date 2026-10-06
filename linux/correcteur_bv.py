@@ -24,7 +24,11 @@ from graphie_bv import GraphieBV, Choix, DEUX, B, V
 
 RACINE = Path(__file__).resolve().parent              # le dossier linux/
 DEPOT = RACINE.parent                                 # la racine de kab-board
-TABLE = DEPOT / "app" / "src" / "main" / "assets" / "graphie" / "table_bv.tsv"
+try:
+    import chemins
+    TABLE = chemins.TABLE_BV
+except Exception:
+    TABLE = DEPOT / "app" / "src" / "main" / "assets" / "graphie" / "table_bv.tsv"
 PIPELINE = RACINE / "pipeline"
 
 

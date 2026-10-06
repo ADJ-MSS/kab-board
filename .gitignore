@@ -32,3 +32,9 @@ linux/**/__pycache__/
 __pycache__/
 *.pyc
 ~$*
+
+# Local
+word/vsto-libs/
+kab-board-word-*.zip
+.cache-windows/
+natif/pont/
