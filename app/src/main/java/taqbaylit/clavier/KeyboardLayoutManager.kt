@@ -94,6 +94,9 @@ class KeyboardLayoutManager(private val context: Context) {
     // Référence optionnelle pour prévisualiser les options d'appui long dans les coins des touches
     // (v8.3.0).
     var accentHandler: AccentHandler? = null
+
+    /** Posée par le service avant chaque construction du clavier. */
+    var disposition: Disposition = Disposition.KABYLE
     
     // Handler pour l'appui long personnalisé de la barre d'espace
     private val spaceLongPressHandler = Handler(Looper.getMainLooper())
@@ -246,6 +249,15 @@ class KeyboardLayoutManager(private val context: Context) {
      * Crée le layout alphabétique (AZERTY créole)
      */
     private fun createAlphabeticLayout(mainLayout: LinearLayout) {
+        if (!disposition.estKabyle) {
+            // Une rangée de lettres plus courte, comme le a-l du QWERTY, garde la largeur de touche
+            // d'une rangée de dix et se centre.
+            for (rangee in disposition.rangees) {
+                val lettres = "⇧" !in rangee && " " !in rangee
+                mainLayout.addView(createKeyboardRow(rangee, if (lettres) 10f else 0f))
+            }
+            return
+        }
         // Disposition kabyle. La structure, les poids de touche et le raisonnement sont ceux de
         // KreyolKeyb ; seules les lettres changent, et le choix est mesure sur les 1 823 217
         // lettres des formes verbales, qui portent l'orthographe de reference.
@@ -301,9 +313,10 @@ class KeyboardLayoutManager(private val context: Context) {
     /**
      * Crée une rangée de touches
      */
-    private fun createKeyboardRow(keys: Array<String>): LinearLayout {
+    private fun createKeyboardRow(keys: Array<String>, poidsMin: Float = 0f): LinearLayout {
         val rowLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
+            if (poidsMin > 0f) gravity = Gravity.CENTER_HORIZONTAL
             // Un LinearLayout horizontal aligne par défaut ses enfants sur la ligne de base de leur
             // texte.
             isBaselineAligned = false
@@ -315,7 +328,7 @@ class KeyboardLayoutManager(private val context: Context) {
             }
         }
         
-        val totalWeight = calculateRowWeight(keys)
+        val totalWeight = maxOf(calculateRowWeight(keys), poidsMin)
         
         for (key in keys) {
             // createKeyButton() alimente déjà keyboardButtons avec la touche interactive brute
@@ -408,8 +421,8 @@ class KeyboardLayoutManager(private val context: Context) {
                 tag = key
                 // TalkBack lisait « Taqbaylit » sur l'espace : il continue de le
                 // lire quand le thème y pose un signe à la place du nom.
-                if (key == " " && text.toString() != KeyboardTheme.LIBELLE_LANGUE)
-                    contentDescription = KeyboardTheme.LIBELLE_LANGUE
+                if (key == " " && text.toString() != disposition.nom)
+                    contentDescription = disposition.nom
                 // « 123 » et « ABC » ne tiennent pas en pleine taille dans la largeur d'une touche
                 // en portrait.
                 maxLines = 1
@@ -475,8 +488,7 @@ class KeyboardLayoutManager(private val context: Context) {
             return wrapWithLongPressHints(button, hints, key)
         }
 
-        // Indice visuel : l'appui long sur la barre d'espace change de clavier système (voir
-        // setupSpaceLongPress).
+        // Indice visuel : l'appui long sur la barre d'espace ouvre le choix des dispositions.
         if (key == " " && accentHandler != null) {
             return wrapWithSpaceGlobeHint(button)
         }
@@ -980,6 +992,7 @@ class KeyboardLayoutManager(private val context: Context) {
 
     /** Le libellé de l'espace que le thème demande, s'il se dessine. */
     private fun libelleEspace(): String {
+        if (!disposition.estKabyle) return disposition.nom
         val demande = KeyboardTheme.palette().libelleEspace
         if (demande == KeyboardTheme.LIBELLE_LANGUE) return demande
         libelleVerifie?.let { (d, retenu) -> if (d == demande) return retenu }

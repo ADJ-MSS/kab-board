@@ -67,6 +67,16 @@ object KeyboardPreferences {
             .putString(KEY_GRAPHIE, if (mode == GraphieBV.Mode.V) "v" else "b").apply()
     }
 
+    private const val KEY_DISPOSITION = "disposition"
+
+    /** Choisie par appui long sur l'espace, et gardée d'un champ à l'autre. */
+    fun disposition(context: Context): Disposition =
+        Disposition.depuisCle(prefs(context).getString(KEY_DISPOSITION, null))
+
+    fun setDisposition(context: Context, disposition: Disposition) {
+        prefs(context).edit().putString(KEY_DISPOSITION, disposition.cle).apply()
+    }
+
     /** « Écrire comme on parle » (EcritureParlee). */
     fun ecrireCommeOnParle(context: Context): Boolean =
         prefs(context).getBoolean(KEY_ECRIRE_COMME_ON_PARLE, false)

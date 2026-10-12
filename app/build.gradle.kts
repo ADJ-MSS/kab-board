@@ -29,8 +29,8 @@ android {
         // Les deux architectures des telephones reels. x86 et x86_64 ne servent qu'aux emulateurs
         // et coutaient 43 Mio d'APK, dont 30 pour le seul ONNX Runtime.
         ndk { abiFilters += listOf("arm64-v8a") }
-        versionCode = 5
-        versionName = "0.3.1"
+        versionCode = 6
+        versionName = "0.3.2"
         externalNativeBuild {
             cmake {
                 // Pas de RTTI ni d'exceptions superflues : ce sont des
@@ -74,6 +74,9 @@ android {
     }
 
     buildTypes {
+        // L'APK diffusé hors Play est celui-ci. Débogable, il tournait cinq à six fois moins vite :
+        // moteur prêt en 12 s au lieu de 2, une correction en 3 s au lieu de 0,5 à 0,9 s.
+        debug { isDebuggable = false }
         release {
             isMinifyEnabled = false
             signingConfig = signingConfigs.findByName("televersement")

@@ -18,7 +18,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
-import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
@@ -30,6 +29,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import taqbaylit.moteur.Completion
@@ -206,6 +206,9 @@ class ClavierKabyle : InputMethodService(),
      */
     override val portee = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var travailEnCours: Job? = null
+    private var calcul: Job? = null
+    // Change à chaque champ : le résultat d'un calcul lancé dans le précédent n'y est pas affiché.
+    private var generation = 0
 
     /** Champ sensible : on ne propose rien et on n'enregistre rien. */
     override var champSensible = false
@@ -224,6 +227,8 @@ class ClavierKabyle : InputMethodService(),
     private var glissement = false
     private val poigneeSync = Handler(Looper.getMainLooper())
     private var syncEnAttente: Runnable? = null
+
+    private var disposition = Disposition.KABYLE
 
     // ===== CYCLE DE VIE =====
 
@@ -271,6 +276,9 @@ class ClavierKabyle : InputMethodService(),
         KeyFeedback.refresh(this)
         KeyboardTheme.refresh(this)
         paletteDeLaVue = KeyboardTheme.palette()
+        disposition = KeyboardPreferences.disposition(this)
+        clavier.disposition = disposition
+        accents.disposition = disposition
 
         val racine = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -435,6 +443,7 @@ class ClavierKabyle : InputMethodService(),
 
     override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
         super.onStartInputView(info, restarting)
+        if (!restarting) generation++
         KeyFeedback.refresh(this)
         KeyboardTheme.refresh(this)
         // Meme raison que pour les propositions : un mot de passe ne doit pas laisser d'emoji
@@ -455,6 +464,7 @@ class ClavierKabyle : InputMethodService(),
     override fun onFinishInput() {
         super.onFinishInput()
         travailEnCours?.cancel()
+        generation++
         // Un glissement encore marque a l'arrivee dans le champ suivant y ferait sauter les
         // premieres propositions, le temps que la resynchronisation differee retombe.
         syncEnAttente?.let { poigneeSync.removeCallbacks(it) }
@@ -638,14 +648,22 @@ class ClavierKabyle : InputMethodService(),
     override fun onLongPress(key: String, button: View) {
         when (key) {
             "⌫" -> effacerMot()
-            " " -> (getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
-                ?.showInputMethodPicker()
+            " " -> accents.montrerDispositions(button, disposition) { changerDeDisposition(it) }
             // showAccentPopup directement, et non startLongPressTimer.
             else -> if (accents.hasAccents(key)) accents.showAccentPopup(key, button)
         }
     }
 
     override fun onKeyRelease() { accents.cancelLongPress() }
+
+    private fun changerDeDisposition(choix: Disposition) {
+        if (choix == disposition) return
+        KeyboardPreferences.setDisposition(this, choix)
+        derniereConversion = null
+        dicteeARelire = null
+        setInputView(onCreateInputView())
+        proposer()
+    }
 
     /** Glissement du doigt sur la barre d'espace : le curseur suit. */
     override fun onSpaceCursorMove(steps: Int) {
@@ -805,81 +823,102 @@ class ClavierKabyle : InputMethodService(),
         travailEnCours?.cancel()
         val mot = motCourant()
         if (champSensible) { afficher(emptyList()); return }
+        // En AZERTY ou en QWERTY on écrit une autre langue : rien à corriger en kabyle.
+        if (!disposition.estKabyle) { arreterAttente(); afficher(emptyList()); return }
         // Tant que le moteur n'est pas la, la barre dit ou il en est.
         if (!Moteur.dejaPret()) { annoncerPreparation(); return }
         arreterAttente()
+        // Un calcul tourne déjà : à son retour, il relance pour l'état le plus récent.
+        if (calcul?.isActive == true) return
         val gauche = contexteGauche(mot)
-        // Aucun mot en cours : ce n'est plus au correcteur de parler.
-        if (mot.length < LONGUEUR_MIN) { predire(gauche); return }
+        // Aucun mot en cours ni rien avant : il n'y a ni à corriger, ni à prédire.
+        if (mot.length < LONGUEUR_MIN && gauche.isBlank()) {
+            raisonDeTete = null
+            teteMotsAvant = 0
+            barreEnCompletion = false
+            afficher(emptyList())
+            return
+        }
+        // La frappe suivante remplace celle-ci tant que le calcul n'est pas parti.
         travailEnCours = portee.launch {
-            // La frappe suivante annule celle-ci : rien n'est calcule pour un
-            // prefixe que l'utilisateur a deja quitte.
             delay(ATTENTE_MS)
-            val t0 = System.currentTimeMillis()
-            val graphie = KeyboardPreferences.graphie(this@ClavierKabyle)
-            val resultat = withContext(Dispatchers.Default) {
-                GraphieBV.charger(this@ClavierKabyle)
-                Moteur.avec(this@ClavierKabyle) { m ->
-                    // De 1 a 3 lettres, la barre complete le mot, quand quelque chose
-                    // commence ainsi ; ensuite, ou faute de complétion, elle corrige.
-                    val tape = Normalisation.normalize(mot)
-                    m.completion.barre(gauche, tape, MAX_PROPOSITIONS, m.modeleLangue,
-                                       Completion.motDeDictionnaire(m.res))
-                        ?.let { completes ->
-                            return@avec Barre(
-                                GraphieBV.appliquer(completes, graphie)
-                                    .map { casserComme(mot, it) }.distinct(),
-                                completion = true)
-                        }
-                    // Position 1 : la correction en contexte, qui voit la phrase.
-                    val six = Propositions.calculer(m, gauche, mot, graphie)
-                    // Rattachée au mot d'avant, elle en prend la casse.
-                    val modeleTete = if (six.motsAvant > 0)
-                        gauche.trimEnd().takeLastWhile(::estCaractereMot) else mot
-                    val formes = (listOf(casserComme(modeleTete, six.absolue)) +
-                                  six.cinq.map { casserComme(mot, it) })
-                        .distinct()
-                        .filter { it.isNotBlank() }
-                    // La raison d'état ne vaut que pour la correction en contexte.
-                    Barre(formes, six.raison?.takeIf { six.absolue.isNotBlank() }, six.motsAvant)
-                }
-            }
-            val liste = resultat?.formes ?: emptyList()
-            raisonDeTete = resultat?.raison
-            teteMotsAvant = resultat?.motsAvant ?: 0
-            barreEnCompletion = resultat?.completion ?: false
-            // Jamais le mot tapé ni les propositions dans le journal.
-            Log.i(TAG, "${liste.size} propositions en ${System.currentTimeMillis() - t0} ms")
-            // Une complétion se lit comme une prédiction : la suite d'un mot, pas sa correction.
-            afficher(liste, prediction = barreEnCompletion)
+            calculer(mot, gauche)
         }
     }
 
-    /** Le mot suivant, quand il n'y a plus de mot en cours. */
-    private fun predire(gauche: String) {
-        raisonDeTete = null
-        teteMotsAvant = 0
-        barreEnCompletion = false
-        if (gauche.isBlank()) { afficher(emptyList()); return }
+    /**
+     * Un calcul va jusqu'au bout, même si l'on tape entre-temps : annulé à chaque lettre, il
+     * n'aboutissait jamais sur un téléphone qui calcule moins vite qu'on ne tape. Son résultat
+     * s'affiche s'il vaut encore pour ce qui est tapé, puis le calcul repart sur le dernier état.
+     */
+    private fun calculer(mot: String, gauche: String) {
+        val tour = generation
         val graphie = KeyboardPreferences.graphie(this)
-        travailEnCours = portee.launch {
-            delay(ATTENTE_MS)
+        calcul = portee.launch {
             val t0 = System.currentTimeMillis()
-            val liste = withContext(Dispatchers.Default) {
+            val resultat = withContext(Dispatchers.Default) {
                 GraphieBV.charger(this@ClavierKabyle)
-                Moteur.avec(this@ClavierKabyle) { c ->
-                    val lm = c.modeleLangue ?: return@avec emptyList()
-                    // Le modele de langue ne connait que le b : la graphie reglee
-                    // vaut aussi pour ce qu'il propose.
-                    GraphieBV.appliquer(
-                        Prediction(lm, c.res.frequents).suivants(gauche, MAX_PROPOSITIONS),
-                        graphie)
-                } ?: emptyList()
+                if (mot.length < LONGUEUR_MIN) predireSuite(gauche, graphie)
+                else corrigerMot(mot, gauche, graphie)
             }
-            Log.i(TAG, "prediction : ${liste.size} mots en ${System.currentTimeMillis() - t0} ms")
-            afficher(liste, prediction = true)
+            val nature = if (mot.isEmpty()) "prediction" else "propositions"
+            Log.i(TAG, "$nature : ${resultat?.formes?.size ?: 0} en ${System.currentTimeMillis() - t0} ms")
+            calcul = null
+            if (tour != generation) { proposer(); return@launch }
+            val motNouveau = motCourant()
+            val valable = contexteGauche(motNouveau) == gauche &&
+                (if (mot.isEmpty()) motNouveau.isEmpty() else motNouveau.startsWith(mot))
+            if (valable && resultat != null) {
+                raisonDeTete = resultat.raison
+                teteMotsAvant = resultat.motsAvant
+                barreEnCompletion = resultat.completion
+                // Une complétion se lit comme une prédiction : la suite d'un mot, pas sa correction.
+                afficher(resultat.formes, prediction = mot.isEmpty() || resultat.completion)
+            }
+            if (motNouveau != mot || !valable) proposer()
         }
     }
+
+    /** De 1 à 3 lettres, la barre complète le mot ; ensuite, ou faute de complétion, elle corrige. */
+    private fun CoroutineScope.corrigerMot(mot: String, gauche: String, graphie: GraphieBV.Mode): Barre? =
+        Moteur.avec<Barre?>(this@ClavierKabyle) { m ->
+            if (!isActive) return@avec null
+            // De 1 à 3 lettres, c'est à la complétion de répondre : corriger un début de mot coûte
+            // autant qu'un mot entier, pour rien.
+            if (!Moteur.completionPrete && mot.length <= Completion.SEUIL) return@avec Barre(emptyList())
+            val tape = Normalisation.normalize(mot)
+            (if (Moteur.completionPrete) m.completion else null)
+                ?.barre(gauche, tape, MAX_PROPOSITIONS, m.modeleLangue,
+                        Completion.motDeDictionnaire(m.res))
+                ?.let { completes ->
+                    return@avec Barre(
+                        GraphieBV.appliquer(completes, graphie)
+                            .map { casserComme(mot, it) }.distinct(),
+                        completion = true)
+                }
+            // Position 1 : la correction en contexte, qui voit la phrase.
+            val six = Propositions.calculer(m, gauche, mot, graphie)
+            // Rattachée au mot d'avant, elle en prend la casse.
+            val modeleTete = if (six.motsAvant > 0)
+                gauche.trimEnd().takeLastWhile(::estCaractereMot) else mot
+            val formes = (listOf(casserComme(modeleTete, six.absolue)) +
+                          six.cinq.map { casserComme(mot, it) })
+                .distinct()
+                .filter { it.isNotBlank() }
+            // La raison d'état ne vaut que pour la correction en contexte.
+            Barre(formes, six.raison?.takeIf { six.absolue.isNotBlank() }, six.motsAvant)
+        }
+
+    /** Le mot suivant, quand il n'y a plus de mot en cours. */
+    private fun CoroutineScope.predireSuite(gauche: String, graphie: GraphieBV.Mode): Barre? =
+        Moteur.avec<Barre?>(this@ClavierKabyle) { c ->
+            if (!isActive) return@avec null
+            val lm = c.modeleLangue ?: return@avec Barre(emptyList())
+            // Le modele de langue ne connait que le b : la graphie reglee
+            // vaut aussi pour ce qu'il propose.
+            Barre(GraphieBV.appliquer(
+                Prediction(lm, c.res.frequents).suivants(gauche, MAX_PROPOSITIONS), graphie))
+        }
 
     /** Affiche l'etat de la preparation, et se rappelle jusqu'a ce qu'elle aboutisse. */
     private fun annoncerPreparation() {
@@ -1042,6 +1081,7 @@ class ClavierKabyle : InputMethodService(),
     private fun ecrireCommeOnParle(ic: InputConnection?, texte: String): Boolean {
         derniereConversion = null
         if (ic == null || texte.length != 1 || champSensible) return false
+        if (!disposition.estKabyle) return false
         if (!KeyboardPreferences.ecrireCommeOnParle(this)) return false
         if (!EcritureParlee.accepte(currentInputEditorInfo?.inputType ?: 0)) return false
         if (ic.getSelectedText(0)?.isNotEmpty() == true) return false

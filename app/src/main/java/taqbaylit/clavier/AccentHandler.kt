@@ -29,6 +29,8 @@ class AccentHandler(private val context: Context) {
     
     // État du mode majuscule
     var isCapitalMode: Boolean = false
+
+    var disposition: Disposition = Disposition.KABYLE
     
     // La table qui suit est kabyle et n'a rien gardé de la leur.
     private val accentMap = mapOf(
@@ -52,6 +54,23 @@ class AccentHandler(private val context: Context) {
         "," to listOf(";", ":", "'"),
         "." to listOf("!", "?", "…")
     )
+
+    // AZERTY et QWERTY : les accents du français, sans aucune lettre kabyle.
+    private val accentsLatins = mapOf(
+        "e" to listOf("é", "è", "ê", "ë"),
+        "a" to listOf("à", "â", "æ"),
+        "c" to listOf("ç"),
+        "u" to listOf("ù", "û", "ü"),
+        "i" to listOf("î", "ï"),
+        "o" to listOf("ô", "œ"),
+        "y" to listOf("ÿ"),
+        "n" to listOf("ñ"),
+        "," to listOf(";", ":", "'"),
+        "." to listOf("!", "?", "…")
+    )
+
+    private val table: Map<String, List<String>>
+        get() = if (disposition.estKabyle) accentMap else accentsLatins
 
     // Ordre d'affichage des aperçus en coin, quand il doit différer de l'ordre du popup d'appui
     // long (v8.7.0).
@@ -92,7 +111,7 @@ class AccentHandler(private val context: Context) {
      * Vérifie si une touche a des accents disponibles
      */
     fun hasAccents(key: String): Boolean {
-        return accentMap.containsKey(key.lowercase()) || emojiSkinTones.containsKey(key)
+        return table.containsKey(key.lowercase()) || emojiSkinTones.containsKey(key)
     }
     
     /**
@@ -139,7 +158,7 @@ class AccentHandler(private val context: Context) {
      * Affiche la popup d'accents pour une touche de base
      */
     fun showAccentPopup(baseKey: String, anchorButton: View) {
-        val accents = accentMap[baseKey.lowercase()] ?: emojiSkinTones[baseKey] ?: return
+        val accents = table[baseKey.lowercase()] ?: emojiSkinTones[baseKey] ?: return
         
         // Fermer la popup existante si elle existe
         dismissAccentPopup()
@@ -181,6 +200,57 @@ class AccentHandler(private val context: Context) {
         }
     }
     
+    /** Le menu de l'appui long sur l'espace : changer de lettres sans changer de clavier. */
+    fun montrerDispositions(ancre: View, actuelle: Disposition, choisir: (Disposition) -> Unit) {
+        dismissAccentPopup()
+        val p = KeyboardTheme.palette()
+        val liste = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dpToPx(6), dpToPx(6), dpToPx(6), dpToPx(6))
+        }
+        for (d in Disposition.values()) {
+            val choisie = d == actuelle
+            liste.addView(TextView(context).apply {
+                text = if (d.detail.isEmpty()) d.nom else "${d.nom}  ·  ${d.detail}"
+                textSize = 16f
+                setTextColor(if (choisie) p.popupAccentEncre else p.popupBaseEncre)
+                if (choisie) setTypeface(typeface, android.graphics.Typeface.BOLD)
+                gravity = Gravity.CENTER_VERTICAL
+                minWidth = dpToPx(200)
+                minHeight = dpToPx(ACCENT_BUTTON_SIZE_DP)
+                setPadding(dpToPx(16), 0, dpToPx(16), 0)
+                background = createAccentButtonBackground(isBase = !choisie)
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                ).apply { setMargins(0, dpToPx(2), 0, dpToPx(2)) }
+                isSoundEffectsEnabled = false
+                setOnClickListener { vue ->
+                    KeyFeedback.onKeyPress(vue)
+                    dismissAccentPopup()
+                    choisir(d)
+                }
+            })
+        }
+        liste.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        currentAccentPopup = PopupWindow(
+            liste,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            false
+        ).apply {
+            setBackgroundDrawable(createPopupBackground())
+            elevation = dpToPx(POPUP_ELEVATION_DP).toFloat()
+            isTouchable = true
+            isOutsideTouchable = true
+            animationStyle = android.R.style.Animation_Dialog
+            showAsDropDown(
+                ancre,
+                (ancre.width - liste.measuredWidth) / 2,
+                -ancre.height - liste.measuredHeight - dpToPx(8)
+            )
+        }
+    }
+
     /**
      * Ferme la popup d'accents actuelle
      */
@@ -333,7 +403,7 @@ class AccentHandler(private val context: Context) {
             else -> ""
         }
         
-        val accentCount = accentMap[baseKey]?.size ?: 0
+        val accentCount = table[baseKey]?.size ?: 0
         val totalButtons = accentCount + 1 // +1 pour la touche de base
         val popupWidth = totalButtons * buttonWidth + dpToPx(16) // +padding
         
@@ -346,7 +416,7 @@ class AccentHandler(private val context: Context) {
      * Obtient tous les accents disponibles pour une touche
      */
     fun getAccentsForKey(key: String): List<String> {
-        return accentMap[key.lowercase()] ?: emojiSkinTones[key] ?: emptyList()
+        return table[key.lowercase()] ?: emojiSkinTones[key] ?: emptyList()
     }
 
     /**
@@ -354,7 +424,8 @@ class AccentHandler(private val context: Context) {
      * puis bas-droit (peut différer de l'ordre du popup d'appui long, voir cornerHintOverrides)
      */
     fun getCornerHintsForKey(key: String): List<String> {
-        return cornerHintOverrides[key.lowercase()] ?: getAccentsForKey(key)
+        val ordre = if (disposition.estKabyle) cornerHintOverrides[key.lowercase()] else null
+        return ordre ?: getAccentsForKey(key)
     }
 
     /**
