@@ -1,16 +1,6 @@
-import java.util.Properties
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-}
-
-// La clé de téléversement Google Play vit hors du dépôt. Sans elle, le build release se fait
-// sans signature, et rien de secret n'entre dans git.
-val proprietesSignature = file(System.getProperty("user.home") +
-    "/.config/kab-board-signature/keystore.properties")
-val signature = Properties().apply {
-    if (proprietesSignature.isFile) proprietesSignature.inputStream().use { load(it) }
 }
 
 // Nom du fichier produit : kab-board-debug.apk, et non app-debug.apk.
@@ -62,24 +52,12 @@ android {
                                             // corrige de la meme facon.
                                             "onnx") }
 
-    signingConfigs {
-        if (signature.getProperty("storeFile") != null) {
-            create("televersement") {
-                storeFile = file(signature.getProperty("storeFile"))
-                storePassword = signature.getProperty("storePassword")
-                keyAlias = signature.getProperty("keyAlias")
-                keyPassword = signature.getProperty("keyPassword")
-            }
-        }
-    }
-
     buildTypes {
-        // L'APK diffusé hors Play est celui-ci. Débogable, il tournait cinq à six fois moins vite :
+        // L'APK diffusé est celui-ci. Débogable, il tournait cinq à six fois moins vite :
         // moteur prêt en 12 s au lieu de 2, une correction en 3 s au lieu de 0,5 à 0,9 s.
         debug { isDebuggable = false }
         release {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.findByName("televersement")
         }
     }
     compileOptions {
