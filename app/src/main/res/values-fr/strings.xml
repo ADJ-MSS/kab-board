@@ -6,6 +6,9 @@
     <string name="etat_choisir">2. Le choisir comme clavier</string>
     <string name="etat_bouton_activer">Ouvrir les reglages</string>
     <string name="etat_bouton_choisir">Choisir le clavier</string>
+    <string name="etat_demarrage">3. Autoriser son démarrage automatique</string>
+    <string name="etat_bouton_demarrage">Autoriser le démarrage</string>
+    <string name="etat_demarrage_detail">Sur ce téléphone, le système empêche de démarrer les applis que vous n\'avez pas ouvertes vous-même : choisi depuis un autre clavier, kab-board ne s\'afficherait pas. Autorisez kab-board dans l\'écran qui s\'ouvre. Si son interrupteur est grisé, désactivez d\'abord « Gérer automatiquement ».</string>
 
     <string name="journal_titre">Aider a ameliorer le correcteur</string>
     <string name="journal_explication">Il n\'existe aucun corpus de vraies fautes en kabyle. Quand vous gardez votre graphie au lieu de la notre, vous nous apprenez ce qu\'aucun test ne dit : quelle faute se produit vraiment, et quelle forme un locuteur juge correcte.</string>

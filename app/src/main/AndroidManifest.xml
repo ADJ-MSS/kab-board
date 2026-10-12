@@ -6,6 +6,15 @@
     <!-- La seule permission, et elle ne s'exerce qu'a l'appui sur le microphone. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <!-- Les écrans des constructeurs qui autorisent le démarrage automatique (ActiviteReglages). -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="smartmanager" />
+        </intent>
+        <package android:name="com.miui.securitycenter" />
+    </queries>
+
     <!-- largeHeap : le moteur tient 57 Mio de donnees vives (lexique de 1,58 million d'entrees, vivier de 449 112 formes, index sonore). -->
     <application
         android:label="@string/app_nom"

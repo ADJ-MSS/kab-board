@@ -2,6 +2,7 @@ package taqbaylit.clavier
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.Settings
@@ -50,6 +51,11 @@ class ActiviteReglages : Activity() {
             (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager)
                 .showInputMethodPicker()
         })
+        ecranDemarrage()?.let { ecran ->
+            colonne.addView(texte(getString(R.string.etat_demarrage)))
+            colonne.addView(bouton(getString(R.string.etat_bouton_demarrage)) { ouvrir(ecran) })
+            colonne.addView(petit(getString(R.string.etat_demarrage_detail)))
+        }
         colonne.addView(texte(getString(R.string.etat_correcteur)))
         colonne.addView(bouton(getString(R.string.etat_bouton_correcteur)) {
             ouvrirChoixCorrecteur()
@@ -281,6 +287,23 @@ class ActiviteReglages : Activity() {
 
     // ---- fabriques de vues, sans XML : l'écran est simple et linéaire
     /** Ouvre l'ecran ou se choisit le correcteur orthographique du systeme. */
+    /**
+     * TCL et Xiaomi empêchent une appli qu'on n'a pas ouverte à la main de démarrer : choisi
+     * depuis un autre clavier, kab-board ne s'affiche alors pas. Ailleurs, l'étape n'apparaît pas.
+     */
+    private fun ecranDemarrage(): Intent? = listOf(
+        Intent(Intent.ACTION_VIEW, Uri.parse("smartmanager://appoptimise")),
+        Intent().setClassName("com.miui.securitycenter",
+            "com.miui.permcenter.autostart.AutoStartManagementActivity")
+    ).firstOrNull { packageManager.resolveActivity(it, 0) != null }
+
+    private fun ouvrir(ecran: Intent) {
+        runCatching { startActivity(ecran) }.onFailure {
+            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", packageName, null)))
+        }
+    }
+
     private fun ouvrirChoixCorrecteur() {
         val direct = Intent().apply {
             setClassName("com.android.settings",

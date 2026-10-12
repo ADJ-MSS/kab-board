@@ -12,6 +12,9 @@ Clavier pour écrire le kabyle, sur Android et sur Linux, et correcteur pour Mic
 - **La barre complète le mot**, de 1 à 3 lettres tapées : les mots qui commencent ainsi, choisis d'après la phrase. Dès la 4e lettre, elle corrige comme avant. Mesuré sur 400 phrases : 24 % de frappes en moins, sans rien perdre en correction.
 - **« tamurt iw » devient « tamurt-iw » en une fois.** La correction qui rattache un possessif au mot d'avant remplace désormais les deux mots, dans la barre comme dans Relire.
 - La graphie **v** est le réglage de départ, sur Android comme sur Linux ; un choix déjà fait est respecté.
+- **Français ou anglais sans changer de clavier.** Un appui long sur la barre d'espace propose Taqbaylit, Français (AZERTY) ou English (QWERTY). En AZERTY et en QWERTY, les appuis longs donnent les accents du français et le correcteur kabyle se tait.
+- **Plus rapide.** Sur un téléphone d'entrée de gamme, le moteur est prêt en 2 s au lieu de 12, une correction arrive en moins d'une seconde au lieu de 3, et les propositions s'affichent pendant qu'on tape au lieu d'attendre une pause.
+- **Démarrage automatique.** Sur les téléphones TCL et Xiaomi, une étape de la mise en place ouvre l'écran qui autorise kab-board à démarrer : sans elle, le clavier choisi depuis un autre ne s'affichait pas.
 - **Kab-board pour Word**, première version publique : un onglet dans le ruban, la relecture du document ou de la sélection, les propositions au clic droit, « Mon dictionnaire », la graphie b ou v et la dictée en kabyle. Comme sur le téléphone, tout se calcule sur l'ordinateur.
 
 ## Version 0.2

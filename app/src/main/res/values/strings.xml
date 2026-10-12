@@ -8,6 +8,9 @@
     <string name="etat_choisir">2. Choose it as your keyboard</string>
     <string name="etat_bouton_activer">Open settings</string>
     <string name="etat_bouton_choisir">Choose keyboard</string>
+    <string name="etat_demarrage">3. Let it start automatically</string>
+    <string name="etat_bouton_demarrage">Allow automatic start</string>
+    <string name="etat_demarrage_detail">On this phone, the system stops apps you have not opened yourself from starting: chosen from another keyboard, kab-board would not appear. Allow kab-board on the screen that opens. If its switch is greyed out, first turn off \"Manage automatically\".</string>
 
     <string name="journal_titre">Help improve the corrector</string>
     <string name="journal_explication">There is no corpus of real Kabyle spelling errors. When you keep a form over the one suggested, you teach us something no test can: which error actually occurs, and which form a speaker judges correct.</string>

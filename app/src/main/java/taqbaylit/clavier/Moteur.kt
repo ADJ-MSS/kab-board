@@ -23,6 +23,10 @@ object Moteur {
     @Volatile var avancement: Int = 0
         private set
 
+    /** La complétion se construit quelques secondes après le moteur. */
+    @Volatile var completionPrete = false
+        private set
+
     /** Le moteur, en le construisant au besoin. */
     fun obtenir(ctx: Context): Correcteur? = synchronized(verrou) {
         correcteur?.let { return it }
@@ -44,13 +48,16 @@ object Moteur {
             correcteur = it
             etat = Etat.PRET
             Log.i(TAG, "MOTEUR PRET en ${System.currentTimeMillis() - t0} ms")
-            // Le vocabulaire de complétion se construit en parcourant tout le lexique : en
-            // arrière-plan maintenant, plutôt qu'à la première lettre tapée.
+            // Le vocabulaire de complétion parcourt tout le lexique. Hors du verrou : sinon toutes
+            // les propositions attendaient derrière, le message de chargement déjà disparu.
             Thread {
                 val t1 = System.currentTimeMillis()
-                avec(ctx) { c -> c.completion.taille }?.let { n ->
-                    Log.i(TAG, "complétion prête : $n mots en ${System.currentTimeMillis() - t1} ms")
-                }
+                runCatching { it.completion.taille }
+                    .onSuccess { n ->
+                        completionPrete = true
+                        Log.i(TAG, "complétion prête : $n mots en ${System.currentTimeMillis() - t1} ms")
+                    }
+                    .onFailure { e -> Log.e(TAG, "complétion indisponible", e) }
             }.start()
         }.onFailure {
             echoue = true
