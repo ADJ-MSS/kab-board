@@ -35,6 +35,20 @@ class CompletionTest {
     }
 
     @Test
+    fun `un possessif apres un mot laisse la place a la correction`() {
+        val iw = Completion(listOf("iwakken", "isem", "tamurt"), listOf(900, 800, 700))
+        // Sans cette règle, « iw » se complétait en « iwakken » et « tamurt iw » ne
+        // devenait jamais « tamurt-iw ».
+        assertNull(iw.barre("tamurt", "iw", 6, null, rienFiable))
+        assertNull(iw.barre("deg tmurt", "is", 6, null, rienFiable))
+        // En tête de phrase ou après une virgule, rien à rattacher : on complète.
+        assertEquals(listOf("iwakken"), iw.barre("", "iw", 6, null, rienFiable))
+        assertEquals(listOf("iwakken"), iw.barre("tamurt,", "iw", 6, null, rienFiable))
+        // « ise » n'est pas un possessif.
+        assertEquals(listOf("isem"), iw.barre("tamurt", "ise", 6, null, rienFiable))
+    }
+
+    @Test
     fun `jusqu'a trois lettres la barre complete`() {
         assertEquals(listOf("tameṭṭut", "tamurt", "tamdint", "tamettant"),
             c.barre("", "tam", 6, null, rienFiable))
