@@ -885,8 +885,9 @@ class ClavierKabyle : InputMethodService(),
             if (!isActive) return@avec null
             // De 1 à 3 lettres, c'est à la complétion de répondre : corriger un début de mot coûte
             // autant qu'un mot entier, pour rien.
-            if (!Moteur.completionPrete && mot.length <= Completion.SEUIL) return@avec Barre(emptyList())
             val tape = Normalisation.normalize(mot)
+            if (!Moteur.completionPrete && mot.length <= Completion.SEUIL &&
+                !Completion.cedeALaCorrection(gauche, tape)) return@avec Barre(emptyList())
             (if (Moteur.completionPrete) m.completion else null)
                 ?.barre(gauche, tape, MAX_PROPOSITIONS, m.modeleLangue,
                         Completion.motDeDictionnaire(m.res))

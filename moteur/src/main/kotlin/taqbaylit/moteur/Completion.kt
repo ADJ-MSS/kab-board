@@ -37,6 +37,13 @@ class Completion(mots: List<String>, freqs: List<Int>) {
          * lexique agrégé compte des bouts de mots, « ẓr » ou « lx », présents dans plus de
          * trois sources.
          */
+        /**
+         * « tamurt iw » : un possessif tapé juste après un mot se rattache à lui, et seule la
+         * correction en contexte le voit. La complétion lui laisse la place.
+         */
+        fun cedeALaCorrection(contexteGauche: String, tape: String): Boolean =
+            tape in Normalisation.POSSESSIFS && contexteGauche.trimEnd().lastOrNull()?.isLetter() == true
+
         fun motDeDictionnaire(res: Ressources): (String) -> Boolean =
             { m -> res.lexcat(m) != null || m in res.amyag }
 
@@ -95,7 +102,7 @@ class Completion(mots: List<String>, freqs: List<Int>) {
      */
     fun barre(contexteGauche: String, tape: String, nb: Int, lm: ModeleLangue?,
               estUnMot: (String) -> Boolean): List<String>? {
-        if (tape.isEmpty() || tape.length > SEUIL) return null
+        if (tape.isEmpty() || tape.length > SEUIL || cedeALaCorrection(contexteGauche, tape)) return null
         val comp = completer(contexteGauche, tape, nb, lm)
         if (comp.isEmpty()) return null
         val tete = if (estUnMot(tape)) listOf(tape) else emptyList()

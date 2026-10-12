@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent / "pipeline"))
 from completion import Completion, SEUIL, LONGUEUR_MIN
 
 ok, rates = 0, []
@@ -19,7 +20,7 @@ class Faux:
     def __init__(self, dictionnaire):
         self.freq = {"tamurt": 900, "tameṭṭut": 1200, "tamdint": 300, "taqbaylit": 800,
                      "axxam": 2000, "aɣrum": 700, "tamettant": 60,
-                     "tam": 5000, "rare": 10}
+                     "tam": 5000, "rare": 10, "iwakken": 900, "isem": 800}
         self.kenlm = None
         self.lexcat = {m: "particle" for m in dictionnaire}
         self.amyag = set()
@@ -36,6 +37,11 @@ verifie("jusqu'à trois lettres, la barre complète", c.barre("", "tam"),
         ["tameṭṭut", "tamurt", "tamdint", "tamettant"])
 verifie("au-delà, plus de complétion", c.barre("", "tame"), None)
 verifie("faute en tête, on corrige", c.barre("", "tma"), None)
+verifie("« tamurt iw » : le possessif laisse la place à la correction", c.barre("tamurt", "iw"), None)
+verifie("de même pour « is »", c.barre("deg tmurt", "is"), None)
+verifie("en tête de phrase, on complète", c.barre("", "iw"), ["iwakken"])
+verifie("après une virgule aussi", c.barre("tamurt,", "iw"), ["iwakken"])
+verifie("« ise » n'est pas un possessif", c.barre("tamurt", "ise"), ["isem"])
 verifie("un mot court sûr reste en tête",
         Completion(Faux({"tam"})).barre("", "tam", 3), ["tam", "tameṭṭut", "tamurt"])
 verifie("seuils de la mesure", (SEUIL, LONGUEUR_MIN), (3, 4))

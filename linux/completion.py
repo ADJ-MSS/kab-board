@@ -20,6 +20,13 @@ FREQ_MIN = 50        # un mot assez fréquent pour être proposé sans qu'on l'a
 PAR_PREFIXE = 400    # les plus fréquents d'un début, avant le modèle de langue
 
 
+def cede_a_la_correction(contexte, tape):
+    """« tamurt iw » : un possessif tapé juste après un mot se rattache à lui, et seule la
+    correction en contexte le voit. La complétion lui laisse la place."""
+    from normalisation import POSSESSIFS_KABYLE
+    return tape in POSSESSIFS_KABYLE and (contexte or "").rstrip()[-1:].isalpha()
+
+
 class Completion:
 
     def __init__(self, ressources):
@@ -73,7 +80,7 @@ class Completion:
         """Ce que montre la barre pour un mot de 1 à SEUIL lettres : le mot tapé s'il
         est déjà un mot des dictionnaires, puis les complétions. None quand rien ne
         commence ainsi : la barre corrige alors comme avant."""
-        if not tape or len(tape) > SEUIL:
+        if not tape or len(tape) > SEUIL or cede_a_la_correction(contexte, tape):
             return None
         comp = self.completer(contexte, tape, nb)
         if not comp:
