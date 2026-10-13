@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+# Ce que l'on construit : le paquet se refait avec paquet/construire.ps1
+/construction/
+/sortie/
+/natif/build/
+*.dll
+*.res
+*.exe
+*.zip
+# Les ressources (lexique, modèles) ne sont pas versionnées
+/modeles/
+/assets/
+/python/
+/donnees/
+# Les sorties de LaTeX
+manuel/*.aux
+manuel/*.log
+manuel/*.out
+manuel/*.toc

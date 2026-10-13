@@ -1,0 +1,91 @@
+name: Paquet
+
+# Le dossier portable, son .zip et l'installeur, vérifiés avec le vrai
+# correcteur, puis publiés sur la page des versions de ce dépôt.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version (sans le v)
+        required: true
+        default: '0.1'
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+env:
+  VERSION: ${{ github.event.inputs.version || github.ref_name }}
+
+jobs:
+  natif:
+    name: Ponts natifs et lanceur (mingw-w64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - name: kab-board, au commit repris
+        run: |
+          git clone --quiet --filter=blob:none https://github.com/ADJ-MSS/kab-board.git ../kab-board
+          git -C ../kab-board checkout --quiet "$(cat moteur/AMONT-COMMIT)"
+      - name: mingw-w64
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+      - run: ./natif/construire-dll.sh ../kab-board
+      - run: ./lanceur/construire.sh
+      - uses: actions/upload-artifact@v5
+        with:
+          name: natif
+          retention-days: 3
+          path: |
+            natif/build/*.dll
+            lanceur/Kab-board.exe
+
+  paquet:
+    name: Paquet Windows
+    needs: natif
+    runs-on: windows-latest
+    timeout-minutes: 60
+    env:
+      KAB_BOARD_DONNEES: ${{ github.workspace }}\donnees-essai
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - uses: actions/download-artifact@v5
+        with:
+          name: natif
+      - name: Inno Setup
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) {
+            choco install innosetup -y --no-progress | Out-Null
+          }
+      - name: Construire
+        shell: pwsh
+        run: ./paquet/construire.ps1 -Version ($env:VERSION -replace '^v', '')
+      - name: Vérifier avec le vrai correcteur
+        run: sortie\Kab-board\python\python.exe paquet\verifier.py sortie\Kab-board
+      - name: Kab-board.exe, comme au démarrage de Windows
+        run: sortie\Kab-board\python\python.exe paquet\essai_lanceur.py sortie\Kab-board
+      - name: Journaux
+        if: always()
+        shell: pwsh
+        run: Get-ChildItem $env:KAB_BOARD_DONNEES -Filter *.log -ErrorAction SilentlyContinue | ForEach-Object { "== $($_.Name)"; Get-Content $_.FullName -Tail 60 }
+      - name: Publier
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $v = $env:VERSION -replace '^v', ''
+          $fichiers = @(Get-ChildItem sortie -File | Where-Object { $_.Extension -in '.zip', '.exe', '.txt' } | ForEach-Object { $_.FullName })
+          gh release view "v$v" *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload "v$v" @fichiers --clobber
+          } else {
+            gh release create "v$v" @fichiers --prerelease --title "Kab-board pour Windows $v" --notes-file paquet/NOTES-VERSION.md --target $env:GITHUB_SHA
+          }

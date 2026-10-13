@@ -1,0 +1,54 @@
+name: Vérifier
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    name: Logique et interface (Linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Outils
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q xvfb
+          pip install --quiet ruff
+      - name: Relecture du code
+        run: ruff check --select E,F,W --ignore E501,E402 windows paquet outils
+      - name: Le moteur repris de kab-board
+        working-directory: moteur
+        run: |
+          python test_graphie_bv.py
+          python test_completion.py
+          python test_saisie.py
+      - name: Le clavier
+        run: xvfb-run -a python -m unittest discover -s windows/tests -v
+
+  windows:
+    name: Pour de vrai (Windows)
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - name: Le moteur repris de kab-board
+        working-directory: moteur
+        run: |
+          python test_graphie_bv.py
+          python test_completion.py
+          python test_saisie.py
+      - name: Le clavier, le crochet, le Bloc-notes
+        run: python -m unittest discover -s windows/tests -v
