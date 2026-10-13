@@ -1,5 +1,4 @@
-﻿# Fabrique Kab-board pour Windows : le dossier portable, son archive .zip et
-# l'installeur.
+﻿# Fabrique Kab-board pour Windows : son dossier et l'installeur.
 #
 #   powershell -ExecutionPolicy Bypass -File paquet\construire.ps1 -Version 0.2
 #
@@ -10,10 +9,10 @@
 #     lanceur\construire.sh (mingw-w64, sous Linux ou WSL ; la CI le fait) ;
 #   - le paquet Linux de kab-board 0.3 (kab-board-0.3.deb), dont on reprend les
 #     ressources : téléchargé de la page des versions s'il n'est pas fourni ;
-#   - Inno Setup 6 pour l'installeur (facultatif : sans lui, seulement le .zip).
+#   - Inno Setup 6 pour l'installeur.
 #
-# Sortie : sortie\Kab-board\ (le dossier), sortie\kab-board-windows-<v>-portable.zip,
-#          sortie\kab-board-windows-<v>-setup.exe, sortie\SHA256SUMS.txt
+# Sortie : sortie\Kab-board\ (le dossier), sortie\kab-board-windows-<v>-setup.exe,
+#          sortie\SHA256SUMS.txt
 
 param(
     [string]$Version = "0.2",
@@ -146,23 +145,8 @@ Etape "compilation…"
 $taille = (Get-ChildItem $dist -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
 Write-Host ("  dossier : {0:N0} Mo" -f $taille)
 
-# 5. L'archive portable : le même dossier, avec portable.txt
-Etape "archive portable…"
-Set-Content -Path (Join-Path $dist 'portable.txt') -Encoding UTF8 -Value @(
-    "Ce fichier rend Kab-board portable : reglages, dictionnaire et cache restent",
-    "dans le dossier donnees\, a cote. Supprimez-le pour tout ranger dans",
-    "%LOCALAPPDATA%\kab-board, comme Kab-board pour Word.")
-$zip = Join-Path $sortie "kab-board-windows-$Version-portable.zip"
-if (Test-Path $zip) { Remove-Item $zip }
-Push-Location $sortie
-try {
-    & tar.exe -a -c -f $zip 'Kab-board'
-    if ($LASTEXITCODE -ne 0) { throw "l'archive n'a pas pu être faite" }
-} finally { Pop-Location }
-Remove-Item (Join-Path $dist 'portable.txt')
-
-# 6. L'installeur
-$fichiers = @($zip)
+# 5. L'installeur
+$fichiers = @()
 if (-not $SansInstalleur) {
     $iscc = @("$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe",
               "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
@@ -173,7 +157,7 @@ if (-not $SansInstalleur) {
         if ($LASTEXITCODE -ne 0) { throw "Inno Setup a échoué" }
         $fichiers += Join-Path $sortie "kab-board-windows-$Version-setup.exe"
     } else {
-        Write-Host "  Inno Setup absent : pas d'installeur (winget install JRSoftware.InnoSetup)"
+        throw "Inno Setup absent : winget install JRSoftware.InnoSetup"
     }
 }
 

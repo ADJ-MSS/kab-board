@@ -163,7 +163,6 @@ class LInterface(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    os.environ.setdefault("KAB_BOARD_PORTABLE", "0")
     unittest.main()
 
 

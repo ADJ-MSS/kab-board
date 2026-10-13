@@ -9,7 +9,7 @@ les nôtres (« modeles »). On le lit malgré le BOM, et ses clés restent.
 
 La graphie b ou v est aussi celle de Word, qui la garde dans le registre
 (HKCU\\Software\\Kab-board, « Graphie ») : choisie ici ou dans Word, elle vaut
-pour les deux. Sauf sur une clé USB, qui ne laisse rien sur l'ordinateur.
+pour les deux.
 """
 import json
 import os
@@ -20,8 +20,7 @@ CLE_WORD = r"Software\Kab-board"
 
 
 def _partage_avec_word() -> bool:
-    return (lieux.WINDOWS and not lieux.PORTABLE
-            and not os.environ.get("KAB_BOARD_DONNEES"))
+    return (lieux.WINDOWS and not os.environ.get("KAB_BOARD_DONNEES"))
 
 
 def graphie_de_word():

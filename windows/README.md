@@ -2,8 +2,7 @@
 
 Le clavier kabyle de [kab-board](https://github.com/ADJ-MSS/kab-board), sur
 Windows 10 et 11 : il écrit **dans toutes les applications** (navigateur,
-messagerie, Word, Bloc-notes…), et il **tient sur une clé USB**. Correction en
-contexte, six propositions, complétion, prédiction du mot suivant, graphie b ou
+messagerie, Word, Bloc-notes…). Correction en contexte, six propositions, complétion, prédiction du mot suivant, graphie b ou
 v, clavier à l'écran, dictée en kabyle. **100 % hors ligne** : tout se calcule
 sur l'ordinateur.
 
@@ -45,13 +44,11 @@ Le clavier se tait :
 - après un clic, une flèche, un raccourci : il ne sait plus ce qui précède le
   curseur, et repart au mot suivant.
 
-## Avec soi
+## Où vont les choses
 
-`Kab-board.exe` lance le Python livré dans son dossier. Avec `portable.txt` à
-côté (l'archive `.zip`), réglages, « mon dictionnaire » et cache restent dans
-`donnees/`, sur la clé. Sans lui (l'installeur), ils vont dans
-`%LOCALAPPDATA%\kab-board`, et « mon dictionnaire » est celui de Kab-board pour
-Word.
+`Kab-board.exe` lance le Python livré dans son dossier. Réglages, « mon
+dictionnaire » et cache vont dans `%LOCALAPPDATA%\kab-board`, et « mon
+dictionnaire » est celui de Kab-board pour Word.
 
 ## Construire
 
@@ -94,7 +91,7 @@ du crochet et du Bloc-notes ne tournent que sous Windows.
 ## Mode d'emploi
 
 [`manuel/Kab-board-Windows-manuel-0.2.pdf`](manuel/Kab-board-Windows-manuel-0.2.pdf),
-16 pages illustrées : de l'installation à la désinstallation. La source est
+15 pages illustrées : de l'installation à la désinstallation. La source est
 `manuel/manuel.tex`, ses captures dans `manuel/captures/` :
 
 ```

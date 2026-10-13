@@ -113,8 +113,6 @@ class Fenetre:
         self._titre(gauche, "Au démarrage")
         self.v_demarrage = tk.BooleanVar(value=demarrage_actif())
         detail = "Le clavier sera prêt sans ouvrir cette fenêtre."
-        if lieux.PORTABLE:
-            detail += " Sur une clé USB, cela ne vaut que pour cet ordinateur."
         inter = self._interrupteur(gauche, self.v_demarrage, "Démarrer avec Windows", detail,
                                    self._basculer_demarrage)
         if not WINDOWS:
@@ -156,9 +154,6 @@ class Fenetre:
         self.etat = tk.Label(page, text="", anchor="w", justify="left", fg=DISCRET,
                              font=self.petite, wraplength=760)
         self.etat.pack(fill="x", pady=(14, 0))
-        if lieux.PORTABLE:
-            self._petit(page, f"Mode portable : réglages, dictionnaire et cache restent dans "
-                              f"{lieux.DONNEES}.", largeur=760)
 
         self._relever()
         ecran.tenir(racine)
@@ -276,7 +271,7 @@ def principal(argv) -> int:
     racine = tk.Tk()
     fenetre = Fenetre(racine)
     if "--allumer" in argv and not fenetre._clavier_allume():
-        # Ouvrir Kab-board allume le clavier : sur une clé USB, un double-clic suffit.
+        # Ouvrir Kab-board allume le clavier.
         processus.lancer("kab_saisie.py")
         fenetre.v_clavier.set(True)
         fenetre._dire("Démarrage du clavier… le correcteur se prépare en quelques secondes.")

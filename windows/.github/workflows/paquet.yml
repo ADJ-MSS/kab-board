@@ -1,7 +1,7 @@
 name: Paquet
 
-# Le dossier portable, son .zip et l'installeur, vérifiés avec le vrai
-# correcteur, puis publiés sur la page des versions de ce dépôt.
+# L'installeur, vérifié avec le vrai correcteur, puis publié sur la page des
+# versions de ce dépôt.
 on:
   workflow_dispatch:
     inputs:
@@ -82,7 +82,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $v = $env:VERSION -replace '^v', ''
-          $fichiers = @(Get-ChildItem sortie -File | Where-Object { $_.Extension -in '.zip', '.exe', '.txt' } | ForEach-Object { $_.FullName })
+          $fichiers = @(Get-ChildItem sortie -File | Where-Object { $_.Extension -in '.exe', '.txt' } | ForEach-Object { $_.FullName })
           gh release view "v$v" *> $null
           if ($LASTEXITCODE -eq 0) {
             gh release upload "v$v" @fichiers --clobber

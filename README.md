@@ -16,7 +16,7 @@ Clavier pour écrire le kabyle, sur Android, sur Linux et sur Windows, et correc
 - **Français ou anglais sans changer de clavier.** Un appui long sur la barre d'espace propose Taqbaylit, Français (AZERTY) ou English (QWERTY). En AZERTY et en QWERTY, les appuis longs donnent les accents du français et le correcteur kabyle se tait.
 - **Plus rapide.** Sur un téléphone d'entrée de gamme, le moteur est prêt en 2 s au lieu de 12, une correction arrive en moins d'une seconde au lieu de 3, et les propositions s'affichent pendant qu'on tape au lieu d'attendre une pause.
 - **Démarrage automatique.** Sur les téléphones TCL et Xiaomi, une étape de la mise en place ouvre l'écran qui autorise kab-board à démarrer : sans elle, le clavier choisi depuis un autre ne s'affichait pas.
-- **Kab-board pour Windows**, première version publique : le clavier kabyle écrit dans toutes les applications, avec la barre des six propositions sous le mot, la complétion, la graphie b ou v, le clavier à l'écran et la dictée. Un installeur qui emporte tout, ou une archive à garder sur une clé USB.
+- **Kab-board pour Windows**, première version publique : le clavier kabyle écrit dans toutes les applications, avec la barre des six propositions sous le mot, la complétion, la graphie b ou v, le clavier à l'écran et la dictée. Un installeur qui emporte tout, sans droits d'administrateur.
 - **Kab-board pour Word**, première version publique : un onglet dans le ruban, la relecture du document ou de la sélection, les propositions au clic droit, « Mon dictionnaire », la graphie b ou v et la dictée en kabyle. Comme sur le téléphone, tout se calcule sur l'ordinateur.
 
 ## Version 0.2
