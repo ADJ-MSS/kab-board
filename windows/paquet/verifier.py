@@ -17,7 +17,6 @@ from pathlib import Path
 
 RACINE = Path(sys.argv[1]).resolve()
 os.environ["KAB_BOARD_DONNEES"] = tempfile.mkdtemp(prefix="kab-verif-")
-os.environ["KAB_BOARD_PORTABLE"] = "0"
 sys.path.insert(0, str(RACINE / "windows"))
 
 import lieux  # noqa: E402

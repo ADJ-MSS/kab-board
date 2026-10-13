@@ -21,7 +21,7 @@ graphies, même complétion, même saisie. Le commit d'origine est dans
   vivier de la version Word (`word/kab-board-word-complet-0.1/moteur/linux/pipeline/ressources.py`),
   qui fait passer le chargement d'une minute à une dizaine de secondes. Le
   dossier du cache se règle par `KAB_BOARD_CACHE` : `cache-clavier/` à côté
-  des réglages (sur la clé en mode portable), jamais le `cache/` de Word.
+  des réglages, jamais le `cache/` de Word.
 - `test_graphie_bv.py` : le chemin de la table, `graphie/table_bv.tsv`.
 
 ## Reprendre une nouvelle version

@@ -1,14 +1,8 @@
 """Où sont les choses : l'application, ses ressources, et ce qu'elle retient.
 
-Deux façons de l'avoir avec soi :
-
-- **portable** : un fichier `portable.txt` à côté de `Kab-board.exe`. Tout ce
-  que l'application retient (réglages, « mon dictionnaire », cache, journal)
-  reste dans son dossier, `donnees/`. On copie le dossier sur une clé USB, et
-  le clavier kabyle suit d'un ordinateur à l'autre, sans rien installer.
-- **installée** : sans ce fichier, elle range ses affaires dans
-  `%LOCALAPPDATA%\\kab-board`, comme Kab-board pour Word. « Mon dictionnaire »
-  est alors le même dans Word et partout ailleurs.
+Ce que l'application retient (réglages, « mon dictionnaire », cache, journal)
+va dans `%LOCALAPPDATA%\\kab-board`, comme pour Kab-board pour Word. « Mon
+dictionnaire » est le même dans Word et partout ailleurs.
 
 Les ressources (lexique, modèle de langue, modèle vocal) sont cherchées dans le
 dossier de l'application, puis dans celui de Kab-board pour Word s'il est
@@ -26,20 +20,9 @@ PIPELINE = MOTEUR / "pipeline"
 WINDOWS = os.name == "nt"
 
 
-def _portable() -> bool:
-    if os.environ.get("KAB_BOARD_PORTABLE") in ("0", "1"):
-        return os.environ["KAB_BOARD_PORTABLE"] == "1"
-    return (RACINE / "portable.txt").exists()
-
-
-PORTABLE = _portable()
-
-
 def _donnees() -> Path:
     if os.environ.get("KAB_BOARD_DONNEES"):
         return Path(os.environ["KAB_BOARD_DONNEES"])
-    if PORTABLE:
-        return RACINE / "donnees"
     if WINDOWS:
         return Path(os.environ.get("LOCALAPPDATA", Path.home())) / "kab-board"
     return Path.home() / ".config" / "kab-board"

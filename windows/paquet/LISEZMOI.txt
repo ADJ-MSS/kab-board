@@ -8,19 +8,16 @@ Tout se calcule sur l'ordinateur : rien n'est envoyé, aucune connexion n'est
 ouverte.
 
 
-IL VOUS SUIT PARTOUT
---------------------
+TOUT EST DEDANS
+---------------
 
   Ce dossier se suffit à lui-même : Python, le correcteur, ses 1,58 million de
-  mots, le modèle de langue et le modèle vocal sont dedans. Copiez-le sur une
-  clé USB : sur n'importe quel Windows 10 ou 11 (64 bits), un double-clic sur
-  Kab-board.exe et le clavier kabyle est là, sans rien installer, sans droits
-  d'administrateur.
+  mots, le modèle de langue et le modèle vocal sont dedans. Rien d'autre à
+  installer, et pas besoin de droits d'administrateur.
 
-  Avec le fichier portable.txt (archive .zip), vos réglages, « mon
-  dictionnaire » et le cache restent dans le dossier donnees\, sur la clé.
-  Sans lui (installeur), ils vont dans %LOCALAPPDATA%\kab-board, comme
-  Kab-board pour Word : « mon dictionnaire » est alors le même dans Word.
+  Vos réglages, « mon dictionnaire » et le cache vont dans
+  %LOCALAPPDATA%\kab-board, comme Kab-board pour Word : « mon dictionnaire »
+  est le même dans Word.
 
 
 DÉMARRER
@@ -122,8 +119,7 @@ DÉMARRER AVEC WINDOWS
 ---------------------
 
   Réglages > « Démarrer avec Windows » : le clavier s'allume à l'ouverture de
-  la session, sans la fenêtre de réglages. Depuis une clé USB, ce réglage ne
-  vaut que pour l'ordinateur où il a été coché.
+  la session, sans la fenêtre de réglages.
 
 
 ARRÊTER
@@ -143,8 +139,7 @@ CE QU'IL FAUT SAVOIR
   - Pour la dictée, si Windows bloque le micro : Paramètres > Confidentialité
     et sécurité > Microphone, autorisez les applications de bureau. La voix
     est transcrite sur place, et l'enregistrement effacé aussitôt.
-  - Le journal est dans donnees\ (portable) ou %LOCALAPPDATA%\kab-board :
-    saisie.log, service.log.
+  - Le journal est dans %LOCALAPPDATA%\kab-board : saisie.log, service.log.
 
 
   kab-board, clavier et correcteur kabyles. Licence GNU GPL 3 ou ultérieure.

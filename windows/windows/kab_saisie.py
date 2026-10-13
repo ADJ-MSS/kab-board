@@ -501,7 +501,7 @@ class Noyau:
                     "propositions": list(f.propositions), "graphie": self.reglages["graphie"],
                     "clavier": self.clavier.visible, "service": self.etat_service,
                     "crochet": bool(self.crochets and not self.crochets.erreur) or not WINDOWS,
-                    "portable": lieux.PORTABLE, "pid": os.getpid()}
+                    "pid": os.getpid()}
         if quoi == "reglages":
             self.planifier(self.relire_reglages)
             return {"ok": True}

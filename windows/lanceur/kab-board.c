@@ -2,10 +2,7 @@
  *
  *   Kab-board.exe             l'application de réglages, et le clavier allumé
  *   Kab-board.exe --clavier   le clavier seul (démarrage avec Windows)
- *   Kab-board.exe --bureau    la fenêtre « Écrire et relire »
- *
- * Rien n'est écrit ailleurs que dans le dossier : copié sur une clé USB, il
- * fonctionne tel quel sur un autre ordinateur. */
+ *   Kab-board.exe --bureau    la fenêtre « Écrire et relire » */
 #ifndef UNICODE
 #define UNICODE
 #endif

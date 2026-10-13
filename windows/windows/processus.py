@@ -38,8 +38,8 @@ def instance_unique(nom: str, par_dossier: bool = False) -> bool:
     jusqu'à sa fin, même brutale.
 
     par_dossier : le seul pour ce dossier de données. Le service se joint par
-    une fiche rangée dans ce dossier : une copie portable à côté de la version
-    installée a le sien. (Le clavier, lui, est seul dans la session : deux
+    une fiche rangée dans ce dossier : une autre copie, avec ses propres
+    données, a le sien. (Le clavier, lui, est seul dans la session : deux
     crochets traiteraient chaque touche deux fois.)"""
     if WINDOWS:
         if par_dossier:

@@ -4,8 +4,8 @@
 ; Setup avec /DVersion=… et /DSource=…
 ;
 ; Tout s'installe dans le compte de l'utilisateur (%LOCALAPPDATA%\Programs) :
-; aucun droit d'administrateur n'est demandé. Sans portable.txt, réglages et
-; « mon dictionnaire » vont dans %LOCALAPPDATA%\kab-board, comme pour Word.
+; aucun droit d'administrateur n'est demandé. Réglages et « mon dictionnaire »
+; vont dans %LOCALAPPDATA%\kab-board, comme pour Word.
 
 #ifndef Version
   #define Version "0.2"
@@ -56,7 +56,7 @@ fr.FinishedLabelNoIcons=L'assistant a terminé l'installation de [name] sur votr
 Name: "demarrage"; Description: "Allumer le clavier kabyle à l'ouverture de la session"; Flags: unchecked
 
 [Files]
-Source: "{#Source}\*"; DestDir: "{app}"; Excludes: "portable.txt,donnees"; Flags: recursesubdirs ignoreversion
+Source: "{#Source}\*"; DestDir: "{app}"; Excludes: "donnees"; Flags: recursesubdirs ignoreversion
 
 [Icons]
 Name: "{userprograms}\Kab-board"; Filename: "{app}\Kab-board.exe"; Comment: "Clavier et correcteur kabyles"

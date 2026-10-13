@@ -1,4 +1,4 @@
-Le clavier kabyle de kab-board, pour **Windows 10 et 11** (64 bits) : il écrit dans **toutes les applications**, et il tient sur une clé USB. Tout se calcule sur l'ordinateur : aucune connexion, rien n'est envoyé.
+Le clavier kabyle de kab-board, pour **Windows 10 et 11** (64 bits) : il écrit dans **toutes les applications**. Tout se calcule sur l'ordinateur : aucune connexion, rien n'est envoyé.
 
 ## Corrigé dans la 0.2
 
@@ -29,9 +29,8 @@ Le même correcteur que sur Android et Linux (kab-board 0.3.3), ses ressources c
 
 ## Installer
 
-- **Portable** : `kab-board-windows-…-portable.zip`. Décompressez, double-cliquez `Kab-board.exe`. Copiez le dossier sur une clé USB : il vous suit d'un ordinateur à l'autre, réglages compris, sans rien installer.
-- **Installeur** : `kab-board-windows-…-setup.exe`, pour votre compte seulement, sans droits d'administrateur.
+`kab-board-windows-…-setup.exe`, pour votre compte seulement, sans droits d'administrateur.
 
-Ni l'un ni l'autre n'est signé : si Windows affiche « Windows a protégé votre ordinateur », cliquez « Informations complémentaires », puis « Exécuter quand même ».
+Il n'est pas signé : si Windows affiche « Windows a protégé votre ordinateur », cliquez « Informations complémentaires », puis « Exécuter quand même ».
 
 Les empreintes SHA-256 sont dans `SHA256SUMS.txt`.
