@@ -1,0 +1,152 @@
+﻿Kab-board pour Windows
+======================
+
+Le clavier kabyle qui écrit dans toutes les applications : navigateur,
+messagerie, Word, Bloc-notes… Correction en contexte, six propositions,
+complétion, prédiction du mot suivant, graphie b ou v, dictée en kabyle.
+Tout se calcule sur l'ordinateur : rien n'est envoyé, aucune connexion n'est
+ouverte.
+
+
+IL VOUS SUIT PARTOUT
+--------------------
+
+  Ce dossier se suffit à lui-même : Python, le correcteur, ses 1,58 million de
+  mots, le modèle de langue et le modèle vocal sont dedans. Copiez-le sur une
+  clé USB : sur n'importe quel Windows 10 ou 11 (64 bits), un double-clic sur
+  Kab-board.exe et le clavier kabyle est là, sans rien installer, sans droits
+  d'administrateur.
+
+  Avec le fichier portable.txt (archive .zip), vos réglages, « mon
+  dictionnaire » et le cache restent dans le dossier donnees\, sur la clé.
+  Sans lui (installeur), ils vont dans %LOCALAPPDATA%\kab-board, comme
+  Kab-board pour Word : « mon dictionnaire » est alors le même dans Word.
+
+
+DÉMARRER
+--------
+
+  Double-cliquez sur Kab-board.exe. La fenêtre de réglages s'ouvre et le
+  clavier kabyle s'allume ; l'icône de Kab-board apparaît près de l'horloge.
+  Le correcteur se prépare en une dizaine de secondes (une minute la toute
+  première fois, le temps de construire son cache) : la frappe fonctionne
+  pendant ce temps, sans propositions.
+
+  Windows n'a jamais vu ce programme : s'il affiche « Windows a protégé votre
+  ordinateur », cliquez « Informations complémentaires », puis « Exécuter
+  quand même ».
+
+
+ÉCRIRE
+------
+
+  Vous tapez sur votre clavier, comme d'habitude, dans n'importe quelle
+  application : aucun clavier à l'écran n'est nécessaire.
+
+  Les lettres kabyles, au clavier ordinaire :
+
+      gh  donne ɣ        AltGr + g  donne ɣ
+      dh  donne ḍ        AltGr + e  donne ɛ
+      kh  donne x        AltGr + d, h, t, z, s  donnent ḍ ḥ ṭ ẓ ṣ
+      aa  donne ɛ        AltGr + c, j, r        donnent č ǧ ṛ
+      ou  donne u
+
+  Un effacement juste après une conversion la défait : gh redevient gh.
+  « Écrire comme on parle » se coupe dans les réglages ou le menu de l'icône.
+
+  Les propositions s'affichent dans une petite barre sous le mot en cours :
+  la correction en contexte d'abord (soulignée en vert), puis les candidats
+  (en bleu) ; de 1 à 3 lettres, les mots qui commencent ainsi (en ocre). Un
+  chiffre de 1 à 6, ou un clic, écrit la proposition choisie, suivie d'une
+  espace. Le mot fini, la barre propose le mot suivant (en ocre) : un clic
+  l'écrit.
+
+  Sur un clavier AZERTY, les chiffres se tapent avec Maj (Maj + & donne 1),
+  ou au pavé numérique : c'est ainsi qu'ils choisissent. La touche & seule
+  écrit &, et é, -, ' restent des lettres et des signes, comme toujours.
+
+  Rien n'est corrigé d'office : l'espace écrit le mot tel que vous l'avez
+  tapé.
+
+  « tamurt iw » devient « tamurt-iw » en une fois : tapez « tamurt iw », la
+  barre propose « tamurt-iw » en tête (en vert), 1 l'écrit. Après « ɣer »,
+  c'est « tmurt-iw ». Jamais par-dessus une virgule.
+
+  Effacer l'espace après un mot le rend de nouveau modifiable : ses
+  propositions reviennent.
+
+  Dans un champ de mot de passe, le clavier kabyle se tait.
+
+
+LE CLAVIER À L'ÉCRAN
+--------------------
+
+  Réglages > « Clavier à l'écran », ou le menu de l'icône. Il reste au-dessus
+  des autres fenêtres et ne prend jamais le curseur : cliquez dans votre
+  texte, puis sur les touches. Il se déplace en tirant sa barre du haut.
+
+  Un appui long sur une touche montre ses variantes (â à, ẓ, ṛ, č…) ; sur
+  l'effacement, il efface le mot entier. Sa rangée d'outils :
+
+      Dicter        parlez en kabyle, puis « Arrêter » : le texte s'écrit au
+                    curseur, jamais corrigé d'office (30 secondes au plus)
+      gh → ɣ        écrire comme on parle, ou non
+      Asegzawal     la fiche du mot : sens, catégorie, état libre et d'annexion
+      fr → kab      chercher un mot kabyle depuis le français
+      Relire        relit le texte copié (Ctrl+C) et peut recopier la version
+                    corrigée dans le presse-papiers
+      Mot du jour   le même pour tout le monde, chaque jour
+
+  Un clic droit sur une proposition ouvre sa fiche.
+
+
+ÉCRIRE ET RELIRE
+----------------
+
+  Une fenêtre pour écrire un texte, le relire mot à mot et le copier :
+  bouton « Écrire et relire » des réglages, ou menu de l'icône. Changer de
+  graphie y réécrit le texte déjà tapé.
+
+
+B OU V
+------
+
+  Certains écrivent abrid, d'autres avrid. Le réglage vaut pour tout ce qui
+  s'affiche : la correction, les propositions, la prédiction, la fiche, la
+  recherche, le mot du jour et la dictée. La graphie v est celle de départ.
+  Si Kab-board pour Word est installé, c'est le même réglage : choisi ici ou
+  dans Word, il vaut pour les deux.
+
+
+DÉMARRER AVEC WINDOWS
+---------------------
+
+  Réglages > « Démarrer avec Windows » : le clavier s'allume à l'ouverture de
+  la session, sans la fenêtre de réglages. Depuis une clé USB, ce réglage ne
+  vaut que pour l'ordinateur où il a été coché.
+
+
+ARRÊTER
+-------
+
+  Menu de l'icône > « Arrêter le clavier kabyle », ou l'interrupteur des
+  réglages. Les touches repartent telles quelles dans les applications.
+
+
+CE QU'IL FAUT SAVOIR
+--------------------
+
+  - Une application lancée « en tant qu'administrateur » refuse qu'on écrive
+    à sa place : le clavier kabyle s'y tait.
+  - Certaines applications ne disent pas où est leur curseur : la barre se
+    pose alors en bas de l'écran.
+  - Pour la dictée, si Windows bloque le micro : Paramètres > Confidentialité
+    et sécurité > Microphone, autorisez les applications de bureau. La voix
+    est transcrite sur place, et l'enregistrement effacé aussitôt.
+  - Le journal est dans donnees\ (portable) ou %LOCALAPPDATA%\kab-board :
+    saisie.log, service.log.
+
+
+  kab-board, clavier et correcteur kabyles. Licence GNU GPL 3 ou ultérieure.
+  Ressources linguistiques sous CC BY-SA 4.0, doi 10.5281/zenodo.22112059.
+  Modèle vocal Mmeslay (Aomer Gaya Ouldali), GNU GPL 3. Voir NOTICE.txt.

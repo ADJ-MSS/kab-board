@@ -1,0 +1,39 @@
+﻿Kab-board pour Windows : ce qui vient d'ailleurs
+================================================
+
+Kab-board pour Windows est distribué sous licence GNU GPL, version 3 ou
+ultérieure (fichier LICENSE). Il embarque :
+
+Le correcteur de kab-board
+  Le moteur (dossier moteur\) est celui de kab-board pour Linux, copié tel quel.
+  https://github.com/ADJ-MSS/kab-board : GNU GPL 3 ou ultérieure.
+
+Les ressources linguistiques (dossier modeles\ et assets\moteur\)
+  Lexique, modèle de langue 3-grammes, étiqueteur, graphe sémantique, gloses :
+  Correcteur kabyle, doi.org/10.5281/zenodo.22112059 : CC BY-SA 4.0.
+
+Le modèle vocal (dossier assets\voix\)
+  Mmeslay, de Aomer Gaya Ouldali (G1ya777), exporté en ONNX : GNU GPL 3.
+  https://github.com/G1ya777/Mmeslay_backend-CLI
+
+KenLM (moteur\pipeline\kab_lm.dll)
+  Kenneth Heafield : GNU LGPL 2.1 ou ultérieure. Sources : kab-board, natif\amont\kenlm.
+
+CRFsuite et libLBFGS (moteur\pipeline\kab_crf.dll)
+  Naoaki Okazaki, Jorge Nocedal : licence BSD modifiée et licence MIT.
+  Sources : kab-board, natif\amont\crfsuite et natif\amont\liblbfgs.
+
+Python 3.12 (dossier python\)
+  Python Software Foundation License, version 2 (python\LICENSE.txt).
+  Tcl/Tk 8.6 : licence BSD (python\tcl\).
+
+NumPy : licence BSD (3 clauses).
+ONNX Runtime 1.20.1 : Microsoft, licence MIT.
+RapidFuzz 3.14.5 : Max Bachmann, licence MIT.
+
+Les bibliothèques d'exécution C++ de Microsoft (msvcp140.dll, msvcp140_1.dll,
+vcruntime140.dll, vcruntime140_1.dll) sont redistribuées selon les termes de
+Microsoft Visual C++ Redistributable.
+
+Les licences complètes de chaque module sont dans son dossier, sous
+python\Lib\site-packages\.

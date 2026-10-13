@@ -1,0 +1,343 @@
+% Manuel d'utilisation de Kab-board pour Windows.
+% Compilation : pdflatex manuel.tex, deux fois (sommaire et renvois).
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{tipa}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{newunicodechar}
+% Les lettres kabyles du texte.
+\newunicodechar{ɣ}{\textipa{G}}
+\newunicodechar{ɛ}{\textipa{E}}
+\newunicodechar{ḍ}{\d{d}}
+\newunicodechar{ḥ}{\d{h}}
+\newunicodechar{ṭ}{\d{t}}
+\newunicodechar{ẓ}{\d{z}}
+\newunicodechar{ṣ}{\d{s}}
+\newunicodechar{ṛ}{\d{r}}
+\newunicodechar{ǧ}{\v{g}}
+\newunicodechar{→}{\ensuremath{\rightarrow}}
+\usepackage[french]{babel}
+\frenchsetup{og=«, fg=», StandardItemLabels=true, SmallCapsFigTabCaptions=false}
+\usepackage{microtype}
+\usepackage{graphicx}
+\graphicspath{{captures/}}
+\usepackage{float}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{tabularx,booktabs,array}
+\usepackage{amssymb}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Kab-board pour Windows : manuel d'utilisation},pdfauthor={Massil Aoudj},pdflang={fr}}
+
+% Un bouton ou une case de Kab-board ou de Windows.
+\newcommand{\bouton}[1]{\textsf{#1}}
+% Un mot kabyle cité.
+\newcommand{\kab}[1]{\textit{#1}}
+% Ce qu'on tape.
+\newcommand{\touche}[1]{\texttt{#1}}
+% Un chemin de Windows.
+\newcommand{\chemin}[1]{\texttt{#1}}
+\newcommand{\menu}{\enspace›\enspace}
+
+% Une remarque : un titre en gras, puis le texte.
+\newenvironment{encadre}[2][]{\par\medskip\noindent\textbf{#2.}\ }{\par\medskip}
+
+% Une capture et sa légende.
+\setlength{\fboxsep}{0pt}
+\setlength{\fboxrule}{0.4pt}
+\newcommand{\capture}[3][\dimexpr\linewidth-2\fboxrule\relax]{%
+  \begin{figure}[!htb]
+  \centering\fbox{\includegraphics[width=#1]{#2}}
+  \caption{#3}\label{f:#2}
+  \end{figure}}
+
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcommand{\tableau}[3]{%
+  \par\noindent\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{#1}L@{}}
+  \toprule #2 \\ \midrule #3 \bottomrule
+  \end{tabularx}\par}
+
+\title{Kab-board pour Windows\\[0.4em] \large Le clavier kabyle pour Windows : manuel d'utilisation, version 0.2}
+\author{}
+\date{12 octobre 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Vous tapez sur votre clavier habituel, dans toutes les applications : Kab-board écrit les lettres kabyles, propose des corrections et complète les mots. Ce manuel en décrit l'installation, la frappe des lettres kabyles, la barre des propositions, le clavier à l'écran, les outils, la dictée et la désinstallation. Tout se calcule sur l'ordinateur : rien n'est envoyé sur Internet.
+\end{abstract}
+
+\capture[0.8\linewidth]{bloc-notes-barre.png}{Dans le Bloc-notes : la barre des propositions sous le mot « ruhaɣ ».}
+
+\noindent{\small Kab-board, clavier et correcteur kabyles. Licence GNU GPL version 3 ou ultérieure. Le lexique et le modèle de langue sont publiés sous licence CC BY-SA 4.0, doi 10.5281/zenodo.22112059. La dictée utilise le modèle vocal Mmeslay (Aomer Gaya Ouldali), sous licence GNU GPL version 3.}
+
+% ---------------------------------------------------------------- Sommaire
+\clearpage
+\renewcommand{\contentsname}{Sommaire}
+\setcounter{tocdepth}{1}
+\tableofcontents
+\clearpage
+
+% ---------------------------------------------------------------- 1
+\section{Ce qu'il faut}\label{s:faut}
+\begin{itemize}
+  \item \textbf{Windows 10 ou 11}, en 64 bits (presque tous les ordinateurs récents).
+  \item Environ \textbf{600 Mo} d'espace libre.
+  \item Votre clavier habituel, AZERTY ou QWERTY : rien à changer dans Windows.
+  \item Pour la dictée seulement : un \textbf{micro}.
+\end{itemize}
+Il n'y a rien d'autre à installer. Kab-board emporte tout avec lui : le correcteur, son lexique de 1,58 million de formes, le modèle de langue, le modèle de dictée, et le programme qui les fait tourner.
+
+Pas besoin d'être administrateur de l'ordinateur : Kab-board s'installe dans votre compte Windows.
+
+\begin{encadre}{Avec Kab-board pour Word}
+Les deux s'installent côte à côte et se complètent : le clavier écrit et propose pendant la frappe, le complément Word relit un document entier. Ils partagent la graphie (v ou b) et « mon dictionnaire ».
+\end{encadre}
+
+% ---------------------------------------------------------------- 2
+\section{Installer Kab-board}\label{s:installer}
+L'installeur est un seul fichier : \chemin{kab-board-windows-0.2-setup.exe} (environ 250 Mo).
+
+\subsection{Étape 1 : lancer l'installeur}
+Double-cliquez sur le fichier.
+\begin{encadre}{« Windows a protégé votre ordinateur »}
+L'installeur n'est pas signé numériquement : Windows peut afficher cet écran bleu la première fois. Cliquez sur \bouton{Informations complémentaires}, puis sur \bouton{Exécuter quand même}.
+\end{encadre}
+
+\subsection{Étape 2 : allumer le clavier avec Windows, ou non}
+Cochez la case si vous voulez que le clavier kabyle soit prêt dès l'ouverture de votre session. Vous pourrez changer d'avis plus tard (section~\ref{s:demarrer}). Cliquez sur \bouton{Suivant}.
+\capture[0.6\linewidth]{install-1-taches.png}{La seule question posée par l'installeur.}
+
+\subsection{Étape 3 : installer}
+Cliquez sur \bouton{Installer}. Les fichiers se copient en deux minutes environ.
+\capture[0.6\linewidth]{install-2-pret.png}{Prêt à installer.}
+\capture[0.6\linewidth]{install-3-en-cours.png}{Les fichiers se copient.}
+
+\subsection{Étape 4 : terminer}
+Laissez cochée « Ouvrir Kab-board » et cliquez sur \bouton{Terminer}.
+\capture[0.6\linewidth]{install-4-fin.png}{Kab-board est dans le menu Démarrer.}
+
+\begin{encadre}{Mise à jour}
+Pour passer à une nouvelle version, lancez le nouvel installeur : il remplace l'ancienne et garde vos réglages et votre dictionnaire.
+\end{encadre}
+
+% ---------------------------------------------------------------- 3
+\section{Le premier lancement}\label{s:lancement}
+Ouvrir Kab-board (menu Démarrer\menu Kab-board) allume le clavier kabyle et ouvre la fenêtre des réglages.
+\capture[0.85\linewidth]{reglages.png}{Les réglages. En bas : « Clavier actif, prêt à écrire dans toutes les applications. »}
+
+Le correcteur se prépare en une dizaine de secondes (une minute la toute première fois, le temps de construire son cache). Pendant ce temps, la frappe marche déjà, sans propositions.
+
+Vous pouvez fermer cette fenêtre : le clavier reste allumé. Son icône est près de l'horloge (section~\ref{s:icone}).
+
+\begin{encadre}{Pas de clavier à l'écran}
+Kab-board ne remplace pas votre clavier : vous tapez dessus comme d'habitude, et il travaille pendant la frappe. Le clavier à l'écran existe, mais seulement si vous le voulez (section~\ref{s:ecran}).
+\end{encadre}
+
+% ---------------------------------------------------------------- 4
+\section{Écrire les lettres kabyles}\label{s:lettres}
+Tapez comme on parle : Kab-board écrit la lettre kabyle à la place des deux lettres.
+
+\medskip
+\noindent\begin{tabularx}{\linewidth}{@{}p{30mm}p{35mm}L@{}}
+\toprule
+\textbf{Vous tapez} & \textbf{Kab-board écrit} & \textbf{Ou bien, avec AltGr} \\
+\midrule
+\touche{gh} & ɣ & AltGr + g \\
+\touche{dh} & ḍ & AltGr + d \\
+\touche{kh} & x & \\
+\touche{aa} & ɛ & AltGr + e \\
+\touche{ou} & u & \\
+ & ḥ ṭ ẓ ṣ č ǧ ṛ & AltGr + h, t, z, s, c, j, r \\
+\bottomrule
+\end{tabularx}
+\medskip
+
+\capture[0.8\linewidth]{bloc-notes-gh.png}{« agh » devient « aɣ ».}
+\capture[0.8\linewidth]{bloc-notes-gh-defait.png}{Un effacement juste après : « agh » revient.}
+
+Un effacement juste après une conversion la défait : utile pour écrire « gh » pour de bon. Pour ne plus convertir du tout, décochez \bouton{Écrire comme on parle} dans les réglages.
+
+% ---------------------------------------------------------------- 5
+\section{La barre des propositions}\label{s:barre}
+Pendant que vous tapez un mot, une petite barre s'ouvre juste sous lui, avec six propositions.
+\capture[0.8\linewidth]{bloc-notes-barre.png}{« ruhaɣ » : la correction en contexte « ruḥeɣ » en tête (vert), puis les candidats (bleu).}
+
+\tableau{25mm}{\textbf{Couleur} & \textbf{Ce que c'est}}{%
+vert & La correction en contexte : ce que le correcteur choisirait, compte tenu des mots d'avant. \\
+bleu & Les autres candidats pour ce mot. \\
+ocre & De 1 à 3 lettres, les mots qui commencent ainsi ; le mot fini, les mots qui viennent souvent après. \\}
+
+\capture[0.8\linewidth]{bloc-notes-completion.png}{Trois lettres : les mots qui commencent par « tam ».}
+\capture[0.8\linewidth]{bloc-notes-prediction.png}{Le mot fini : la suite probable.}
+
+\begin{encadre}{Rien n'est corrigé d'office}
+L'espace écrit le mot tel que vous l'avez tapé. Les propositions ne s'écrivent que si vous les choisissez.
+\end{encadre}
+
+Effacer l'espace après un mot le rend de nouveau modifiable : ses propositions reviennent.
+
+% ---------------------------------------------------------------- 6
+\section{Choisir une proposition}\label{s:choisir}
+\begin{itemize}
+  \item un clic sur la proposition ;
+  \item ou un chiffre de 1 à 6 : 1 pour la première, 2 pour la deuxième, et ainsi de suite.
+\end{itemize}
+La proposition remplace le mot tapé, suivie d'une espace.
+
+\begin{encadre}{Sur un clavier AZERTY}
+Les chiffres se tapent avec Maj, comme d'habitude : Maj + \touche{\&} donne 1, Maj + \touche{é} donne 2. Le pavé numérique marche aussi. Les touches \touche{\&}, \touche{é}, \touche{-} seules écrivent \touche{\&}, \touche{é}, \touche{-} comme toujours.
+\end{encadre}
+
+Les chiffres ne choisissent que pendant qu'un mot s'écrit : après une espace, ils s'écrivent normalement, pour taper un nombre. Ce choix aux chiffres se coupe dans les réglages.
+
+% ---------------------------------------------------------------- 7
+\section{Les possessifs : « tamurt iw » → « tamurt-iw »}\label{s:possessifs}
+Un possessif (\kab{iw}, \kab{ik}, \kab{im}, \kab{is}, \kab{nneɣ}, \kab{nwen}\dots) s'attache au mot d'avant par un tiret. Tapez-le comme un mot à part : la barre propose les deux mots rattachés, en tête.
+\capture[0.8\linewidth]{bloc-notes-possessif.png}{« tamurt iw » : « tamurt-iw » en tête.}
+\capture[0.8\linewidth]{bloc-notes-possessif-choisi.png}{Choisi : les deux mots n'en font qu'un.}
+
+Après une préposition, l'état d'annexion s'ajoute : « ɣer tamurt iw » devient « ɣer tmurt-iw ». Jamais par-dessus une virgule : « tamurt, iw » reste tel quel.
+
+% ---------------------------------------------------------------- 8
+\section{Écrire avec v ou avec b}\label{s:graphie}
+Certains écrivent \kab{avrid}, d'autres \kab{abrid}. Choisissez dans les réglages : \bouton{Écrire avec v} ou \bouton{Écrire avec b}. Le réglage vaut pour tout : les propositions, la prédiction, la fiche, la recherche, le mot du jour et la dictée. Au départ, c'est v.
+\capture[0.8\linewidth]{bloc-notes-graphie-b.png}{En graphie b, les propositions s'écrivent avec b.}
+
+Si Kab-board pour Word est installé, c'est le même réglage : choisi ici ou dans Word, il vaut pour les deux.
+
+% ---------------------------------------------------------------- 9
+\section{Partout : Word, le navigateur, la messagerie}\label{s:partout}
+Kab-board écrit dans toutes les applications : traitement de texte, navigateur, messagerie, réseaux sociaux, Bloc-notes. Il suffit qu'un texte s'y tape.
+\capture{word.png}{Dans Word, à côté de Kab-board pour Word (onglet « Kab-board »).}
+\capture[0.85\linewidth]{navigateur.png}{Dans le navigateur, même dans un champ qui ouvre ses propres suggestions.}
+
+\begin{encadre}{Quand il se tait}
+\begin{itemize}
+  \item Dans un mot de passe : ni conversion, ni barre.
+  \item Dans une application lancée en tant qu'administrateur : Windows lui interdit d'y écrire.
+  \item Après un clic, une flèche ou un raccourci, il ne sait plus ce qui précède le curseur : il reprend au mot suivant.
+\end{itemize}
+\end{encadre}
+
+Certaines applications ne disent pas où est leur curseur : la barre se pose alors en bas de l'écran.
+
+% ---------------------------------------------------------------- 10
+\section{L'icône près de l'horloge}\label{s:icone}
+Tant que le clavier est allumé, son icône est près de l'horloge, parfois cachée derrière la petite flèche. Survolez-la : elle dit si le correcteur est prêt. Un clic droit ouvre son menu.
+\capture[0.35\linewidth]{menu-icone.png}{Le menu de l'icône.}
+
+On y trouve le clavier à l'écran, « Écrire comme on parle », la graphie, « Écrire et relire », les réglages, et \bouton{Arrêter le clavier kabyle}.
+
+% ---------------------------------------------------------------- 11
+\section{Le clavier à l'écran, si vous le voulez}\label{s:ecran}
+Réglages\menu\bouton{Clavier à l'écran}, ou le menu de l'icône. Il reste au-dessus des autres fenêtres et ne prend jamais le curseur : cliquez dans votre texte, puis sur ses touches. Il se déplace en tirant sa barre du haut.
+\capture[0.9\linewidth]{clavier-ecran.png}{Le clavier à l'écran : ses outils, la barre, les touches kabyles.}
+
+Un appui long sur une touche montre ses variantes (â, à, ẓ, ṛ, č\dots) ; sur l'effacement, il efface le mot entier. Sa rangée d'outils :
+
+\tableau{25mm}{\textbf{Outil} & \textbf{À quoi il sert}}{%
+\bouton{Dicter} & Écrit au curseur ce que vous dites en kabyle (section~\ref{s:dicter}). \\
+\bouton{gh → ɣ} & « Écrire comme on parle », ou non. \\
+\bouton{Asegzawal} & La fiche du mot (section~\ref{s:fiche}). \\
+\bouton{fr → kab} & Chercher un mot kabyle depuis le français (section~\ref{s:fiche}). \\
+\bouton{Relire} & Relit le texte copié (section~\ref{s:relire}). \\
+\bouton{Mot du jour} & Le même pour tout le monde, chaque jour. \\}
+
+% ---------------------------------------------------------------- 12
+\section{La fiche d'un mot, du français au kabyle, le mot du jour}\label{s:fiche}
+Un clic droit sur une proposition de la barre, ou \bouton{Asegzawal} dans le clavier à l'écran, ouvre la fiche du mot : son sens et sa catégorie, et ses états libre et d'annexion quand le lexique les connaît.
+\capture[0.9\linewidth]{fiche.png}{La fiche de « aɣrum ».}
+\capture[0.9\linewidth]{recherche.png}{fr → kab : « pain ».}
+\capture[0.9\linewidth]{mot-du-jour.png}{Le mot du jour.}
+
+% ---------------------------------------------------------------- 13
+\section{Relire un texte copié}\label{s:relire}
+Copiez un texte kabyle (Ctrl + C), où qu'il soit, puis \bouton{Relire} dans le clavier à l'écran. Les mots douteux s'affichent avec leurs corrections. \bouton{Copier la version corrigée} la remet dans le presse-papiers : il ne reste qu'à la coller.
+\capture[0.9\linewidth]{relire-copie.png}{Relire le texte copié.}
+
+% ---------------------------------------------------------------- 14
+\section{La fenêtre « Écrire et relire »}\label{s:fenetre}
+Une fenêtre pour écrire un texte, le relire mot à mot et le copier : bouton \bouton{Écrire et relire} des réglages, menu de l'icône, ou menu Démarrer\menu\bouton{Écrire et relire (Kab-board)}. Votre clavier et ses touches à l'écran y écrivent tous les deux.
+\capture[0.65\linewidth]{ecrire-relire.png}{« Écrire et relire » : le texte, la barre, les touches.}
+
+\bouton{Relire} parcourt le texte et propose, mot par mot, de remplacer. \bouton{Copier tout} met le texte dans le presse-papiers. Changer de graphie réécrit le texte déjà tapé.
+\capture[0.75\linewidth]{ecrire-relire-relecture.png}{La relecture : un clic sur une correction la remplace dans le texte.}
+
+% ---------------------------------------------------------------- 15
+\section{Dicter en kabyle}\label{s:dicter}
+\begin{enumerate}
+  \item Cliquez dans votre texte, à l'endroit où écrire.
+  \item Dans le clavier à l'écran, cliquez sur \bouton{Dicter}, et parlez.
+  \item Cliquez sur \bouton{Arrêter} : le texte s'écrit au curseur, dans votre graphie (30 secondes au plus).
+\end{enumerate}
+La voix est transcrite sur place, puis l'enregistrement est effacé. Le texte dicté n'est jamais corrigé d'office.
+
+\begin{encadre}{Si Windows bloque le micro}
+Paramètres\menu Confidentialité et sécurité\menu Microphone : autorisez les applications de bureau à y accéder.
+\end{encadre}
+
+% ---------------------------------------------------------------- 16
+\section{Mon dictionnaire}\label{s:dictionnaire}
+Les mots que la relecture ne doit plus signaler : des noms propres, des mots rares. Bouton \bouton{Mon dictionnaire} des réglages : le fichier s'ouvre dans le Bloc-notes, un mot par ligne. Ajoutez, enregistrez, c'est tout.
+\capture[0.75\linewidth]{mon-dictionnaire.png}{Mon dictionnaire, dans le Bloc-notes.}
+
+C'est le même fichier que celui de Kab-board pour Word.
+
+% ---------------------------------------------------------------- 17
+\section{Démarrer avec Windows, arrêter}\label{s:demarrer}
+Réglages\menu\bouton{Démarrer avec Windows} : le clavier s'allume à l'ouverture de votre session, sans ouvrir la fenêtre des réglages.
+
+Pour l'arrêter : menu de l'icône\menu\bouton{Arrêter le clavier kabyle}, ou décochez \bouton{Clavier kabyle} dans les réglages. Les touches repartent telles quelles dans les applications. Pour le rallumer, ouvrez Kab-board depuis le menu Démarrer.
+
+% ---------------------------------------------------------------- 18
+\section{Sur une clé USB}\label{s:cle}
+L'archive \chemin{kab-board-windows-0.2-portable.zip} se décompresse où vous voulez, même sur une clé USB. Double-cliquez sur \chemin{Kab-board.exe} : le clavier kabyle est là, sans rien installer, sans droits d'administrateur.
+
+Avec le fichier \chemin{portable.txt} à côté de \chemin{Kab-board.exe}, vos réglages, votre dictionnaire et le cache restent dans le dossier \chemin{donnees}, sur la clé : ils vous suivent d'un ordinateur à l'autre, et rien ne reste sur l'ordinateur.
+
+% ---------------------------------------------------------------- 19
+\section{Vos données}\label{s:donnees}
+Rien ne quitte votre ordinateur. Le correcteur et la dictée tournent entièrement sur votre machine, et ne se connectent à aucun service sur Internet. Kab-board ne retient pas ce que vous tapez.
+
+\tableau{35mm}{\textbf{Quoi} & \textbf{Où}}{%
+Le programme & \chemin{\%LOCALAPPDATA\%\textbackslash Programs\textbackslash Kab-board Windows} \\
+Les réglages & \chemin{\%LOCALAPPDATA\%\textbackslash kab-board\textbackslash reglages.json} \\
+Votre dictionnaire & \chemin{\%LOCALAPPDATA\%\textbackslash kab-board\textbackslash mots-a-moi.txt} \\
+Les journaux & \chemin{\%LOCALAPPDATA\%\textbackslash kab-board\textbackslash saisie.log}, \chemin{service.log} \\
+La graphie & aussi dans le registre de Windows, à votre nom, pour Kab-board pour Word \\}
+
+% ---------------------------------------------------------------- 20
+\section{Désinstaller}\label{s:desinstaller}
+\begin{enumerate}
+  \item Ouvrez Paramètres\menu Applications\menu Applications installées.
+  \item Cherchez « Kab-board ».
+  \item Cliquez sur les trois points à droite de « Kab-board, clavier kabyle pour Windows », puis sur \bouton{Désinstaller}, et confirmez.
+\end{enumerate}
+\capture[0.5\linewidth]{desinstaller.png}{La confirmation de la désinstallation.}
+
+Le clavier s'arrête, puis ses fichiers partent. Votre dictionnaire est gardé, au cas où vous réinstalleriez ; Kab-board pour Word n'est pas touché.
+
+% ---------------------------------------------------------------- 21
+\section{En cas de souci}\label{s:souci}
+\tableau{48mm}{\textbf{Ce qui se passe} & \textbf{Que faire}}{%
+Pas de barre sous le mot & Le correcteur se prépare encore : attendez une dizaine de secondes. Vérifiez aussi \bouton{La barre sous le curseur} dans les réglages. \\
+La barre est en bas de l'écran & L'application ne dit pas où est son curseur : la barre s'y pose, mais marche pareil. \\
+La touche 1 écrit « \& » & Clavier AZERTY : Maj + \touche{\&}, ou le pavé numérique (section~\ref{s:choisir}). \\
+Rien ne se convertit dans une application & Elle est peut-être lancée en administrateur, ou c'est un champ de mot de passe. \\
+« gh » s'écrit ɣ alors que je voulais gh & Effacez une fois juste après : « gh » revient. \\
+« Windows a refusé le clavier kabyle » & Fermez Kab-board (menu de l'icône\menu\bouton{Arrêter}) et rouvrez-le. \\
+Rien n'est reconnu à la dictée & Parlez plus près du micro, et vérifiez l'autorisation du micro (section~\ref{s:dicter}). \\}
+
+\medskip
+Pour signaler un problème : \url{https://github.com/ADJ-MSS/kab-board}. Joignez si possible les journaux \chemin{saisie.log} et \chemin{service.log}, dans \chemin{\%LOCALAPPDATA\%\textbackslash kab-board}.
+
+\end{document}
