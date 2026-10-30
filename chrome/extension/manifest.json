@@ -3,7 +3,7 @@
   "name": "Kab-board",
   "short_name": "Kab-board",
   "version": "0.2.0",
-  "description": "Clavier et correcteur kabyles de kab-board dans Chrome : gh → ɣ, propositions, soulignés, dictée. Tout reste sur l'ordinateur.",
+  "description": "Clavier et correcteur kabyles dans le navigateur : gh → ɣ, propositions, soulignés, dictée. Tout reste sur l'ordinateur.",
   "minimum_chrome_version": "116",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwQaSWZSIWQE20x2kaLwBEMR5x7WMGMoIt211kqUAk9eFYeLSEFjEFTkhSFrFYum71YVdyKbUwb6L+BsYn8iP6DZxkBk8E2tEXWAlm14cqzKhisxUo1pceJNKIRyXow5qMVUTcKXiveEh0volJZK7yB0OYLQPoNrxNaWnDZQSAdhCkclWhdG1cXFz4uLmmsQ06cl40HW1iknpxxtCvbN+kX9P2B81/b3ZRHFjLqFcIlWmTjvhyAE6EgQSQENykr+Cbijanhmpv3u+WqrvE+zfF64P3LYRodvDpd/OXcBAMxXJsuc5jrj1AL5AvJJKN1qCYJzMmNOSlgDzvJtjtCO+OwIDAQAB",
   "icons": {

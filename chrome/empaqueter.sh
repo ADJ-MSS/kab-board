@@ -1,9 +1,9 @@
 #!/bin/sh
 # Les deux archives de l'extension, dans sortie/ :
 #
-#   kab-board-chrome-<version>.zip            à décompresser, puis « Charger l'extension
+#   kab-board-navigateur-<version>.zip            à décompresser, puis « Charger l'extension
 #                                             non empaquetée » (mode développeur)
-#   kab-board-chrome-<version>-web-store.zip  pour le Chrome Web Store, sans la clé : le
+#   kab-board-navigateur-<version>-web-store.zip  pour le Chrome Web Store, sans la clé : le
 #                                             Store donne son propre identifiant
 #
 # L'extension emporte ses ressources (chrome/autonome/ressources.sh), vérifiées d'abord.
@@ -41,7 +41,7 @@ empaqueter() {
 }
 
 copier "$TRAVAIL/avec-cle"
-empaqueter "$TRAVAIL/avec-cle" "$SORTIE/kab-board-chrome-$VERSION.zip"
+empaqueter "$TRAVAIL/avec-cle" "$SORTIE/kab-board-navigateur-$VERSION.zip"
 
 copier "$TRAVAIL/web-store"
 python3 - "$TRAVAIL/web-store/manifest.json" <<'FIN'
@@ -53,7 +53,7 @@ if len(manifeste["description"]) > 132:
     sys.exit("La description dépasse les 132 caractères qu'accepte le Chrome Web Store.")
 json.dump(manifeste, open(chemin, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
 FIN
-ARCHIVE="$SORTIE/kab-board-chrome-$VERSION-web-store.zip"
+ARCHIVE="$SORTIE/kab-board-navigateur-$VERSION-web-store.zip"
 empaqueter "$TRAVAIL/web-store" "$ARCHIVE"
 if [ "$(wc -c < "$ARCHIVE")" -ge 2000000000 ]; then
   echo "L'archive dépasse les 2 Go qu'accepte le Chrome Web Store." >&2
