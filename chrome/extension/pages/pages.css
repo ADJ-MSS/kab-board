@@ -1,0 +1,90 @@
+/* Les pages de l'extension : le popup, les réglages, « Écrire et relire », le micro. */
+:root {
+  --fond: #ffffff;
+  --fond-2: #f5f6f8;
+  --texte: #1e1e1e;
+  --discret: #5f6b76;
+  --bord: #d5d9de;
+  --survol: #eef4fa;
+  --vert: #00843f;
+  --bleu: #0072bb;
+  --ocre: #a86a00;
+  --rouge: #c62828;
+  --accent: #00843f;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fond: #1f2226;
+    --fond-2: #272b30;
+    --texte: #eceff1;
+    --discret: #a0a7b0;
+    --bord: #3d434a;
+    --survol: #2f3b47;
+    --vert: #4caf50;
+    --bleu: #64b5f6;
+    --ocre: #ffb74d;
+    --rouge: #ef5350;
+    --accent: #4caf50;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--fond); color: var(--texte); }
+body { font: 14px/1.45 "Segoe UI", "Noto Sans", system-ui, -apple-system, sans-serif; }
+h1 { font-size: 20px; margin: 0; }
+h2 { font-size: 15px; margin: 22px 0 8px; }
+p { margin: 6px 0; }
+a { color: var(--bleu); }
+code, kbd { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 12.5px;
+  background: var(--fond-2); border: 1px solid var(--bord); border-radius: 4px; padding: 0 4px; }
+.discret { color: var(--discret); font-size: 12.5px; }
+.cache { display: none !important; }
+
+.tete { display: flex; align-items: center; gap: 10px; }
+.tete img { width: 32px; height: 32px; border-radius: 7px; }
+.tete .titre { flex: 1; min-width: 0; }
+
+.pastille { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--discret); }
+.pastille::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--discret); }
+.pastille.pret::before { background: var(--vert); }
+.pastille.attente::before { background: var(--ocre); }
+.pastille.erreur::before { background: var(--rouge); }
+
+/* Les interrupteurs */
+.interrupteur { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; cursor: pointer; }
+.interrupteur input { appearance: none; flex: none; width: 34px; height: 20px; margin: 1px 0 0;
+  border-radius: 10px; background: var(--bord); position: relative; cursor: pointer; transition: background .15s; }
+.interrupteur input::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
+  border-radius: 50%; background: #fff; transition: left .15s; box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+.interrupteur input:checked { background: var(--accent); }
+.interrupteur input:checked::after { left: 16px; }
+.interrupteur input:focus-visible { outline: 2px solid var(--bleu); outline-offset: 2px; }
+.interrupteur input:disabled { opacity: .5; cursor: default; }
+.interrupteur .libelle { display: block; }
+.interrupteur .detail { display: block; color: var(--discret); font-size: 12.5px; }
+
+/* La graphie */
+.segments { display: inline-flex; border: 1px solid var(--bord); border-radius: 8px; overflow: hidden; }
+.segments button { border: 0; background: var(--fond); color: var(--texte); font: inherit; padding: 5px 14px;
+  cursor: pointer; }
+.segments button + button { border-left: 1px solid var(--bord); }
+.segments button[aria-pressed="true"] { background: var(--accent); color: #fff; font-weight: 600; }
+
+.bouton { border: 1px solid var(--bord); background: var(--fond); color: var(--texte); border-radius: 8px;
+  padding: 6px 12px; font: inherit; cursor: pointer; }
+.bouton:hover { background: var(--survol); }
+.bouton:disabled { opacity: .5; cursor: default; }
+.bouton.principal { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+
+input[type=text], input[type=search], textarea {
+  font: inherit; color: var(--texte); background: var(--fond); border: 1px solid var(--bord);
+  border-radius: 8px; padding: 6px 9px; width: 100%; }
+input[type=text]:focus, input[type=search]:focus, textarea:focus { outline: 2px solid var(--bleu); outline-offset: -1px; }
+
+.carte { background: var(--fond-2); border: 1px solid var(--bord); border-radius: 10px; padding: 10px 12px; }
+.avertissement { border-color: var(--rouge); }
+.liste { list-style: none; padding: 0; margin: 0; }
+.liste li { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--bord); }
+.liste li:last-child { border-bottom: 0; }
+.liste li span { flex: 1; min-width: 0; overflow-wrap: anywhere; }

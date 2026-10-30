@@ -1,0 +1,62 @@
+{
+  "manifest_version": 3,
+  "name": "Kab-board",
+  "short_name": "Kab-board",
+  "version": "0.2.0",
+  "description": "Clavier et correcteur kabyles de kab-board dans Chrome : gh → ɣ, propositions, soulignés, dictée. Tout reste sur l'ordinateur.",
+  "minimum_chrome_version": "116",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwQaSWZSIWQE20x2kaLwBEMR5x7WMGMoIt211kqUAk9eFYeLSEFjEFTkhSFrFYum71YVdyKbUwb6L+BsYn8iP6DZxkBk8E2tEXWAlm14cqzKhisxUo1pceJNKIRyXow5qMVUTcKXiveEh0volJZK7yB0OYLQPoNrxNaWnDZQSAdhCkclWhdG1cXFz4uLmmsQ06cl40HW1iknpxxtCvbN+kX9P2B81/b3ZRHFjLqFcIlWmTjvhyAE6EgQSQENykr+Cbijanhmpv3u+WqrvE+zfF64P3LYRodvDpd/OXcBAMxXJsuc5jrj1AL5AvJJKN1qCYJzMmNOSlgDzvJtjtCO+OwIDAQAB",
+  "icons": {
+    "16": "icones/kab-board-16.png",
+    "32": "icones/kab-board-32.png",
+    "48": "icones/kab-board-48.png",
+    "128": "icones/kab-board-128.png"
+  },
+  "action": {
+    "default_title": "Kab-board",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icones/kab-board-16.png",
+      "32": "icones/kab-board-32.png"
+    }
+  },
+  "options_page": "pages/reglages.html",
+  "background": {
+    "service_worker": "fond.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "offscreen",
+    "scripting"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["commun.js", "logique.js", "contenu/champs.js", "contenu/interface.js", "contenu/contenu.js"],
+      "css": ["contenu/contenu.css"],
+      "all_frames": true,
+      "match_about_blank": true,
+      "match_origin_as_fallback": true,
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "basculer": {
+      "suggested_key": { "default": "Alt+Shift+K" },
+      "description": "Allumer ou éteindre le clavier kabyle"
+    },
+    "dicter": {
+      "suggested_key": { "default": "Alt+Shift+D" },
+      "description": "Dicter en kabyle dans le champ où l'on écrit"
+    },
+    "relire": {
+      "suggested_key": { "default": "Alt+Shift+R" },
+      "description": "Relire le champ où l'on écrit"
+    }
+  }
+}

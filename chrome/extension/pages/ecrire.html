@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="kab">
+<head>
+<meta charset="utf-8">
+<title>Écrire et relire : Kab-board</title>
+<link rel="stylesheet" href="pages.css">
+<link rel="stylesheet" href="../contenu/contenu.css">
+<style>
+  body { max-width: 900px; margin: 0 auto; padding: 20px 20px 32px; }
+  .outils { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 14px 0 10px; }
+  .outils .discret { margin-left: auto; }
+  #texte { height: calc(100vh - 230px); min-height: 240px; resize: vertical; font-size: 17px; line-height: 1.55;
+    padding: 12px 14px; }
+</style>
+</head>
+<body>
+<header class="tete">
+  <img src="../icones/kab-board-48.png" alt="">
+  <div class="titre">
+    <h1>Écrire et relire</h1>
+    <span id="etat" class="pastille attente">…</span>
+  </div>
+</header>
+<div class="outils">
+  <button class="bouton" data-commande="dicter" title="Alt+Maj+D">🎤 Dicter</button>
+  <button class="bouton" data-commande="relire" title="Alt+Maj+R">Relire</button>
+  <button class="bouton" data-commande="lettres">ɣ ɛ ḍ ḥ ṭ…</button>
+  <button class="bouton" data-commande="fiche">Asegzawal</button>
+  <button class="bouton" data-commande="chercher">fr → kab</button>
+  <button class="bouton" id="copier">Copier le texte</button>
+  <button class="bouton" id="effacer">Tout effacer</button>
+  <span class="discret" id="compte"></span>
+</div>
+<textarea id="texte" lang="kab" placeholder="Écrivez en kabyle : gh → ɣ, dh → ḍ, kh → x, aa → ɛ, ou → u. Le texte reste sur cet ordinateur."></textarea>
+<p class="discret">Le texte est gardé dans ce navigateur, sur cet ordinateur, jusqu'à ce que vous l'effaciez.</p>
+
+<script src="../commun.js"></script>
+<script src="../logique.js"></script>
+<script src="../contenu/champs.js"></script>
+<script src="../contenu/interface.js"></script>
+<script src="../contenu/contenu.js"></script>
+<script src="pages.js"></script>
+<script src="ecrire.js"></script>
+</body>
+</html>
