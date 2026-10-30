@@ -1,4 +1,4 @@
-% Manuel d'utilisation de Kab-board pour Chrome.
+% Manuel d'utilisation de l'extension Kab-board pour navigateur.
 % Compilation : pdflatex manuel.tex, deux fois (sommaire et renvois).
 
 \documentclass[11pt,a4paper]{article}
@@ -34,7 +34,7 @@
 \usepackage{tabularx,booktabs,array}
 \usepackage{amssymb}
 \usepackage[hidelinks]{hyperref}
-\hypersetup{pdftitle={Kab-board pour Chrome : manuel d'utilisation},pdfauthor={Massil Aoudj},pdflang={fr}}
+\hypersetup{pdftitle={Kab-board, extension pour navigateur : manuel d'utilisation},pdfauthor={Massil Aoudj},pdflang={fr}}
 
 % Un bouton, une case ou un menu de Kab-board ou de Chrome.
 \newcommand{\bouton}[1]{\textsf{#1}}
@@ -64,7 +64,7 @@
   \toprule #2 \\ \midrule #3 \bottomrule
   \end{tabularx}\par}
 
-\title{Kab-board pour Chrome\\[0.4em] \large Le clavier et le correcteur kabyles dans le navigateur : manuel d'utilisation, version 0.2}
+\title{Kab-board, extension pour navigateur\\[0.4em] \large Chrome, Edge, Brave, Opera : le clavier et le correcteur kabyles dans le navigateur. Manuel d'utilisation, version 0.2}
 \author{}
 \date{30 octobre 2026}
 
@@ -73,7 +73,7 @@
 \maketitle
 
 \begin{abstract}
-L'extension Kab-board apporte le clavier et le correcteur kabyles dans Chrome, Edge, Brave et Chromium : les lettres kabyles depuis votre clavier habituel, six propositions sous le mot, les fautes soulignées pendant que vous écrivez, la dictée en kabyle et les outils d'Asegzawal. Le but : écrire et corriger le kabyle là où l'on rédige du texte dans le navigateur, Microsoft 365 en ligne compris. Ce manuel en décrit l'installation et chaque fonction. L'extension se suffit à elle-même : le correcteur, le modèle de langue et le modèle vocal de Kab-board sont dedans, et tournent dans le navigateur. Rien à installer à côté, et rien n'est envoyé sur Internet.
+L'extension Kab-board apporte le clavier et le correcteur kabyles dans les navigateurs Chrome, Edge, Brave, Opera et Chromium : les lettres kabyles depuis votre clavier habituel, six propositions sous le mot, les fautes soulignées pendant que vous écrivez, la dictée en kabyle et les outils d'Asegzawal. Le but : écrire et corriger le kabyle là où l'on rédige du texte dans le navigateur, Microsoft 365 en ligne compris. Ce manuel en décrit l'installation et chaque fonction. Les captures sont faites dans Chrome ; dans Edge, Brave et Opera, tout se passe de la même façon. L'extension se suffit à elle-même : le correcteur, le modèle de langue et le modèle vocal de Kab-board sont dedans, et tournent dans le navigateur. Rien à installer à côté, et rien n'est envoyé sur Internet.
 \end{abstract}
 
 \capture[0.8\linewidth]{03-barre-correction.png}{Dans un champ de message : la barre des propositions sous le mot « ruhaɣ ».}
@@ -97,15 +97,15 @@ Le correcteur de Kab-board pour Android (1,58 million de formes, un modèle de l
 
 % ---------------------------------------------------------------- 2
 \section{Guide d'installation}\label{s:installer}
-Il faut un navigateur récent : Google Chrome 116 ou plus récent, Microsoft Edge, Brave ou Chromium, sous Windows, macOS ou Linux. Rien d'autre à installer.
+Il faut un navigateur récent : Google Chrome 116 ou plus récent, Microsoft Edge, Brave, Opera ou Chromium, sous Windows, macOS ou Linux. Rien d'autre à installer.
 
 \subsection{Télécharger l'extension}
-L'extension se télécharge avec les autres versions de Kab-board, sur la page des versions du dépôt : \url{https://github.com/ADJ-MSS/kab-board/releases}. C'est le fichier \chemin{kab-board-chrome-0.2.0.zip}, d'environ 245~Mo : le correcteur, le modèle de langue et le modèle vocal sont dedans.
+L'extension se télécharge avec les autres versions de Kab-board, sur la page des versions du dépôt : \url{https://github.com/ADJ-MSS/kab-board/releases}. C'est le fichier \chemin{kab-board-navigateur-0.2.0.zip}, d'environ 245~Mo : le correcteur, le modèle de langue et le modèle vocal sont dedans.
 
-\subsection{L'ajouter à Chrome, en mode développeur}
+\subsection{L'ajouter au navigateur, en mode développeur}
 \begin{enumerate}
   \item \textbf{Décompressez} l'archive dans un dossier où elle restera, par exemple vos Documents.
-  \item \textbf{Ouvrez} \chemin{chrome://extensions} dans la barre d'adresse (\chemin{edge://extensions} dans Edge, \chemin{brave://extensions} dans Brave).
+  \item \textbf{Ouvrez} \chemin{chrome://extensions} dans la barre d'adresse (\chemin{edge://extensions} dans Edge, \chemin{brave://extensions} dans Brave, \chemin{opera://extensions} dans Opera).
   \item \textbf{Allumez} \bouton{Mode développeur}, en haut à droite.
   \item \textbf{Cliquez sur} \bouton{Charger l'extension non empaquetée} et choisissez le dossier décompressé, celui qui contient \chemin{manifest.json}.
 \end{enumerate}

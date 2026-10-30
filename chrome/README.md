@@ -1,7 +1,7 @@
-# Kab-board pour Chrome
+# Kab-board, extension pour navigateur
 
-Le clavier et le correcteur kabyles de Kab-board dans Chrome (et Edge, Brave,
-Chromium) : les mêmes règles et les mêmes résultats que kab-board sur Android.
+Le clavier et le correcteur kabyles de Kab-board dans le navigateur (Chrome,
+Edge, Brave, Opera, Chromium) : les mêmes règles et les mêmes résultats que kab-board sur Android.
 **L'extension se suffit à elle-même** : le correcteur, le modèle de langue et le
 modèle vocal sont dedans, et tournent dans le navigateur. Rien à installer à côté,
 et **rien ne part sur Internet**.
@@ -99,14 +99,15 @@ et **rien ne part sur Internet**.
 | `extension/contenu/` | Le script de contenu : `champs.js`, `interface.js`, `contenu.js`, `contenu.css`. |
 | `extension/popup/`, `extension/pages/` | Le bouton de la barre de Chrome, les réglages, « Écrire et relire », l'autorisation du micro. |
 | `extension/ressources/`, `extension/ort/` | Les ressources de l'APK et onnxruntime-web : hors du dépôt, posés par `autonome/ressources.sh`. |
-| `autonome/` | La construction de KenLM et CRFsuite en WebAssembly, et les ressources. |
+| `autonome/` | Comment l'extension est devenue autonome : la construction de KenLM et CRFsuite, les ressources, l'historique. |
 | `tests/` | Les vérifications (voir plus bas). |
 
 ## Comme sur le téléphone
 
 Relevé du 29 et du 30/10/2026, avec le moteur de l'APK 0.3 rejoué hors du
 téléphone (le code Kotlin de l'application, ses ressources, ses bibliothèques
-natives) contre le correcteur de l'extension, avec les mêmes ressources :
+natives) contre le correcteur de l'extension, avec les mêmes ressources ;
+`outils/android/` le refait :
 
 | | identiques |
 |---|---|
@@ -135,11 +136,10 @@ correcteur (`tests/essai_navigateur.mjs --vrai`) :
 
 ## Installer
 
-**Depuis l'archive** `kab-board-chrome-0.2.0.zip`, sur la [page des versions](https://github.com/ADJ-MSS/kab-board/releases) :
-la décompresser, puis `chrome://extensions`, « Mode développeur », « Charger
-l'extension non empaquetée ». Le manuel le montre pas à pas.
+**Depuis le Chrome Web Store**, une fois l'extension publiée : rien d'autre à
+installer.
 
-**Depuis ce dépôt** :
+**En mode développeur**, depuis ce dépôt :
 
 ```sh
 chrome/autonome/ressources.sh kab-board-0.3.apk    # les ressources de l'APK et onnxruntime-web
@@ -149,11 +149,11 @@ puis `chrome://extensions`, « Mode développeur », « Charger l'extension non
 empaquetée » : `chrome/extension`.
 
 **Les archives** : `chrome/empaqueter.sh` vérifie les ressources et fait, dans
-`sortie/`, `kab-board-chrome-<version>.zip` (à décompresser puis charger) et
-`kab-board-chrome-<version>-web-store.zip` (sans la clé, pour le Store, qui donne
+`sortie/`, `kab-board-navigateur-<version>.zip` (à décompresser puis charger) et
+`kab-board-navigateur-<version>-web-store.zip` (sans la clé, pour le Store, qui donne
 son propre identifiant).
 
-**Le manuel** : `manuel/Kab-board-Chrome-manuel-0.2.pdf`, illustré ; la source est
+**Le manuel** : `manuel/Kab-board-Navigateur-manuel-0.2.pdf`, illustré ; la source est
 `manuel/manuel.tex` (`cd chrome/manuel && pdflatex manuel.tex && pdflatex manuel.tex`).
 
 ## Ce qui ne marche pas
