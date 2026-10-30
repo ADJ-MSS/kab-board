@@ -1,0 +1,18 @@
+body { width: 360px; padding: 12px 14px 10px; }
+.bloc { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--bord); }
+.rangee { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+.grille { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.onglets { display: flex; gap: 4px; margin-bottom: 6px; }
+.onglets button { border: 0; background: none; color: var(--discret); font: inherit; padding: 4px 8px;
+  border-radius: 6px; cursor: pointer; }
+.onglets button[aria-selected="true"] { background: var(--survol); color: var(--texte); font-weight: 600; }
+#resultats { max-height: 220px; overflow: auto; }
+.resultat { display: flex; align-items: baseline; gap: 6px; padding: 4px 2px; border-bottom: 1px solid var(--bord); }
+.resultat:last-child { border-bottom: 0; }
+.resultat .forme { font-weight: 600; font-size: 15px; }
+.resultat .glose { flex: 1; color: var(--discret); font-size: 12.5px; }
+.resultat button { flex: none; }
+.lien { background: none; border: 0; color: var(--bleu); cursor: pointer; font: inherit; font-size: 12.5px; padding: 0 2px; }
+.grand { font-size: 17px; font-weight: 600; }
+details summary { cursor: pointer; color: var(--discret); }
+footer { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--bord); font-size: 12.5px; }

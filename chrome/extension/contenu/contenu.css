@@ -1,0 +1,15 @@
+/* Les soulignés de Kab-board dans un élément modifiable : des « highlights » du
+   navigateur, qui ne touchent pas au DOM de la page. Comme le correcteur
+   d'Android : rouge pour une faute (un mot inconnu), bleu pour un doute (un mot
+   connu que le contexte écrirait autrement). */
+::highlight(kab-board-faute) {
+  text-decoration: underline wavy #D32F2F;
+  text-decoration-thickness: 1.5px;
+}
+::highlight(kab-board-doute) {
+  text-decoration: underline wavy #0072BB;
+  text-decoration-thickness: 1.5px;
+}
+::highlight(kab-board-actuel) {
+  background-color: rgba(0, 114, 187, 0.18);
+}

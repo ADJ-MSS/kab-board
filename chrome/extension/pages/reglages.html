@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kab-board : réglages</title>
+<link rel="stylesheet" href="pages.css">
+<style>
+  body { max-width: 760px; margin: 0 auto; padding: 24px 20px 48px; }
+  section { margin-top: 8px; }
+  .rangee { display: flex; align-items: center; gap: 8px; margin: 8px 0; flex-wrap: wrap; }
+  .rangee input[type=text], .rangee input[type=search] { flex: 1; min-width: 180px; width: auto; }
+  #mots { max-height: 320px; overflow: auto; }
+  .raccourcis td { padding: 3px 12px 3px 0; }
+</style>
+</head>
+<body>
+<header class="tete">
+  <img src="../icones/kab-board-48.png" alt="">
+  <div class="titre">
+    <h1>Kab-board pour Chrome</h1>
+    <span id="etat" class="pastille attente">…</span>
+  </div>
+</header>
+
+<div id="panne" class="carte avertissement cache" style="margin-top: 16px">
+  <h2 style="margin-top: 0">Le correcteur ne se charge pas</h2>
+  <p>La frappe (gh → ɣ, AltGr) marche sans lui ; la barre, les soulignés, la dictée et les outils l'attendent. Il lui faut environ 750 Mo de mémoire : fermez quelques onglets, puis réessayez.</p>
+  <p class="discret" id="erreur-moteur"></p>
+  <button class="bouton principal" id="reessayer">Réessayer</button>
+</div>
+
+<section>
+  <h2>Le clavier kabyle</h2>
+  <label class="interrupteur">
+    <input type="checkbox" id="allume">
+    <span><span class="libelle">Allumé dans toutes les pages</span><span class="detail">Alt+Maj+K pour l'allumer ou l'éteindre à tout moment.</span></span>
+  </label>
+  <div class="rangee">
+    <span>Graphie</span>
+    <div class="segments" id="graphie">
+      <button data-graphie="v" aria-pressed="false">v : avrid</button>
+      <button data-graphie="b" aria-pressed="false">b : abrid</button>
+    </div>
+    <span class="discret">Celle des propositions, des outils et de la dictée.</span>
+  </div>
+  <div id="interrupteurs"></div>
+</section>
+
+<section>
+  <h2>Mon dictionnaire</h2>
+  <p class="discret">Les mots que Kab-board ne souligne jamais, gardés dans Chrome. Un fichier texte, un mot par ligne, s'importe d'un coup (celui de Kab-board pour Windows, par exemple).</p>
+  <form class="rangee" id="ajout">
+    <input type="text" id="nouveau-mot" placeholder="Un mot à ajouter (gh → ɣ)" autocomplete="off" spellcheck="false">
+    <button class="bouton" type="submit">Ajouter</button>
+  </form>
+  <div class="rangee">
+    <input type="search" id="filtre" placeholder="Chercher dans mon dictionnaire" autocomplete="off" spellcheck="false">
+    <span class="discret" id="total"></span>
+  </div>
+  <ul class="liste" id="mots"></ul>
+  <div class="rangee">
+    <button class="bouton" id="importer">Importer un fichier…</button>
+    <button class="bouton" id="exporter">Exporter</button>
+    <input type="file" id="fichier" accept=".txt,text/plain" class="cache">
+    <span class="discret" id="importe"></span>
+  </div>
+</section>
+
+<section>
+  <h2>Les sites où Kab-board se tait</h2>
+  <form class="rangee" id="ajout-site">
+    <input type="text" id="nouveau-site" placeholder="exemple.com" autocomplete="off" spellcheck="false">
+    <button class="bouton" type="submit">Ajouter</button>
+  </form>
+  <ul class="liste" id="sites"></ul>
+  <p class="discret" id="aucun-site">Aucun : Kab-board écrit partout.</p>
+</section>
+
+<section>
+  <h2>Raccourcis</h2>
+  <table class="raccourcis">
+    <tr><td><kbd>Alt+Maj+K</kbd></td><td>allumer ou éteindre le clavier kabyle</td></tr>
+    <tr><td><kbd>Alt+Maj+D</kbd></td><td>dicter dans le champ où l'on écrit (encore une fois pour arrêter)</td></tr>
+    <tr><td><kbd>Alt+Maj+R</kbd></td><td>relire le champ où l'on écrit</td></tr>
+    <tr><td><kbd>1</kbd> à <kbd>6</kbd></td><td>choisir une proposition de la barre ; <kbd>Échap</kbd> la cache</td></tr>
+  </table>
+  <p><button class="bouton" id="changer-raccourcis">Changer les raccourcis</button></p>
+</section>
+
+<section>
+  <h2>Votre vie privée</h2>
+  <p>Ce que vous écrivez ne quitte jamais l'ordinateur : le correcteur et le modèle vocal sont dans l'extension et tournent dans Chrome, sur place. Aucune connexion n'est ouverte vers Internet. La voix de la dictée n'est gardée que le temps de la transcrire, en mémoire. Les mots de passe, les codes et les numéros de carte ne sont jamais lus.</p>
+</section>
+
+<script src="../commun.js"></script>
+<script src="../logique.js"></script>
+<script src="pages.js"></script>
+<script src="reglages.js"></script>
+</body>
+</html>

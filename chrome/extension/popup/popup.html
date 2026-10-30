@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kab-board</title>
+<link rel="stylesheet" href="../pages/pages.css">
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<header class="tete">
+  <img src="../icones/kab-board-32.png" alt="">
+  <div class="titre">
+    <h1>Kab-board</h1>
+    <span id="etat" class="pastille attente">…</span>
+  </div>
+</header>
+
+<section class="bloc">
+  <label class="interrupteur">
+    <input type="checkbox" id="allume">
+    <span><span class="libelle">Clavier kabyle</span><span class="detail" id="detail-allume">Alt+Maj+K pour l'allumer ou l'éteindre</span></span>
+  </label>
+  <label class="interrupteur" id="ligne-site">
+    <input type="checkbox" id="site">
+    <span><span class="libelle">Sur <b id="nom-site">ce site</b></span><span class="detail">Éteint ici, allumé ailleurs</span></span>
+  </label>
+  <div class="rangee">
+    <span>Graphie</span>
+    <div class="segments" id="graphie">
+      <button data-graphie="v" aria-pressed="false" title="avrid, vava-s">v</button>
+      <button data-graphie="b" aria-pressed="false" title="abrid, baba-s">b</button>
+    </div>
+  </div>
+</section>
+
+<section class="bloc">
+  <div class="grille" id="outils-page">
+    <button class="bouton" data-commande="dicter" title="Alt+Maj+D">🎤 Dicter</button>
+    <button class="bouton" data-commande="relire" title="Alt+Maj+R">Relire le champ</button>
+    <button class="bouton" data-commande="lettres">ɣ ɛ ḍ ḥ ṭ…</button>
+    <button class="bouton" data-page="ecrire">Écrire et relire</button>
+  </div>
+  <p class="discret cache" id="page-interdite">Chrome ne laisse pas les extensions écrire dans cette page : utilisez « Écrire et relire ».</p>
+</section>
+
+<section class="bloc">
+  <div class="onglets" role="tablist">
+    <button role="tab" data-mode="fiche" aria-selected="true">Asegzawal</button>
+    <button role="tab" data-mode="chercher" aria-selected="false">fr → kab</button>
+  </div>
+  <form id="formulaire" class="rangee">
+    <input type="search" id="requete" placeholder="Un mot kabyle (gh → ɣ)" autocomplete="off" spellcheck="false">
+    <button class="bouton" type="submit">Voir</button>
+  </form>
+  <div id="resultats"></div>
+</section>
+
+<section class="bloc cache" id="mot-du-jour"></section>
+
+<details class="bloc">
+  <summary>Réglages de l'écriture</summary>
+  <div id="interrupteurs"></div>
+</details>
+
+<footer>
+  <a href="#" id="reglages">Tous les réglages, mon dictionnaire</a>
+</footer>
+
+<script src="../commun.js"></script>
+<script src="../logique.js"></script>
+<script src="../pages/pages.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>

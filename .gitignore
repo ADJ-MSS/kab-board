@@ -38,3 +38,13 @@ word/vsto-libs/
 kab-board-word-*.zip
 .cache-windows/
 natif/pont/
+
+# Kab-board pour Chrome : ses ressources viennent de l'APK (chrome/autonome/ressources.sh)
+chrome/extension/ressources/
+chrome/extension/ort/
+/sortie/
+node_modules/
+chrome/manuel/*.aux
+chrome/manuel/*.log
+chrome/manuel/*.out
+chrome/manuel/*.toc

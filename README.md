@@ -1,11 +1,12 @@
 # kab-board
 
-Clavier pour écrire le kabyle, sur Android, sur Linux et sur Windows, et correcteur pour Microsoft Word : correcteur orthographique, suggestions, dictée vocale et outils d'écriture. **100 % hors ligne** : tout se calcule sur l'appareil, et l'application Android n'a pas l'autorisation d'accéder à Internet.
+Clavier pour écrire le kabyle, sur Android, sur Linux et sur Windows, extension pour Chrome, et correcteur pour Microsoft Word : correcteur orthographique, suggestions, dictée vocale et outils d'écriture. **100 % hors ligne** : tout se calcule sur l'appareil, et l'application Android n'a pas l'autorisation d'accéder à Internet.
 
-- **Télécharger** : [page des versions](https://github.com/ADJ-MSS/kab-board/releases) : `.apk` pour Android 7 ou plus récent sur téléphone 64 bits, `.deb` pour Debian et Ubuntu, `kab-board-windows-0.2-setup.exe` pour le clavier sous Windows 10 ou 11, `kab-board-word-setup-0.3.exe` pour Word.
+- **Télécharger** : [page des versions](https://github.com/ADJ-MSS/kab-board/releases) : `.apk` pour Android 7 ou plus récent sur téléphone 64 bits, `.deb` pour Debian et Ubuntu, `kab-board-windows-0.2-setup.exe` pour le clavier sous Windows 10 ou 11, `kab-board-chrome-0.2.0.zip` pour l'extension Chrome, `kab-board-word-setup-0.3.exe` pour Word.
 - **Manuel d'utilisation** : [kab-board-manuel-utilisation.netlify.app](https://kab-board-manuel-utilisation.netlify.app/)
 - **Le code Linux** : [`linux/`](linux/), application, méthode de saisie et clavier à l'écran.
 - **Le code Windows** : [`windows/`](windows/), le clavier qui écrit dans toutes les applications, sa barre de propositions, le clavier à l'écran et l'installeur ; voir [`windows/README.md`](windows/README.md).
+- **Le code Chrome** : [`chrome/`](chrome/), l'extension pour Chrome, Edge et Brave, avec le correcteur et la dictée dedans ; voir [`chrome/README.md`](chrome/README.md).
 - **Le code Word** : [`word/`](word/), complément pour Word, moteur et installeur ; voir [`word/NOTES-DEV.md`](word/NOTES-DEV.md).
 
 ## Version 0.3
@@ -17,6 +18,7 @@ Clavier pour écrire le kabyle, sur Android, sur Linux et sur Windows, et correc
 - **Plus rapide.** Sur un téléphone d'entrée de gamme, le moteur est prêt en 2 s au lieu de 12, une correction arrive en moins d'une seconde au lieu de 3, et les propositions s'affichent pendant qu'on tape au lieu d'attendre une pause.
 - **Démarrage automatique.** Sur les téléphones TCL et Xiaomi, une étape de la mise en place ouvre l'écran qui autorise kab-board à démarrer : sans elle, le clavier choisi depuis un autre ne s'affichait pas.
 - **Kab-board pour Windows**, première version publique : le clavier kabyle écrit dans toutes les applications, avec la barre des six propositions sous le mot, la complétion, la graphie b ou v, le clavier à l'écran et la dictée. Un installeur qui emporte tout, sans droits d'administrateur.
+- **Kab-board pour Chrome**, première version : les lettres kabyles, les six propositions, les fautes soulignées, la dictée et les outils dans tous les sites, Microsoft 365 en ligne compris (Word dans le navigateur, où le complément Word ne s'installe pas). L'extension se suffit à elle-même : le correcteur, le modèle de langue et le modèle vocal tournent dans le navigateur, sans rien installer à côté.
 - **Kab-board pour Word**, première version publique : un onglet dans le ruban, la relecture du document ou de la sélection, les propositions au clic droit, « Mon dictionnaire », la graphie b ou v et la dictée en kabyle. Comme sur le téléphone, tout se calcule sur l'ordinateur.
 
 ## Version 0.2
