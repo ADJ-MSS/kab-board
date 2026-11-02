@@ -92,7 +92,9 @@ async function demarrer() {
 
   $("allume").addEventListener("change", () => P.changerReglages({ allume: $("allume").checked }));
   $("reessayer").addEventListener("click", async () => montrerEtat(await P.etat()));
-  $("changer-raccourcis").addEventListener("click", () => chrome.tabs.create({ url: "chrome://extensions/shortcuts" }));
+  // Firefox a sa page à lui, qu'une extension ne peut qu'ouvrir par cette fonction.
+  $("changer-raccourcis").addEventListener("click", () => (chrome.commands.openShortcutSettings
+    ? chrome.commands.openShortcutSettings() : chrome.tabs.create({ url: "chrome://extensions/shortcuts" })));
   L.brancherSaisie($("nouveau-mot"), () => reglages.translitteration);
   L.brancherSaisie($("filtre"), () => reglages.translitteration);
   $("ajout").addEventListener("submit", async (e) => {

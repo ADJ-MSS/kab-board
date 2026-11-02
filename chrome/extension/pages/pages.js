@@ -5,6 +5,7 @@
 (function () {
   "use strict";
   const C = globalThis.KabCommun;
+  C.nommerNavigateur(document);
 
   const INTERRUPTEURS = [
     ["translitteration", "Écrire comme on parle", "gh → ɣ, dh → ḍ, kh → x, aa → ɛ, ou → u. Un effacement juste après défait la conversion."],
@@ -12,7 +13,7 @@
     ["barre", "Barre des propositions", "Six propositions sous le mot : la correction en contexte (vert), les candidats (bleu), la complétion (ocre)."],
     ["chiffres", "Choisir avec 1 à 6", "Tant qu'un mot est en cours. En AZERTY : Maj + 1 à 6, ou le pavé numérique."],
     ["prediction", "Proposer le mot suivant", "Quand un mot finit, la barre propose la suite (en ocre)."],
-    ["souligner", "Souligner les fautes", "Pendant qu'on écrit ; un clic sur le mot souligné pour le corriger. Le correcteur de Chrome, qui ne connaît pas le kabyle, se tait alors dans le champ."],
+    ["souligner", "Souligner les fautes", `Pendant qu'on écrit ; un clic sur le mot souligné pour le corriger. Le correcteur de ${C.navigateur()}, qui ne connaît pas le kabyle, se tait alors dans le champ.`],
     ["autocorrection", "Correction automatique", "À l'espace, corrige les mots que le correcteur ne connaît pas (jamais un mot connu, un nom propre, un sigle). Retour arrière rend le mot tapé."],
   ];
 
@@ -48,7 +49,7 @@
 
   function surEtat(fonction) {
     chrome.storage.onChanged.addListener((changements, zone) => {
-      if (zone === "session" && changements.etat) fonction(changements.etat.newValue);
+      if (zone === C.zoneEtat() && changements.etat) fonction(changements.etat.newValue);
     });
   }
 

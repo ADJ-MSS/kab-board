@@ -1,0 +1,24 @@
+<!doctype html><html lang="kab"><head><meta charset="utf-8"><title>Essai</title>
+<link rel="icon" href="data:,">
+<style>body{font:16px/1.5 sans-serif;margin:24px;max-width:760px}
+textarea{width:100%;height:140px;font:17px/1.5 "DejaVu Sans",sans-serif;padding:8px}
+input{width:100%;font:17px "DejaVu Sans",sans-serif;padding:6px 8px}
+.ed{border:1px solid #999;min-height:100px;padding:8px;font:17px/1.5 "DejaVu Sans",sans-serif}
+label{display:block;margin-top:18px;color:#555;font-size:13px}</style></head><body>
+<h1>Essai de Kab-board</h1>
+<label for="zone">Une zone de texte</label><textarea id="zone"></textarea>
+<label for="ligne">Une ligne</label><input id="ligne" type="text">
+<label>Un élément modifiable</label><div id="ed" class="ed" contenteditable="true"></div>
+<label for="mdp">Un mot de passe</label><input id="mdp" type="password">
+<label for="courriel">Un courriel</label><input id="courriel" type="email">
+<label for="complete">Une recherche qui complète ce qu'on tape (comme Bing)</label><input id="complete" type="search">
+<script>
+const complete = document.getElementById("complete");
+complete.addEventListener("input", (e) => {
+  if (e.inputType !== "insertText" || !complete.value.endsWith("g")) return;
+  const n = complete.value.length;
+  complete.value += "irc arrco";
+  complete.setSelectionRange(n, complete.value.length);
+});
+</script>
+</body></html>

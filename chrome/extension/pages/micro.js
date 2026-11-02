@@ -2,6 +2,7 @@
  * enregistre la dictée ne peut pas poser la question lui-même. */
 "use strict";
 
+globalThis.KabCommun.nommerNavigateur(document);
 const resultat = document.getElementById("resultat");
 
 async function autoriser() {

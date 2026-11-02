@@ -48,3 +48,5 @@ chrome/manuel/*.aux
 chrome/manuel/*.log
 chrome/manuel/*.out
 chrome/manuel/*.toc
+# Kab-board pour Firefox : construite par firefox/construire.sh
+firefox/extension/

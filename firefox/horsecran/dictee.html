@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kab-board : dictée</title>
+<link rel="stylesheet" href="../pages/pages.css">
+<style>
+  body { padding: 16px 18px; }
+  .jauge { height: 8px; margin: 14px 0 12px; border-radius: 4px; background: var(--fond-2); overflow: hidden; }
+  #niveau { height: 100%; width: 0; background: var(--accent); transition: width 0.2s; }
+  .rangee { display: flex; gap: 8px; }
+</style>
+</head>
+<body>
+<header class="tete">
+  <img src="../icones/kab-board-32.png" alt="">
+  <div class="titre">
+    <h1>Dictée en kabyle</h1>
+    <span id="etat" class="discret">Le micro s'ouvre…</span>
+  </div>
+</header>
+<div class="jauge"><div id="niveau"></div></div>
+<div class="rangee">
+  <button class="bouton principal" id="arreter">Arrêter</button>
+  <button class="bouton" id="annuler">Annuler</button>
+</div>
+<p class="discret">Le texte s'écrit dans le champ où vous écriviez. Alt+Maj+D arrête aussi.</p>
+<script src="../logique.js"></script>
+<script src="dictee.js"></script>
+<script src="enregistreur.js"></script>
+</body>
+</html>

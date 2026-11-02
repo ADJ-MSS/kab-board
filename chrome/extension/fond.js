@@ -2,17 +2,20 @@
  * Le fond de l'extension : il prépare le correcteur et lui passe les requêtes des
  * pages.
  *
- * Le correcteur tourne dans un document hors écran (horsecran/), ouvert au premier
- * champ où l'on écrit, pas au démarrage du navigateur : il pèse lourd. Ce document
- * écoute aussi le micro de la dictée. Il se ferme au bout de vingt minutes sans
- * rien demander, et se rouvre au besoin.
+ * Le correcteur est ouvert au premier champ où l'on écrit, pas au démarrage du
+ * navigateur : il pèse lourd. Il se ferme au bout de vingt minutes sans rien demander,
+ * et se rouvre au besoin. Où il tourne dépend du navigateur (plateforme.js) : un
+ * document hors écran sous Chrome, la page de fond elle-même sous Firefox.
  *
- * L'état du correcteur va dans chrome.storage.session, que lisent les pages et le
- * script de contenu.
+ * L'état du correcteur va dans chrome.storage (C.zoneEtat()), que lisent les pages et
+ * le script de contenu.
  */
-importScripts("commun.js");
+// Sous Chrome, un service worker ; sous Firefox, une page, qui a déjà chargé les deux.
+if (typeof importScripts === "function") importScripts("commun.js", "plateforme.js");
 
 const C = globalThis.KabCommun;
+const P = globalThis.KabPlateforme;
+const ZONE = C.zoneEtat();
 
 const DELAIS = {
   proposer: 6000, predire: 6000, basculer: 6000, juger: 60000, fiche: 12000, chercher: 12000,
@@ -20,16 +23,17 @@ const DELAIS = {
 };
 const REQUETES = new Set(Object.keys(DELAIS));
 const TEXTE_MAX = 20000;         // ce que l'on relit d'un coup
-const HORS_ECRAN = "horsecran/horsecran.html";
 
 let reglages = C.reglagesComplets({});
 let etat = { moteur: "arrete", erreur: "" };
-let ouverture = null;            // le document hors écran en train de s'ouvrir
+let ouverture = null;            // le correcteur en train de s'ouvrir
 let dictee = null;               // { tabId, frameId } : où écrire ce qui sera dit
 let dernierChamp = null;         // { tabId, frameId } : le dernier champ où l'on a écrit
 
-chrome.storage.session.setAccessLevel({ accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS" })
-  .catch(() => {});
+if (ZONE === "session") {
+  chrome.storage.session.setAccessLevel({ accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS" })
+    .catch(() => {});
+}
 const reglagesLus = chrome.storage.sync.get("reglages").then((r) => {
   reglages = C.reglagesComplets(r.reglages);
   majBadge();
@@ -37,15 +41,15 @@ const reglagesLus = chrome.storage.sync.get("reglages").then((r) => {
 chrome.storage.session.get("dernierChamp").then((r) => {
   if (r.dernierChamp && !dernierChamp) dernierChamp = r.dernierChamp;
 }).catch(() => {});
-// Le fond a pu être endormi ; le document hors écran, lui, vit peut-être encore, le
-// correcteur prêt. Les requêtes attendent de le savoir.
-const etatLu = horsEcranOuvert().then(async (ouvert) => {
+// Le fond a pu être endormi ; le correcteur, lui, vit peut-être encore, prêt. Les
+// requêtes attendent de le savoir.
+P.ecouter(duCorrecteur);
+const etatLu = P.ouvert().then(async (ouvert) => {
   if (!ouvert) {
     publierEtat({ moteur: "arrete", erreur: "" });
     return;
   }
-  const e = await chrome.runtime.sendMessage({ cible: "horsecran", type: "etat" }).catch(() => null);
-  publierEtat(e || { moteur: "chargement", erreur: "" });
+  publierEtat((await P.etat()) || { moteur: "chargement", erreur: "" });
 }).catch(() => {});
 chrome.storage.onChanged.addListener((changements, zone) => {
   if (zone === "sync" && changements.reglages) {
@@ -58,7 +62,7 @@ chrome.storage.onChanged.addListener((changements, zone) => {
 
 function publierEtat(changements) {
   etat = { ...etat, ...changements };
-  chrome.storage.session.set({ etat }).catch(() => {});
+  chrome.storage[ZONE].set({ etat }).catch(() => {});
   majBadge();
 }
 
@@ -75,29 +79,18 @@ function majBadge() {
   chrome.action.setBadgeBackgroundColor({ color: couleur }).catch(() => {});
 }
 
-// Le correcteur, dans le document hors écran
+// Le correcteur
 
-async function horsEcranOuvert() {
-  const existants = await chrome.runtime.getContexts({
-    contextTypes: ["OFFSCREEN_DOCUMENT"], documentUrls: [chrome.runtime.getURL(HORS_ECRAN)],
-  });
-  return existants.length > 0;
-}
-
-/** Ouvre le document hors écran, s'il ne l'est pas : le correcteur s'y charge. */
+/** Ouvre le correcteur, s'il ne l'est pas : il se charge. */
 function preparer() {
   if (ouverture) return ouverture;
   ouverture = (async () => {
-    if (await horsEcranOuvert()) return;
+    if (await P.ouvert()) return;
     publierEtat({ moteur: "chargement", erreur: "" });
     try {
-      await chrome.offscreen.createDocument({
-        url: HORS_ECRAN, reasons: ["WORKERS", "USER_MEDIA"],
-        justification: "Le correcteur kabyle, chargé une fois pour toutes les pages, et le micro de la dictée.",
-      });
+      await P.ouvrir();
     } catch (erreur) {
-      const message = String(erreur && erreur.message || erreur);
-      if (!/single offscreen/i.test(message)) publierEtat({ moteur: "panne", erreur: message });
+      publierEtat({ moteur: "panne", erreur: String(erreur && erreur.message || erreur) });
     }
   })().finally(() => {
     ouverture = null;
@@ -106,11 +99,7 @@ function preparer() {
 }
 
 async function fermer() {
-  try {
-    await chrome.offscreen.closeDocument();
-  } catch (erreur) {
-    // déjà fermé
-  }
+  await P.fermer();
   publierEtat({ moteur: "arrete", erreur: "" });
 }
 
@@ -132,9 +121,6 @@ async function envoyer(requete) {
     return indisponible();
   }
   await reglagesLus;
-  const message = {
-    cible: "horsecran", type: "requete", requete: { graphie: reglages.graphie, ...requete },
-  };
   let minuterie;
   const delai = new Promise((resoudre) => {
     minuterie = setTimeout(() => resoudre({
@@ -142,9 +128,10 @@ async function envoyer(requete) {
     }), DELAIS[requete.quoi]);
   });
   try {
-    return await Promise.race([chrome.runtime.sendMessage(message).then((r) => r || indisponible()), delai]);
+    const reponse = P.requete({ graphie: reglages.graphie, ...requete }).then((r) => r || indisponible());
+    return await Promise.race([reponse, delai]);
   } catch (erreur) {
-    // Le document hors écran a été fermé entre-temps : on le rouvre.
+    // Le correcteur a été fermé entre-temps : on le rouvre.
     publierEtat({ moteur: "arrete", erreur: "" });
     preparer();
     return indisponible();
@@ -153,7 +140,7 @@ async function envoyer(requete) {
   }
 }
 
-// La dictée : le micro et la transcription dans le document hors écran
+// La dictée : le micro et la transcription, là où tourne le correcteur
 
 function direALaPage(cible, message) {
   if (!cible || cible.tabId === undefined) return;
@@ -168,9 +155,7 @@ async function commencerDictee(sender) {
   try {
     await preparer();                // le correcteur se prépare pendant qu'on parle
     await reglagesLus;
-    const r = await chrome.runtime.sendMessage({
-      cible: "horsecran", type: "commencer", dureeMax: 30, graphie: reglages.graphie,
-    });
+    const r = await P.micro("commencer", { dureeMax: 30, graphie: reglages.graphie });
     if (!r || r.erreur) {
       dictee = null;
       if (r && r.erreur === "micro-refuse") ouvrirPage("micro");
@@ -183,16 +168,31 @@ async function commencerDictee(sender) {
   }
 }
 
-function finDictee(message) {
-  const cible = dictee;
-  if (message.type === "horsecran-transcription") {
-    direALaPage(cible, { type: "dictee", phase: "transcription", secondes: message.secondes });
-    return;
+/** Ce qu'annonce le correcteur : son état, le repos, la dictée. Rend true s'il s'agissait de lui. */
+function duCorrecteur(m) {
+  switch (m.type) {
+    case "horsecran-etat":
+      publierEtat(m.etat);
+      return true;
+    case "horsecran-repos":
+      if (!dictee) fermer();
+      return true;
+    case "horsecran-progres":
+      direALaPage(dictee, { type: "dictee", phase: "ecoute", secondes: m.secondes, niveau: m.niveau });
+      return true;
+    case "horsecran-transcription":
+      direALaPage(dictee, { type: "dictee", phase: "transcription", secondes: m.secondes });
+      return true;
+    case "horsecran-fini":
+    case "horsecran-erreur": {
+      const cible = dictee;
+      dictee = null;
+      direALaPage(cible, { type: "dictee", phase: "fin", texte: m.texte || "", erreur: m.erreur || "" });
+      return true;
+    }
+    default:
+      return false;
   }
-  dictee = null;
-  direALaPage(cible, {
-    type: "dictee", phase: "fin", texte: message.texte || "", erreur: message.erreur || "",
-  });
 }
 
 // Les pages
@@ -250,25 +250,11 @@ chrome.runtime.onMessage.addListener((m, sender, repondre) => {
         return true;
       }
       if (m.action === "arreter" || m.action === "annuler") {
-        chrome.runtime.sendMessage({ cible: "horsecran", type: m.action }).catch(() => {});
+        P.micro(m.action).catch(() => {});
         repondre({ ok: !!dictee });
         return false;
       }
       repondre({ erreur: "action inconnue" });
-      return false;
-    case "horsecran-etat":
-      publierEtat(m.etat);
-      return false;
-    case "horsecran-repos":
-      if (!dictee) fermer();
-      return false;
-    case "horsecran-progres":
-      direALaPage(dictee, { type: "dictee", phase: "ecoute", secondes: m.secondes, niveau: m.niveau });
-      return false;
-    case "horsecran-transcription":
-    case "horsecran-fini":
-    case "horsecran-erreur":
-      finDictee(m);
       return false;
     case "commande":
       versLeChamp({ type: "commande", nom: m.nom });
@@ -277,6 +263,7 @@ chrome.runtime.onMessage.addListener((m, sender, repondre) => {
       ouvrirPage(m.page);
       return false;
     default:
+      duCorrecteur(m);
       return false;
   }
 });
@@ -284,6 +271,11 @@ chrome.runtime.onMessage.addListener((m, sender, repondre) => {
 // Raccourcis clavier et menu du clic droit
 
 chrome.commands.onCommand.addListener(async (nom) => {
+  // Une dictée en cours s'arrête d'ici : sous Firefox, sa fenêtre a peut-être le focus.
+  if (nom === "dicter" && dictee) {
+    P.micro("arreter").catch(() => {});
+    return;
+  }
   if (nom === "basculer") {
     const r = await chrome.storage.sync.get("reglages");
     const actuels = C.reglagesComplets(r.reglages);
