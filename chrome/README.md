@@ -4,7 +4,8 @@ Le clavier et le correcteur kabyles de Kab-board dans le navigateur (Chrome,
 Edge, Brave, Opera, Chromium) : les mêmes règles et les mêmes résultats que kab-board sur Android.
 **L'extension se suffit à elle-même** : le correcteur, le modèle de langue et le
 modèle vocal sont dedans, et tournent dans le navigateur. Rien à installer à côté,
-et **rien ne part sur Internet**.
+et **rien ne part sur Internet**. La version pour Firefox se construit de celle-ci :
+voir `firefox/README.md`.
 
 ## Ce qu'elle fait
 
@@ -69,7 +70,9 @@ et **rien ne part sur Internet**.
 - **Le document hors écran** (`horsecran/`) charge le correcteur une fois, dans un
   fil à part, pour tous les onglets. Le fond ne l'ouvre qu'au premier champ où
   l'on écrit, pas au démarrage du navigateur, et il se ferme au bout de vingt
-  minutes sans rien demander. Il écoute aussi le micro de la dictée.
+  minutes sans rien demander. Il écoute aussi le micro de la dictée. Le fond n'en
+  sait que ce que lui en dit `plateforme.js` : Firefox, qui n'a pas de document
+  hors écran, a le sien (`firefox/plateforme.js`).
 - **Le fond** (`fond.js`) passe les requêtes des pages au correcteur, en ajoutant
   la graphie. L'état du correcteur (au repos, en chargement, prêt, en panne) va
   dans `chrome.storage.session`, les réglages dans `chrome.storage.sync`, « mon
@@ -93,21 +96,21 @@ et **rien ne part sur Internet**.
 | `extension/manifest.json` | Manifeste V3. La clé fixe l'identifiant en mode développeur : `bdmaonaapnhmnkcealgfodhmkijkhbgg`. |
 | `extension/logique.js` | Les règles, sans navigateur : digrammes, AltGr, mot en cours, choix, possessif, correction automatique, morceaux à relire, rééchantillonnage. |
 | `extension/commun.js` | Les réglages et leurs valeurs de départ, « mon dictionnaire ». |
-| `extension/fond.js` | Le service worker : le document hors écran, l'état, la dictée, les raccourcis, le menu du clic droit. |
+| `extension/fond.js` | Le service worker : le correcteur, l'état, la dictée, les raccourcis, le menu du clic droit. |
+| `extension/plateforme.js` | Où tourne le correcteur sous Chrome : le document hors écran. |
 | `extension/horsecran/` | Le document hors écran : le relais vers le correcteur, le micro. |
 | `extension/moteur/` | Le correcteur : le moteur en JavaScript, KenLM et CRFsuite en WebAssembly, la transcription. |
 | `extension/contenu/` | Le script de contenu : `champs.js`, `interface.js`, `contenu.js`, `contenu.css`. |
 | `extension/popup/`, `extension/pages/` | Le bouton de la barre de Chrome, les réglages, « Écrire et relire », l'autorisation du micro. |
 | `extension/ressources/`, `extension/ort/` | Les ressources de l'APK et onnxruntime-web : hors du dépôt, posés par `autonome/ressources.sh`. |
-| `autonome/` | Comment l'extension est devenue autonome : la construction de KenLM et CRFsuite, les ressources, l'historique. |
+| `autonome/` | La construction de KenLM, CRFsuite et du décodeur xz en WebAssembly, et les ressources. |
 | `tests/` | Les vérifications (voir plus bas). |
 
 ## Comme sur le téléphone
 
 Relevé du 29 et du 30/10/2026, avec le moteur de l'APK 0.3 rejoué hors du
 téléphone (le code Kotlin de l'application, ses ressources, ses bibliothèques
-natives) contre le correcteur de l'extension, avec les mêmes ressources ;
-`outils/android/` le refait :
+natives) contre le correcteur de l'extension, avec les mêmes ressources :
 
 | | identiques |
 |---|---|
@@ -136,10 +139,11 @@ correcteur (`tests/essai_navigateur.mjs --vrai`) :
 
 ## Installer
 
-**Depuis le Chrome Web Store**, une fois l'extension publiée : rien d'autre à
-installer.
+**Depuis l'archive** `kab-board-navigateur-0.2.0.zip`, sur la [page des versions](https://github.com/ADJ-MSS/kab-board/releases) :
+la décompresser, puis `chrome://extensions`, « Mode développeur », « Charger
+l'extension non empaquetée ». Le manuel le montre pas à pas.
 
-**En mode développeur**, depuis ce dépôt :
+**Depuis ce dépôt** :
 
 ```sh
 chrome/autonome/ressources.sh kab-board-0.3.apk    # les ressources de l'APK et onnxruntime-web
@@ -170,7 +174,7 @@ son propre identifiant).
 ## Vérifier
 
 ```sh
-node --test chrome/tests/logique.test.mjs           # la logique : 21 groupes
+node --test chrome/tests/logique.test.mjs           # la logique : 21 groupes, communs avec Firefox
 node chrome/tests/essai_navigateur.mjs              # Chromium, l'extension, un faux correcteur : 59
 node chrome/tests/essai_navigateur.mjs --vrai       # le vrai correcteur, et les mesures : 54
 KAB_ESSAI_AUDIO=chrome/manuel/outils/voix.wav KAB_ESSAI_DICTEE="ilaq ad teččem kra n lḥaǧa" \
@@ -178,13 +182,14 @@ KAB_ESSAI_AUDIO=chrome/manuel/outils/voix.wav KAB_ESSAI_DICTEE="ilaq ad teččem
 ```
 
 `essai_navigateur.mjs` lance un vrai Chromium (Playwright, ou `CHROME=…`),
-charge l'extension et tape dans une page : conversions, barre, chiffres,
+charge l'extension et fait le parcours de `tests/scenario.mjs`, le même que pour
+Firefox (`firefox/tests/essai_firefox.mjs`), sur la même page (`tests/page_essai.html`) : conversions, barre, chiffres,
 soulignés, carte, élément modifiable, mot de passe, correction automatique,
 outils, dictée, popup, graphie, « mon dictionnaire » et son import, « Écrire et
-relire », le document hors écran fermé au repos puis rouvert, et un correcteur
+relire », le correcteur fermé au repos puis rouvert, et un correcteur
 qui ne se charge pas. Sans `--vrai`, une copie de l'extension sans ses ressources,
 où un faux correcteur (`tests/faux_travailleur.js`) donne, pour ces phrases-là,
-les réponses du vrai : c'est ce que fait la CI. Avec `--vrai`, l'extension
+les réponses du vrai. Avec `--vrai`, l'extension
 elle-même, avec ses ressources. `KAB_ESSAI_AUDIO=son.wav` sert de micro à la
 dictée, et `KAB_ESSAI_DICTEE` ce qu'elle doit en tirer : avec `manuel/outils/voix.wav`,
 une phrase kabyle enregistrée, « ilaq ad teččem kra n lḥaǧa », comme sur le téléphone.

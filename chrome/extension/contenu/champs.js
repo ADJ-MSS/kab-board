@@ -37,10 +37,12 @@
     documentMiroir = racine;
   }
 
-  /** La racine d'ombre d'un élément, même fermée : une extension y a accès. */
+  /** La racine d'ombre d'un élément, même fermée : une extension y a accès (Chrome par
+   * chrome.dom, Firefox par la propriété openOrClosedShadowRoot). */
   function racineOmbre(el) {
     if (el.shadowRoot) return el.shadowRoot;
     try {
+      if ("openOrClosedShadowRoot" in el) return el.openOrClosedShadowRoot || null;
       return chrome.dom && chrome.dom.openOrClosedShadowRoot ? chrome.dom.openOrClosedShadowRoot(el) : null;
     } catch (erreur) {
       return null;

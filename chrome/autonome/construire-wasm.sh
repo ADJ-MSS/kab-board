@@ -1,14 +1,17 @@
 #!/bin/sh
-# KenLM et CRFsuite en WebAssembly, pour le correcteur dans le navigateur.
+# KenLM et CRFsuite en WebAssembly, pour le correcteur dans le navigateur, et le décodeur
+# des ressources compressées (Firefox).
 #
 #   chrome/autonome/construire-wasm.sh  ->  chrome/extension/moteur/kab_lm.mjs, kab_lm.wasm,
-#                                            kab_crf.mjs, kab_crf.wasm
+#                                            kab_crf.mjs, kab_crf.wasm, kab_xz.mjs, kab_xz.wasm
 #
 # KenLM et CRFsuite viennent du dépôt kab-board (natif/amont) : KAB_BOARD=~/kab-board
 # par défaut. Il faut Emscripten (emcc 3.1 ou plus récent).
 #
 # Les ponts (kenlm_wasm.cc, crf_wasm.cc) reprennent les appels des ponts JNI de
-# l'application Android. Le modèle de langue se lit en mémoire, sans mmap.
+# l'application Android. Le modèle de langue se lit en mémoire, sans mmap. xz_wasm.cc
+# décompresse avec xz-embedded (xz-embedded/, licence 0BSD, du commit ae63ae3a du
+# 30/12/2024) et recalcule le vocabulaire du modèle avec la fonction de hachage de KenLM.
 # util/usage.cc est remplacé par usage.cc, ici ; util/parallel_read.cc, la lecture en
 # plusieurs fils, n'est appelé par rien.
 set -e
@@ -45,3 +48,15 @@ done
 em++ -std=c++17 $INCLURE $COMMUN -sEXPORT_NAME=CRFsuite -sMAXIMUM_MEMORY=256MB \
     -o "$SORTIE/kab_crf.mjs" "$ICI/crf_wasm.cc" "$OBJETS"/*.o
 taille "$SORTIE/kab_crf.wasm"
+
+echo "  xz…"
+XZ="$ICI/xz-embedded"
+for c in "$XZ"/xz_crc32.c "$XZ"/xz_crc64.c "$XZ"/xz_dec_lzma2.c "$XZ"/xz_dec_stream.c; do
+    emcc -std=gnu99 -O2 -w -DXZ_USE_CRC64 -I"$XZ" -c "$c" -o "$OBJETS/xz-$(basename "$c" .c).o"
+done
+# shellcheck disable=SC2086
+em++ -std=c++17 -O2 -w -DXZ_USE_CRC64 -I"$XZ" -I"$KENLM" \
+    -sMODULARIZE=1 -sEXPORT_ES6=1 -sENVIRONMENT=web,worker,node -sALLOW_MEMORY_GROWTH=1 \
+    -sINITIAL_MEMORY=32MB -sMAXIMUM_MEMORY=2GB -sEXPORTED_FUNCTIONS=_malloc,_free \
+    -sEXPORT_NAME=KabXz -o "$SORTIE/kab_xz.mjs" "$ICI/xz_wasm.cc" "$KENLM/util/murmur_hash.cc" "$OBJETS"/xz-*.o
+taille "$SORTIE/kab_xz.wasm"

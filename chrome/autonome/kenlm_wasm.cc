@@ -5,7 +5,7 @@
 // mémoire (util::READ), le navigateur n'ayant pas de mmap, et l'index d'un mot peut
 // se demander une fois pour toutes, puis servir à chaque score.
 //
-// Construction : chrome/autonome/construire-kenlm.sh
+// Construction : chrome/autonome/construire-wasm.sh
 
 #include <cstring>
 #include <new>

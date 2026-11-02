@@ -190,15 +190,16 @@
     /**
      * formes, nature : les propositions ; ancre : le rectangle du curseur.
      * message : une ligne d'état à la place (ou en plus) des propositions.
-     * ecoute : la dictée en cours ({ secondes } ou { transcription: true }).
+     * ecoute : la dictée en cours ({ ouverture: true }, { secondes } ou { transcription: true }).
      */
     montrerBarre({ formes, nature, ancre, chiffres, message, ecoute }) {
       this.attacher();
       const b = this.barre;
       if (ecoute) {
         const texte = ecoute.transcription ? "Transcription…"
-          : `● J'écoute… ${Math.floor(ecoute.secondes || 0)} s`;
-        const mode = ecoute.transcription ? "transcription" : "ecoute";
+          : ecoute.ouverture ? "● Le micro s'ouvre…"
+            : `● J'écoute… ${Math.floor(ecoute.secondes || 0)} s`;
+        const mode = ecoute.transcription ? "transcription" : ecoute.ouverture ? "ouverture" : "ecoute";
         // Pendant l'écoute, seul le compteur change : la barre n'est pas refaite,
         // sinon « Arrêter » disparaîtrait sous le clic.
         if (this.modeBarre === mode && this.messageEcoute && !b.classList.contains("cache")) {
@@ -208,7 +209,7 @@
         b.textContent = "";
         this.messageEcoute = el("div", { classe: "message ecoute" }, texte);
         b.appendChild(this.messageEcoute);
-        if (!ecoute.transcription) {
+        if (mode === "ecoute") {
           b.appendChild(sansFocus(el("div", { classe: "outil", title: "Arrêter la dictée" }, "■ Arrêter"),
             () => this.actions.dicter && this.actions.dicter()));
         }

@@ -1,7 +1,8 @@
-// Le correcteur, dans un fil à part du document hors écran : il charge le moteur une
-// fois (les ressources de l'application, 300 Mo), puis répond aux requêtes, une à la
-// fois. La dictée aussi passe ici, le modèle vocal chargé à la première ; l'audio
-// arrive en 16 kHz, et passe par les 16 bits du micro du téléphone.
+// Le correcteur, dans un fil à part (lancé par le document hors écran sous Chrome, par la
+// page de fond sous Firefox) : il charge le moteur une fois (les ressources de
+// l'application, 300 Mo), puis répond aux requêtes, une à la fois. La dictée aussi passe ici, le modèle vocal chargé à la première ; l'audio
+// arrive en 16 kHz, et passe par les 16 bits du micro du téléphone. Pour Firefox, les plus
+// grosses ressources sont compressées (compresses.json, compression.js).
 
 import KenLM from "./kab_lm.mjs";
 import CRFsuite from "./kab_crf.mjs";
@@ -11,13 +12,29 @@ import { Transcripteur, commeLeMicro } from "./transcripteur.js";
 const RESSOURCES = new URL("../ressources/", import.meta.url);
 
 async function octets(url) {
-  const r = await fetch(url);
-  if (!r.ok) return null;
-  return new Uint8Array(await r.arrayBuffer());
+  try {
+    const r = await fetch(url);
+    return r.ok ? new Uint8Array(await r.arrayBuffer()) : null;
+  } catch (erreur) {
+    return null;
+  }
+}
+
+const compresses = octets(new URL("compresses.json", RESSOURCES))
+  .then((o) => (o ? JSON.parse(new TextDecoder().decode(o)) : {}));
+
+/** Un fichier des ressources (moteur/…, voix/…), décompressé s'il le faut. */
+async function ressource(chemin) {
+  const info = (await compresses)[chemin];
+  if (!info) return octets(new URL(chemin, RESSOURCES));
+  const [{ default: KabXz }, { ressource: decompresser }] =
+    await Promise.all([import("./kab_xz.mjs"), import("./compression.js")]);
+  return decompresser(new URL(chemin, RESSOURCES), info, KabXz,
+    { wasmBinary: await octets(new URL("kab_xz.wasm", import.meta.url)) });
 }
 
 function lire(nom) {
-  return octets(new URL(nom === TABLE_BV ? `graphie/${nom}` : `moteur/${nom}`, RESSOURCES));
+  return ressource(nom === TABLE_BV ? `graphie/${nom}` : `moteur/${nom}`);
 }
 
 let moteur = null;
@@ -46,8 +63,8 @@ async function dicter(audio, graphie) {
     ort = await import("../ort/ort.wasm.min.mjs");
     ort.env.wasm.wasmPaths = new URL("../ort/", import.meta.url).href;
     ort.env.wasm.numThreads = 1;
-    transcripteur = await Transcripteur.ouvrir(ort, await octets(new URL("voix/mmeslay.onnx", RESSOURCES)),
-      await octets(new URL("voix/jetons.txt", RESSOURCES)));
+    transcripteur = await Transcripteur.ouvrir(ort, await ressource("voix/mmeslay.onnx"),
+      await ressource("voix/jetons.txt"));
   }
   const texte = await transcripteur.transcrire(ort, commeLeMicro(audio));
   // Le modèle vocal ne transcrit qu'en b : le texte suit la graphie réglée.

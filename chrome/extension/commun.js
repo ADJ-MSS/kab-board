@@ -55,6 +55,25 @@
     return !!nom && reglages.sitesExclus.some((s) => nom === s || nom.endsWith("." + s));
   }
 
+  /**
+   * Où le fond publie l'état du correcteur : chrome.storage.session, que Chrome ouvre aux
+   * scripts de contenu. Firefox ne la leur ouvre pas : l'état va alors dans
+   * chrome.storage.local, et le fond le remet à zéro en démarrant.
+   */
+  function zoneEtat() {
+    return chrome.runtime.getManifest().browser_specific_settings ? "local" : "session";
+  }
+
+  /** Le nom du navigateur, pour les pages : Firefox a son manifeste à lui. */
+  function navigateur() {
+    return chrome.runtime.getManifest().browser_specific_settings ? "Firefox" : "Chrome";
+  }
+
+  /** Les pages écrivent « Chrome » dans un <span class="navigateur"> : il prend le bon nom. */
+  function nommerNavigateur(racine) {
+    for (const e of racine.querySelectorAll(".navigateur")) e.textContent = navigateur();
+  }
+
   /** « Mon dictionnaire » : les mots que l'on ne souligne jamais, en minuscules. */
   async function mesMots() {
     const r = await chrome.storage.local.get("mesMots");
@@ -79,5 +98,8 @@
     return { total: mots.length };
   }
 
-  return { REGLAGES_DEFAUT, reglagesComplets, site, siteExclu, mesMots, ajouterMots, oublierMot };
+  return {
+    REGLAGES_DEFAUT, reglagesComplets, site, siteExclu, zoneEtat, navigateur, nommerNavigateur,
+    mesMots, ajouterMots, oublierMot,
+  };
 });

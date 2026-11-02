@@ -789,17 +789,26 @@
     }
     const [d, f] = c.selection();
     const longueur = c.texte().length;
-    dictee = { champ: c, debut: d === null ? longueur : d, fin: f === null ? longueur : f, phase: "ecoute", secondes: 0 };
+    // « J'écoute » quand le micro écoute vraiment : sous Firefox, une fenêtre s'ouvre d'abord.
+    dictee = { champ: c, debut: d === null ? longueur : d, fin: f === null ? longueur : f, phase: "ouverture", secondes: 0 };
     montrerDictee();
     const r = await envoyerFond({ type: "dicter", action: "commencer" });
-    if (!r || r.erreur) {
+    if (r && !r.erreur) {
+      ecouteCommencee();
+    } else {
       dictee = null;
       ui.cacherBarre();
       const erreur = r && r.erreur === "micro-refuse"
-        ? "Chrome doit d'abord pouvoir écouter le micro : autorisez-le dans l'onglet qui vient de s'ouvrir, puis recommencez."
+        ? `${C.navigateur()} doit d'abord pouvoir écouter le micro : autorisez-le dans l'onglet qui vient de s'ouvrir, puis recommencez.`
         : (r && r.erreur) || "Le micro ne répond pas.";
       outilMessage("Dictée", erreur);
     }
+  }
+
+  function ecouteCommencee() {
+    if (!dictee || dictee.phase !== "ouverture") return;
+    dictee.phase = "ecoute";
+    montrerDictee();
   }
 
   function montrerDictee() {
@@ -812,9 +821,9 @@
     } catch (erreur) {
       ancre = c.el.getBoundingClientRect();
     }
-    ui.montrerBarre({
-      ancre, ecoute: dictee.phase === "transcription" ? { transcription: true } : { secondes: dictee.secondes },
-    });
+    const ecoute = dictee.phase === "transcription" ? { transcription: true }
+      : dictee.phase === "ouverture" ? { ouverture: true } : { secondes: dictee.secondes };
+    ui.montrerBarre({ ancre, ecoute });
   }
 
   function finirDictee(message) {
@@ -1227,12 +1236,12 @@
   }
 
   chrome.storage.sync.get("reglages").then((r) => mettreReglages(r.reglages)).catch(() => {});
-  chrome.storage.session.get("etat").then((r) => mettreEtat(r.etat)).catch(() => {});
+  chrome.storage[C.zoneEtat()].get("etat").then((r) => mettreEtat(r.etat)).catch(() => {});
   chargerMesMots();
   chrome.storage.onChanged.addListener((changements, zone) => {
     if (!monte) return;
     if (zone === "sync" && changements.reglages) mettreReglages(changements.reglages.newValue);
-    if (zone === "session" && changements.etat) mettreEtat(changements.etat.newValue);
+    if (zone === C.zoneEtat() && changements.etat) mettreEtat(changements.etat.newValue);
     if (zone === "local" && changements.mesMots) chargerMesMots();
   });
 
@@ -1258,7 +1267,8 @@
       if (!dictee) return false;
       if (m.phase === "ecoute") {
         dictee.secondes = m.secondes;
-        montrerDictee();
+        if (dictee.phase === "ouverture") ecouteCommencee();
+        else montrerDictee();
       } else if (m.phase === "transcription") {
         dictee.phase = "transcription";
         montrerDictee();
