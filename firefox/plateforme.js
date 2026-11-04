@@ -26,6 +26,25 @@
   let annoncer = () => {};
   let fenetre = null;            // { id, prete } : la fenêtre de la dictée
 
+  /** Le premier module du correcteur qui manque ou ne se lit pas, en suivant ses import. */
+  async function moduleEnCause(url, vus = new Set()) {
+    if (vus.has(url)) return "";
+    vus.add(url);
+    let texte;
+    try {
+      const r = await fetch(url);
+      if (!r.ok) return url;
+      texte = await r.text();
+    } catch (e) {
+      return url;
+    }
+    for (const [, chemin] of texte.matchAll(/(?:^|[\s;])(?:from|import)\s+["'](\.[^"']+)["']/g)) {
+      const manque = await moduleEnCause(new URL(chemin, url).href, vus);
+      if (manque) return manque;
+    }
+    return "";
+  }
+
   function ouvert() {
     return Promise.resolve(travailleur !== null);
   }
@@ -38,9 +57,9 @@
     travailleur.onmessage = (e) => {
       const m = e.data;
       if (m.etat) {
-        if (m.etat === "pret") etatMoteur = { moteur: "pret", erreur: "", secondes: m.secondes };
-        else if (m.etat === "panne") etatMoteur = { moteur: "panne", erreur: m.erreur };
-        else etatMoteur = { moteur: "chargement", erreur: "" };
+        if (m.etat === "pret") etatMoteur = { moteur: "pret", erreur: "", secondes: m.secondes, journal: m.journal };
+        else if (m.etat === "panne") etatMoteur = { moteur: "panne", erreur: m.erreur, conseil: m.conseil, journal: m.journal };
+        else etatMoteur = { moteur: "chargement", erreur: "", journal: [] };
         annoncer({ type: "horsecran-etat", etat: etatMoteur });
         return;
       }
@@ -49,9 +68,15 @@
       if (resoudre) resoudre(m.reponse);
     };
     // Le fil ne démarre même pas (un module introuvable) : rien ne répondra.
-    travailleur.onerror = (e) => {
-      const erreur = e.message || "le correcteur ne se charge pas";
-      etatMoteur = { moteur: "panne", erreur };
+    travailleur.onerror = async (e) => {
+      const lieu = e.filename ? ` (${e.filename.replace(/^.*\/\/[^/]+\//, "")}${e.lineno ? `:${e.lineno}` : ""})` : "";
+      const manque = await moduleEnCause(new URL("moteur/travailleur.js", location.href).href);
+      const erreur = manque ? `Fichier manquant : ${manque.replace(/^.*\/\/[^/]+\//, "")}`
+        : `Le programme du correcteur ne démarre pas : ${e.message || "un de ses fichiers ne se lit pas"}${lieu}`;
+      etatMoteur = {
+        moteur: "panne", erreur, journal: [erreur, `navigateur : ${navigator.userAgent}`],
+        conseil: "Un fichier de l'extension manque ou est abîmé : retéléchargez-la, puis installez-la de nouveau.",
+      };
       annoncer({ type: "horsecran-etat", etat: etatMoteur });
       for (const resoudre of attente.values()) resoudre({ erreur });
       attente.clear();

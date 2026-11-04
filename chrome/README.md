@@ -139,7 +139,7 @@ correcteur (`tests/essai_navigateur.mjs --vrai`) :
 
 ## Installer
 
-**Depuis l'archive** `kab-board-navigateur-0.2.0.zip`, sur la [page des versions](https://github.com/ADJ-MSS/kab-board/releases) :
+**Depuis l'archive** `kab-board-navigateur-0.2.2.zip`, sur la [page des versions](https://github.com/ADJ-MSS/kab-board/releases) :
 la décompresser, puis `chrome://extensions`, « Mode développeur », « Charger
 l'extension non empaquetée ». Le manuel le montre pas à pas.
 

@@ -2,7 +2,7 @@
 
 Clavier pour écrire le kabyle, sur Android, sur Linux et sur Windows, extension pour navigateur (Chrome, Edge, Brave, Opera, Firefox), et correcteur pour Microsoft Word : correcteur orthographique, suggestions, dictée vocale et outils d'écriture. **100 % hors ligne** : tout se calcule sur l'appareil, et l'application Android n'a pas l'autorisation d'accéder à Internet.
 
-- **Télécharger** : [page des versions](https://github.com/ADJ-MSS/kab-board/releases) : `.apk` pour Android 7 ou plus récent sur téléphone 64 bits, `.deb` pour Debian et Ubuntu, `kab-board-windows-0.2-setup.exe` pour le clavier sous Windows 10 ou 11, `kab-board-navigateur-0.2.0.zip` pour l'extension navigateur (Chrome, Edge, Brave, Opera), `kab-board-firefox-0.2.0.xpi` pour Firefox, `kab-board-word-setup-0.3.exe` pour Word.
+- **Télécharger** : [page des versions](https://github.com/ADJ-MSS/kab-board/releases) : `.apk` pour Android 7 ou plus récent sur téléphone 64 bits, `.deb` pour Debian et Ubuntu, `kab-board-windows-0.2-setup.exe` pour le clavier sous Windows 10 ou 11, `kab-board-navigateur-0.2.2.zip` pour l'extension navigateur (Chrome, Edge, Brave, Opera), `kab-board-firefox-0.2.0.xpi` pour Firefox, `kab-board-word-setup-0.3.exe` pour Word.
 - **Manuel d'utilisation** : [kab-board-manuel-utilisation.netlify.app](https://kab-board-manuel-utilisation.netlify.app/)
 - **Le code Linux** : [`linux/`](linux/), application, méthode de saisie et clavier à l'écran.
 - **Le code Windows** : [`windows/`](windows/), le clavier qui écrit dans toutes les applications, sa barre de propositions, le clavier à l'écran et l'installeur ; voir [`windows/README.md`](windows/README.md).

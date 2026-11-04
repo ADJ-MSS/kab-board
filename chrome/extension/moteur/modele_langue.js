@@ -13,6 +13,21 @@ export class Etat {
   }
 }
 
+/**
+ * KenLM rend 0 sans dire pourquoi : faute de mémoire (il copie tout le modèle dans la
+ * sienne), ou faute d'un modèle lisible. On le sait en demandant la même place.
+ */
+export function pourquoiPas(m, taille, quoi, fichier) {
+  const marge = taille + 32 * 1024 * 1024;
+  const p = m._malloc(marge);
+  if (p) m._free(p);
+  const Mo = (n) => `${(n / 1e6).toFixed(1).replace(".", ",")} Mo`;
+  return Object.assign(p
+    ? new Error(`${quoi} ne se lit pas (ressources/${fichier}, ${Mo(taille)})`)
+    : new Error(`${quoi} demande ${Mo(marge)} d'un seul tenant, que le navigateur refuse`),
+  { kab: p ? "illisible" : "memoire", fichier });
+}
+
 export class ModeleLangue {
   constructor(m, h) {
     this.m = m;
@@ -24,10 +39,11 @@ export class ModeleLangue {
   static async ouvrir(fabrique, octets, options = {}) {
     const m = await fabrique(options);
     const chemin = "/kabyle_3gram.binary";
+    const taille = octets.length;
     m.FS.writeFile(chemin, octets, { canOwn: true });
     const h = m._kab_lm_ouvrir(ModeleLangue.chaine(m, chemin));
     m.FS.unlink(chemin);
-    if (!h) throw new Error("KenLM : ouverture impossible du modèle");
+    if (!h) throw pourquoiPas(m, taille, "le modèle de langue", "moteur/kabyle_3gram.binary");
     return new ModeleLangue(m, h);
   }
 

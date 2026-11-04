@@ -30,6 +30,23 @@ function montrerEtat(e) {
   const panne = !!e && e.moteur === "panne";
   $("panne").classList.toggle("cache", !panne);
   $("erreur-moteur").textContent = panne ? e.erreur : "";
+  $("conseil-moteur").textContent = panne ? e.conseil || "" : "";
+  const lignes = (e && e.journal) || [];
+  $("journal").textContent = lignes.length ? lignes.join("\n")
+    : "Le correcteur ne s'est pas encore chargé depuis l'ouverture du navigateur.";
+  if (panne) $("journal-bloc").open = true;
+}
+
+async function copierJournal() {
+  const e = await chrome.runtime.sendMessage({ type: "etat" }).catch(() => null);
+  const texte = [`Kab-board ${chrome.runtime.getManifest().version}, ${new Date().toLocaleString("fr-FR")}`,
+    `état : ${e ? e.moteur : "?"}${e && e.erreur ? ` (${e.erreur})` : ""}`, "", ...((e && e.journal) || [])].join("\n");
+  try {
+    await navigator.clipboard.writeText(texte);
+    $("journal-copie").textContent = "Copié : collez-le dans un message.";
+  } catch (erreur) {
+    $("journal-copie").textContent = "La copie est refusée : sélectionnez le journal et copiez-le à la main.";
+  }
 }
 
 function montrerReglages() {
@@ -92,6 +109,7 @@ async function demarrer() {
 
   $("allume").addEventListener("change", () => P.changerReglages({ allume: $("allume").checked }));
   $("reessayer").addEventListener("click", async () => montrerEtat(await P.etat()));
+  $("copier-journal").addEventListener("click", copierJournal);
   // Firefox a sa page à lui, qu'une extension ne peut qu'ouvrir par cette fonction.
   $("changer-raccourcis").addEventListener("click", () => (chrome.commands.openShortcutSettings
     ? chrome.commands.openShortcutSettings() : chrome.tabs.create({ url: "chrome://extensions/shortcuts" })));

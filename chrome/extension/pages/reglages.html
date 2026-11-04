@@ -24,9 +24,10 @@
 
 <div id="panne" class="carte avertissement cache" style="margin-top: 16px">
   <h2 style="margin-top: 0">Le correcteur ne se charge pas</h2>
-  <p>La frappe (gh → ɣ, AltGr) marche sans lui ; la barre, les soulignés, la dictée et les outils l'attendent. Il lui faut environ 750 Mo de mémoire : fermez quelques onglets, puis réessayez.</p>
-  <p class="discret" id="erreur-moteur"></p>
-  <button class="bouton principal" id="reessayer">Réessayer</button>
+  <p class="cause" id="erreur-moteur"></p>
+  <p id="conseil-moteur"></p>
+  <p class="discret">La frappe (gh → ɣ, AltGr) marche sans lui ; la barre, les soulignés, la dictée et les outils l'attendent.</p>
+  <p><button class="bouton principal" id="reessayer">Réessayer</button> <a href="#journal-bloc">Voir le journal du chargement</a></p>
 </div>
 
 <section>
@@ -85,6 +86,16 @@
     <tr><td><kbd>1</kbd> à <kbd>6</kbd></td><td>choisir une proposition de la barre ; <kbd>Échap</kbd> la cache</td></tr>
   </table>
   <p><button class="bouton" id="changer-raccourcis">Changer les raccourcis</button></p>
+</section>
+
+<section>
+  <h2>Journal du correcteur</h2>
+  <p class="discret">Chaque étape du dernier chargement du correcteur : les fichiers lus, la mémoire, l'erreur s'il y en a une. Rien ne quitte l'ordinateur ; copiez-le pour l'envoyer si le correcteur ne se charge pas.</p>
+  <details id="journal-bloc">
+    <summary>Voir le journal</summary>
+    <pre class="journal" id="journal"></pre>
+  </details>
+  <p><button class="bouton" id="copier-journal">Copier le journal</button> <span class="discret" id="journal-copie"></span></p>
 </section>
 
 <section>
