@@ -66,7 +66,7 @@
 
 \title{Kab-board, extension pour navigateur\\[0.4em] \large Chrome, Edge, Brave, Opera : le clavier et le correcteur kabyles dans le navigateur. Manuel d'utilisation, version 0.2}
 \author{}
-\date{30 octobre 2026}
+\date{4 novembre 2026}
 
 \begin{document}
 
@@ -100,7 +100,7 @@ Le correcteur de Kab-board pour Android (1,58 million de formes, un modèle de l
 Il faut un navigateur récent : Google Chrome 116 ou plus récent, Microsoft Edge, Brave, Opera ou Chromium, sous Windows, macOS ou Linux. Rien d'autre à installer.
 
 \subsection{Télécharger l'extension}
-L'extension se télécharge avec les autres versions de Kab-board, sur la page des versions du dépôt : \url{https://github.com/ADJ-MSS/kab-board/releases}. C'est le fichier \chemin{kab-board-navigateur-0.2.0.zip}, d'environ 245~Mo : le correcteur, le modèle de langue et le modèle vocal sont dedans.
+L'extension se télécharge avec les autres versions de Kab-board, sur la page des versions du dépôt : \url{https://github.com/ADJ-MSS/kab-board/releases}. C'est le fichier \chemin{kab-board-navigateur-0.2.2.zip}, d'environ 245~Mo : le correcteur, le modèle de langue et le modèle vocal sont dedans.
 
 \subsection{L'ajouter au navigateur, en mode développeur}
 \begin{enumerate}
@@ -110,7 +110,7 @@ L'extension se télécharge avec les autres versions de Kab-board, sur la page d
   \item \textbf{Cliquez sur} \bouton{Charger l'extension non empaquetée} et choisissez le dossier décompressé, celui qui contient \chemin{manifest.json}.
 \end{enumerate}
 
-\capture{01-extensions.png}{L'extension chargée en mode développeur : Kab-board 0.2.0, allumée.}
+\capture{01-extensions.png}{L'extension chargée en mode développeur : Kab-board, allumée.}
 
 \begin{encadre}{Pourquoi le mode développeur}
 Kab-board n'est pas encore sur le Chrome Web Store, et hors du Web Store, Chrome n'installe une extension que de cette façon. Laissez son dossier là où il est : Chrome le relit à chaque démarrage. Si vous le déplacez, chargez-la de nouveau depuis sa nouvelle place.
@@ -342,7 +342,7 @@ Le correcteur ne se charge qu'au premier champ où vous écrivez, en cinq second
 
 % ---------------------------------------------------------------- 15
 \section{Si le correcteur ne se charge pas}\label{s:panne}
-Sur un ordinateur qui manque de mémoire, le correcteur peut ne pas se charger. L'extension écrit encore les lettres kabyles, mais ne propose ni ne corrige rien. Elle le dit une fois dans la page, son bouton le dit, et l'icône de l'extension porte un « ! ».
+Sur un ordinateur qui manque de mémoire, ou si l'archive a été mal décompressée, le correcteur peut ne pas se charger. L'extension écrit encore les lettres kabyles, mais ne propose ni ne corrige rien. Elle le dit une fois dans la page, son bouton le dit, et l'icône de l'extension porte un « ! ».
 \begin{figure}[!htb]
 \centering
 \fbox{\includegraphics[width=0.5\linewidth]{27-panne-site.png}}\hfill
@@ -350,8 +350,17 @@ Sur un ordinateur qui manque de mémoire, le correcteur peut ne pas se charger. 
 \caption{Le correcteur ne se charge pas : « ruhagh » devient bien « ruhaɣ », mais sans propositions ; la page et le bouton le disent.}\label{f:panne}
 \end{figure}
 
-Fermez quelques onglets, puis, dans les réglages de l'extension, cliquez sur \bouton{Réessayer}. Ouvrir le bouton Kab-board ou les réglages le recharge aussi.
-\capture[0.75\linewidth]{26-panne-reglages.png}{La page des réglages, quand le correcteur ne se charge pas.}
+Les réglages de l'extension (bouton Kab-board, puis \bouton{Tous les réglages, mon dictionnaire}) disent alors, en rouge, la cause exacte, et ce qu'il faut faire :
+\begin{itemize}
+  \item \textbf{Mémoire insuffisante} : fermez des onglets et d'autres programmes (ou redémarrez l'ordinateur), puis cliquez sur \bouton{Réessayer}.
+  \item \textbf{Fichier manquant, incomplet ou abîmé} : l'archive a été mal décompressée. Retéléchargez-la, décompressez-la entièrement, supprimez Kab-board de \chemin{chrome://extensions} et chargez de nouveau le dossier.
+  \item \textbf{WebAssembly désactivé} : mettez le navigateur à jour ; dans Edge, la « sécurité renforcée » peut le bloquer.
+\end{itemize}
+Ouvrir le bouton Kab-board ou les réglages recharge aussi le correcteur.
+\capture[0.75\linewidth]{26-panne-reglages.png}{La page des réglages, quand la mémoire manque : la cause, et ce qu'il faut faire.}
+
+En bas des réglages, \bouton{Journal du correcteur} montre chaque étape du dernier chargement : les fichiers lus, la mémoire de l'appareil, l'erreur. \bouton{Copier le journal} le met dans le presse-papiers, pour l'envoyer si le correcteur ne se charge toujours pas. Rien n'en part tout seul.
+\capture[0.75\linewidth]{29-journal.png}{Le journal du chargement du correcteur.}
 
 % ---------------------------------------------------------------- 16
 \section{Retirer l'extension}\label{s:retirer}
@@ -361,7 +370,7 @@ Fermez quelques onglets, puis, dans les réglages de l'extension, cliquez sur \b
 \section{En cas de souci}\label{s:souci}
 \medskip
 \tableau{0.36\linewidth}{\textbf{Ce que vous voyez} & \textbf{Que faire}}{%
-« Le correcteur ne se charge pas » & Fermez quelques onglets, puis \bouton{Réessayer} dans les réglages de l'extension (section~\ref{s:panne}). \\
+« Le correcteur ne se charge pas » & Lisez la cause, en rouge, dans les réglages de l'extension, et faites ce qu'ils disent (section~\ref{s:panne}). \\
 Pas de barre sous le mot & Le correcteur se prépare : attendez quelques secondes. Vérifiez aussi que le clavier kabyle est allumé, sur ce site aussi, et que \bouton{Barre des propositions} est cochée. \\
 Rien ne se passe dans une page & C'est peut-être un mot de passe, un éditeur de code, Google Docs ou une page de Chrome : utilisez « Écrire et relire ». \\
 La touche 1 écrit « \& » & Clavier AZERTY : Maj + \touche{\&}, ou le pavé numérique. \\

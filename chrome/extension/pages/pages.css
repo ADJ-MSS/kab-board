@@ -88,3 +88,11 @@ input[type=text]:focus, input[type=search]:focus, textarea:focus { outline: 2px 
 .liste li { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--bord); }
 .liste li:last-child { border-bottom: 0; }
 .liste li span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+
+.cause { font-weight: 600; color: var(--rouge); }
+.journal {
+  max-height: 320px; overflow: auto; padding: 10px 12px; margin: 8px 0 0;
+  background: var(--survol); border: 1px solid var(--bord); border-radius: 8px; color: var(--texte);
+  font: 12px/1.5 ui-monospace, "DejaVu Sans Mono", Consolas, monospace; white-space: pre-wrap; word-break: break-word;
+}
+details > summary { cursor: pointer; }

@@ -31,4 +31,9 @@ while read -r _ chemin; do
   esac
 done < "$ICI/ressources.sha256"
 (cd "$EXT" && sha256sum -c --quiet "$ICI/ressources.sha256")
+# La taille de chaque ressource : le correcteur reconnaît ainsi une archive mal décompressée.
+(cd "$EXT" && grep ' ressources/' "$ICI/ressources.sha256" | while read -r _ chemin; do
+  printf '%s %s\n' "${chemin#ressources/}" "$(wc -c < "$chemin")"; done) \
+  | awk 'BEGIN { printf "{" } { printf "%s\n  \"%s\": %s", (NR > 1 ? "," : ""), $1, $2 } END { print "\n}" }' \
+  > "$EXT/ressources/inventaire.json"
 echo "  Prêt : $(du -sh "$EXT/ressources" | cut -f1) de ressources, $(du -sh "$EXT/ort" | cut -f1) pour onnxruntime-web"

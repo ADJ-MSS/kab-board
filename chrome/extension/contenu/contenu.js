@@ -907,7 +907,7 @@
 
   function ligneEtat() {
     let texte;
-    if (etat.moteur === "panne") texte = "Le correcteur ne se charge pas : " + etat.erreur;
+    if (etat.moteur === "panne") texte = "Le correcteur ne se charge pas. " + etat.erreur;
     else if (etat.moteur === "pret") texte = `Correcteur prêt · graphie ${reglages.graphie}`;
     else texte = "Le correcteur se prépare…";
     return el("p", { classe: "discret" }, texte);

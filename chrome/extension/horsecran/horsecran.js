@@ -27,19 +27,44 @@ function annoncer(etat) {
 
 travailleur.onmessage = (e) => {
   const m = e.data;
-  if (m.etat === "pret") annoncer({ moteur: "pret", erreur: "", secondes: m.secondes });
-  else if (m.etat === "panne") annoncer({ moteur: "panne", erreur: m.erreur });
-  else if (m.etat) annoncer({ moteur: "chargement", erreur: "" });
+  if (m.etat === "pret") annoncer({ moteur: "pret", erreur: "", secondes: m.secondes, journal: m.journal });
+  else if (m.etat === "panne") annoncer({ moteur: "panne", erreur: m.erreur, conseil: m.conseil, journal: m.journal });
+  else if (m.etat) annoncer({ moteur: "chargement", erreur: "", journal: [] });
   if (m.etat) return;
   const resoudre = attente.get(m.id);
   attente.delete(m.id);
   if (resoudre) resoudre(m.reponse);
 };
 
+/** Le premier module du correcteur qui manque ou ne se lit pas, en suivant ses import. */
+async function moduleEnCause(url, vus = new Set()) {
+  if (vus.has(url)) return "";
+  vus.add(url);
+  let texte;
+  try {
+    const r = await fetch(url);
+    if (!r.ok) return url;
+    texte = await r.text();
+  } catch (e) {
+    return url;
+  }
+  for (const [, chemin] of texte.matchAll(/(?:^|[\s;])(?:from|import)\s+["'](\.[^"']+)["']/g)) {
+    const manque = await moduleEnCause(new URL(chemin, url).href, vus);
+    if (manque) return manque;
+  }
+  return "";
+}
+
 // Le fil ne démarre même pas (un module introuvable) : rien ne répondra.
-travailleur.onerror = (e) => {
-  const erreur = e.message || "le correcteur ne se charge pas";
-  annoncer({ moteur: "panne", erreur });
+travailleur.onerror = async (e) => {
+  const lieu = e.filename ? ` (${e.filename.replace(/^.*\/\/[^/]+\//, "")}${e.lineno ? `:${e.lineno}` : ""})` : "";
+  const manque = await moduleEnCause(new URL("../moteur/travailleur.js", location.href).href);
+  const erreur = manque ? `Fichier manquant : ${manque.replace(/^.*\/\/[^/]+\//, "")}`
+    : `Le programme du correcteur ne démarre pas : ${e.message || "un de ses fichiers ne se lit pas"}${lieu}`;
+  annoncer({
+    moteur: "panne", erreur, journal: [erreur, `navigateur : ${navigator.userAgent}`],
+    conseil: "Un fichier de l'extension manque ou est abîmé : retéléchargez l'archive, décompressez-la entièrement, puis chargez de nouveau le dossier.",
+  });
   for (const resoudre of attente.values()) resoudre({ erreur });
   attente.clear();
 };

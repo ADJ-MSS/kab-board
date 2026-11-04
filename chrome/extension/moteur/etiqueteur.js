@@ -1,6 +1,8 @@
 // L'étiqueteur morphosyntaxique : Etiqueteur.kt, sur le pont WebAssembly de CRFsuite
 // (kab_crf.wasm).
 
+import { pourquoiPas } from "./modele_langue.js";
+
 const encodeur = new TextEncoder();
 const CHIFFRE = /^\p{Nd}$/u;
 
@@ -34,7 +36,7 @@ export class Etiqueteur {
     const h = m._kab_crf_ouvrir(p);
     m._free(p);
     m.FS.unlink(chemin);
-    if (!h) throw new Error("CRFsuite : ouverture impossible du modèle");
+    if (!h) throw pourquoiPas(m, octets.length, "l'étiqueteur", "moteur/pos_kab.crfsuite");
     return new Etiqueteur(m, h);
   }
 

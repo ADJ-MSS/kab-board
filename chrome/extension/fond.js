@@ -86,11 +86,19 @@ function preparer() {
   if (ouverture) return ouverture;
   ouverture = (async () => {
     if (await P.ouvert()) return;
-    publierEtat({ moteur: "chargement", erreur: "" });
+    publierEtat({ moteur: "chargement", erreur: "", conseil: "", journal: [] });
     try {
       await P.ouvrir();
     } catch (erreur) {
-      publierEtat({ moteur: "panne", erreur: String(erreur && erreur.message || erreur) });
+      // Le correcteur n'a même pas d'endroit où tourner (Chrome : le document hors écran).
+      const message = String(erreur && erreur.message || erreur);
+      publierEtat({
+        moteur: "panne",
+        erreur: `Le navigateur refuse d'ouvrir le correcteur : ${message}`,
+        conseil: "Il faut Chrome 116 ou plus récent (ou Edge, Brave, Opera à jour). Sur un ordinateur " +
+          "géré (entreprise, école), une règle de l'administrateur peut l'interdire.",
+        journal: [`ouverture du correcteur refusée : ${message}`, `navigateur : ${navigator.userAgent}`],
+      });
     }
   })().finally(() => {
     ouverture = null;
@@ -105,7 +113,7 @@ async function fermer() {
 
 function indisponible() {
   if (etat.moteur === "panne") {
-    return { erreur: "Le correcteur ne se charge pas : " + etat.erreur, indisponible: true };
+    return { erreur: "Le correcteur ne se charge pas. " + etat.erreur, indisponible: true };
   }
   return { erreur: "Le correcteur se prépare…", indisponible: true };
 }

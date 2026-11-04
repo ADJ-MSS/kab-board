@@ -118,6 +118,10 @@ export async function scenario(n) {
   verifie("le correcteur se charge dans le navigateur", !!pret, await etat());
   if (!pret) return { mesures: {} };
   const mesures = { chargement: pret.secondes };
+  if (VRAI) {
+    verifie("le journal du chargement est tenu", (pret.journal || []).some((l) => /correcteur prêt/.test(l)),
+      (pret.journal || []).slice(-3));
+  }
 
   // 2. La barre des propositions
 
@@ -382,6 +386,8 @@ export async function scenario(n) {
     await panne.goto(n.url("pages/reglages.html"));
     verifie("un correcteur qui ne se charge pas : les réglages le disent", !!await jusqua(() => panne.evaluate(() =>
       !document.getElementById("panne").classList.contains("cache")), 8000), await etat());
+    const cause = await jusqua(() => panne.evaluate(() => document.getElementById("erreur-moteur").textContent), 4000);
+    verifie("et nomment le fichier qui manque", /Fichier manquant : moteur\/travailleur\.js/.test(cause || ""), cause);
     verifie("l'icône aussi", await n.fond((g) => g.chrome.action.getBadgeText({})) === "!");
     await capture("11-panne", panne);
     fs.renameSync(travailleur + ".cache", travailleur);
