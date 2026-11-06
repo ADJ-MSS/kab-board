@@ -24,19 +24,20 @@ authors:
   - family-names: Ameur
     given-names: Yulliwas
     affiliation: "Engineering School of Information and Digital Technologies"
-  - family-names: Naït-Zerrad
+  - family-names: Naït Zerad
     given-names: Kamal
     affiliation: "Institut national des langues et civilisations orientales (Inalco)"
 abstract: >-
-  Code source et documentation de kab-board, clavier Android (service de
-  saisie) pour le kabyle. Le clavier embarque, sans connexion réseau, le
-  portage Kotlin du correcteur orthographique hybride kabyle (pipeline Python
-  V2), un modèle de langue 3-grammes interrogé par KenLM, un étiqueteur
-  morphosyntaxique CRF (CRFsuite), la prédiction du mot suivant, un correcteur
-  orthographique du système Android à trois états et la dictée vocale kabyle
-  par le modèle acoustique de Mmeslay exporté en ONNX. Les ressources
-  linguistiques et les modèles ne font pas partie du dépôt ; le README décrit
-  leur mise en place.
+  Code source et documentation de kab-board, clavier kabyle pour Android, Linux
+  et Windows, extension web (Firefox, Chrome, Edge, Brave, Opera) et complément
+  pour Microsoft Word. Toutes ces versions embarquent, sans connexion réseau, le
+  correcteur orthographique hybride kabyle (pipeline Python V2, porté en Kotlin
+  sur Android), un modèle de langue 3-grammes interrogé par KenLM, un étiqueteur
+  morphosyntaxique CRF (CRFsuite) et la dictée vocale kabyle par le modèle
+  acoustique de Mmeslay exporté en ONNX. Sur Android, le clavier comprend aussi
+  la prédiction du mot suivant et un correcteur orthographique du système à
+  trois états. Les ressources linguistiques et les modèles ne font pas partie du
+  dépôt ; le README décrit leur mise en place.
 keywords:
   - Kabyle
   - Taqbaylit
@@ -62,7 +63,7 @@ references:
         given-names: Samia
       - family-names: Ameur
         given-names: Yulliwas
-      - family-names: Naït-Zerrad
+      - family-names: Naït Zerad
         given-names: Kamal
     collection-title: "Proceedings of the Foundation for Endangered Languages (FEL) 2026"
     conference:
@@ -80,7 +81,7 @@ references:
         given-names: Samia
       - family-names: Ameur
         given-names: Yulliwas
-      - family-names: Naït-Zerrad
+      - family-names: Naït Zerad
         given-names: Kamal
     publisher:
       name: Zenodo
