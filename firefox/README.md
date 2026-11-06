@@ -6,7 +6,8 @@ même essai de bout en bout. Seul change ce que Firefox fait autrement.
 `firefox/construire.sh` assemble l'extension pour Firefox dans `firefox/extension/` à
 partir de celle de Chrome ; rien n'est recopié à la main.
 
-**L'installer** : `kab-board-firefox-0.2.0.xpi`, sur la
+**L'installer** : depuis [addons.mozilla.org](https://addons.mozilla.org/fr/firefox/addon/kab-board/), ou avec
+`kab-board-firefox-0.2.0.xpi`, sur la
 [page des versions](https://github.com/ADJ-MSS/kab-board/releases), signé par Mozilla.
 Faites glisser le fichier dans une fenêtre de Firefox (140 ou plus récent), puis
 « Ajouter ». Le premier chargement du correcteur prend une vingtaine de secondes, le
