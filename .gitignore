@@ -50,3 +50,9 @@ chrome/manuel/*.out
 chrome/manuel/*.toc
 # Kab-board pour Firefox : construite par firefox/construire.sh
 firefox/extension/
+
+# Clés et secrets : jamais dans Git (la clé Google Play est dans ~/.secrets)
+.secrets/
+*.json
+!app/src/main/assets/emoji_data.json
+!chrome/extension/manifest.json

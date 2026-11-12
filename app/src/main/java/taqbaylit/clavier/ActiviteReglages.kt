@@ -233,7 +233,7 @@ class ActiviteReglages : Activity() {
             majEtat()
             return
         }
-        val destinataire = "massil.aoudj@lecnam.net"
+        val destinataire = "kab.board15@gmail.com"
 
         // Copie dans cache/partage/, seul dossier declare dans res/xml/partage.xml :
         // les ressources du correcteur et le modele vocal restent hors d'atteinte.

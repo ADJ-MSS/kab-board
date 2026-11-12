@@ -83,7 +83,7 @@ Depends: python3 (>= 3.10), python3-gi, gir1.2-gtk-4.0, gir1.2-gtk-3.0,
 Recommends: python3-rapidfuzz
 Conflicts: kab-board
 Replaces: kab-board
-Maintainer: Massil Aoudj <massil.aoudj@lecnam.net>
+Maintainer: Massil Aoudj <kab.board15@gmail.com>
 Homepage: https://github.com/ADJ-MSS/kab-board
 Description: Clavier et correcteur kabyles, ressources comprises
  Ecrire le kabyle sur ordinateur : correction en contexte, six propositions,
