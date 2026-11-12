@@ -24,6 +24,8 @@
 
     <string name="prive_titre">Jamais enregistre</string>
     <string name="prive_detail">Les champs de mot de passe, et tout champ qu\'une application signale comme prive, ne recoivent aucune suggestion et ne sont jamais enregistres.</string>
+    <string name="confidentialite_bouton">Politique de confidentialité</string>
+    <string name="licence_detail">Logiciel libre sous licence GNU GPL 3.0. Code source sur demande à kab.board15@gmail.com.</string>
     <string name="aspect_titre">Apparence</string>
     <string name="aspect_systeme">Comme le telephone</string>
     <string name="aspect_clair">Toujours clair</string>

@@ -19,8 +19,8 @@ android {
         // Les deux architectures des telephones reels. x86 et x86_64 ne servent qu'aux emulateurs
         // et coutaient 43 Mio d'APK, dont 30 pour le seul ONNX Runtime.
         ndk { abiFilters += listOf("arm64-v8a") }
-        versionCode = 8
-        versionName = "0.3.4"
+        versionCode = 9
+        versionName = "0.3.5"
         externalNativeBuild {
             cmake {
                 // Pas de RTTI ni d'exceptions superflues : ce sont des
@@ -74,10 +74,15 @@ android {
 dependencies {
     testImplementation("junit:junit:4.13.2")
     implementation("androidx.core:core-ktx:1.13.1")
+    // Android exige des bibliothèques natives alignées sur 16 ko : 1.22.0 est la première
+    // version dont libonnxruntime4j_jni.so l'est.
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.22.0")
     // Exigees par le panneau emoji repris de KreyolKeyb (grille virtualisee).
-    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.20.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
+    // viewpager2 tire fragment 1.1.0 et activity 1.0.0, trop anciens.
+    implementation("androidx.fragment:fragment:1.8.5")
+    implementation("androidx.activity:activity:1.9.3")
     // Dispatchers.Main ne fonctionne pas sans le module Android :
     // ça compile, et ça casse au premier lancement.
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")

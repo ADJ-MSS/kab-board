@@ -159,6 +159,13 @@ class ActiviteReglages : Activity() {
         colonne.addView(espace(d))
         colonne.addView(titre(getString(R.string.prive_titre)))
         colonne.addView(texte(getString(R.string.prive_detail)))
+        colonne.addView(bouton(getString(R.string.confidentialite_bouton)) {
+            val page = Intent(Intent.ACTION_VIEW, Uri.parse(POLITIQUE))
+            runCatching { startActivity(page) }.onFailure {
+                Toast.makeText(this, POLITIQUE, Toast.LENGTH_LONG).show()
+            }
+        })
+        colonne.addView(petit(getString(R.string.licence_detail)))
 
         setContentView(ScrollView(this).apply {
             setBackgroundColor(FOND); addView(colonne)
@@ -388,6 +395,7 @@ class ActiviteReglages : Activity() {
     }
 
     private companion object {
+        const val POLITIQUE = "https://kab-board-manuel-utilisation.netlify.app/confidentialite/"
         val FOND = Color.parseColor("#151C24")
         val TEXTE = Color.parseColor("#E8EDF2")
         val GRIS = Color.parseColor("#9AA3AB")

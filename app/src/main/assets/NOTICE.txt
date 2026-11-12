@@ -82,7 +82,8 @@ ete verifiee identique a celle de l'original (ecart maximal 9,3e-05, arrondi
 flottant) sur les trois exemples fournis par le depot.
 
     Cette application etant liee a du code sous GPL-3.0, elle est distribuee
-    sous GPL-3.0. Le texte complet de la licence accompagne le depot du projet.
+    sous GPL-3.0. Le texte de la licence l'accompagne (LICENCE-GPL-3.0.txt) ;
+    le code source complet est fourni sur demande a kab.board15@gmail.com.
 
 Le module SqueezeformerEncoder et sa dependance TimeReductionModule, requis
 pour l'export et retires de NeMo a partir de la version 3.0, sont repris de

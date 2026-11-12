@@ -21,6 +21,8 @@
 
     <string name="prive_titre">Ur yettwaklas ara</string>
     <string name="prive_detail">Urtiyen n wawal uffir, d wid akk i d-yesbeggen usnas d uslig, ur ttawin ula d yiwen usumer.</string>
+    <string name="confidentialite_bouton">Tasertit n tbaḍnit</string>
+    <string name="licence_detail">Aseɣẓan ilelli s turagt GNU GPL 3.0. Tangalt taɣbalut s usuter ɣer kab.board15@gmail.com.</string>
     <string name="aspect_titre">Udem</string>
     <string name="aspect_systeme">Am utilifun</string>
     <string name="aspect_clair">Yecbeḥ yal tikkelt</string>

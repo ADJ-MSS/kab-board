@@ -26,6 +26,8 @@
 
     <string name="prive_titre">Never recorded</string>
     <string name="prive_detail">Password fields, and any field an app marks as private, receive no suggestions and are never recorded.</string>
+    <string name="confidentialite_bouton">Privacy policy</string>
+    <string name="licence_detail">Free software under the GNU GPL 3.0 license. Source code on request at kab.board15@gmail.com.</string>
     <string name="aspect_titre">Appearance</string>
     <string name="aspect_systeme">Follow the phone</string>
     <string name="aspect_clair">Always light</string>
