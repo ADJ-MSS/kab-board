@@ -104,7 +104,7 @@ Moteur de correction
 --------------------
 
 Le module moteur/ porte en Kotlin le correcteur kabyle de M. Aoudj,
-T. Boukhenoufa, S. Bouzefrane, Y. Ameur et K. Nait-Zerrad, publie sous licence
+T. Boukhenoufa, S. Bouzefrane, Y. Ameur et K. Nait Zerad, publie sous licence
 MIT pour le logiciel et CC BY-SA 4.0 pour les donnees :
 
   https://doi.org/10.5281/zenodo.22112059
